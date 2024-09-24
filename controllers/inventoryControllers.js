@@ -1,2 +1,9 @@
-//esto es una prueba
-//prueba de commit
+const showInventory = (req, res) => {
+    res.render('inventory', {
+        pagina: 'Inventario'
+    })
+}
+
+export {
+    showInventory
+}

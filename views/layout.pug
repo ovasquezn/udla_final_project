@@ -1,0 +1,56 @@
+doctype html
+head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description' content='')
+    meta(name='author' content='')
+    title Simple Sidebar - Start Bootstrap Template
+    link(rel='icon' type='image/x-icon' href='assets/favicon.ico')
+    link(href='css/styles.css' rel='stylesheet')
+
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+
+    link(rel='stylesheet' href='https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+
+    script(src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+
+#wrapper.d-flex
+  #sidebar-wrapper.border-end.bg-white
+    .sidebar-heading.border-bottom.bg-light SOFTWARE
+    .list-group.list-group-flush
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='#!') Finanzas
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='/hr') Recursos Humanos
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='#!') Documentos
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='/inventory') Inventario
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='#!') Restaurante
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='#!') Productos
+      a.list-group-item.list-group-item-action.list-group-item-light.p-3(href='#!') Reservas
+  #page-content-wrapper
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.border-bottom
+      .container-fluid
+        button#sidebarToggle.btn.btn-primary +
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarSupportedContent.collapse.navbar-collapse
+          ul.navbar-nav.ms-auto.mt-2.mt-lg-0
+            li.nav-item.active
+              a.nav-link(href='/dashboard') Home
+            li.nav-item.active
+              a.nav-link(href='/dashboard') hora_fecha
+            li.nav-item.active
+              a.nav-link(href='/dashboard') Tijuana Ltda
+            li.nav-item.dropdown
+              a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false') ovasquez              
+              .dropdown-menu.dropdown-menu-end(aria-labelledby='navbarDropdown')
+                a.dropdown-item(href='#!') 
+                a.dropdown-item(href='#!') Configuración
+                .dropdown-divider
+                a.dropdown-item(href='#!') Salir
+    .container-fluid
+        block content
+// Bootstrap core JS
+script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js')
+// Core theme JS
+script(src='js/scripts.js')

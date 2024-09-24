@@ -1,9 +1,9 @@
 //const express = require('express');
 import express from 'express';
 const router = express.Router();
-import { hr } from '../controllers/hrControllers.js';
+import { dashboard } from '../controllers/dashboardControllers.js';
 
-router.get('/', hr);
+router.get('/', dashboard);
 
 //module.exports = router;
 export default router;

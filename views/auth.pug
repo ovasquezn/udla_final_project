@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    title Inicio de Sesión
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+  body
+    .container.mt-5
+      h2.text-center Bienvenido - Inicia Sesión
+      
+      // Formularios de Login y Registro en tabs
+      ul.nav.nav-tabs
+        li.nav-item
+          a.nav-link.active(href='#login', data-toggle='tab') Iniciar Sesión
+        li.nav-item
+          a.nav-link(href='#register', data-toggle='tab') Registrarse
+      
+      .tab-content.mt-4
+        // Formulario de Login
+        #login.tab-pane.fade.show.active
+          form(method='POST' action='/auth/ingreso')
+            .form-group
+              label(for='email') Email:
+              input.form-control(type='email' name='email' required)
+            .form-group
+              label(for='password') Contraseña:
+              input.form-control(type='password' name='password' required)
+            button.btn.btn-primary(type='submit') Iniciar Sesión
+
+        // Formulario de Registro
+        #register.tab-pane.fade
+          form(method='POST' action='/auth/registro')
+            .form-group
+              label(for='nombre') Nombre:
+              input.form-control(type='text' name='nombre' required)
+            .form-group
+              label(for='email') Email:
+              input.form-control(type='email' name='email' required)
+            .form-group
+              label(for='password') Contraseña:
+              input.form-control(type='password' name='password' required)
+            button.btn.btn-success(type='submit') Registrarse
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')

@@ -1,0 +1,71 @@
+extends layout 
+
+block content
+    .container.mt-4
+      h1.text-center Administración de Inventario
+
+      .d-flex.justify-content-between.mb-4
+        button.btn.btn-primary#agregar-inventario Agregar Inventario
+        button.btn.btn-danger#eliminar-inventario Eliminar Inventario
+
+      .input-group.mb-3
+        input.form-control(type='text', placeholder='Buscar productos...', aria-label='Buscar productos')
+        .input-group-append
+          button.btn.btn-outline-secondary(type='button') Buscar
+
+      // Tabla de productos con clase DataTable para ordenar
+      table.table.table-hover#productosTabla
+        thead
+          tr
+            th Nombre del Producto
+            th Cantidad en Inventario
+            th Proveedor
+            th Stock Mínimo
+            th Estado del Stock
+            th Acciones
+        tbody
+          each producto in [{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10}, {id: 2, nombre: 'Producto 2', cantidad: 30, proveedor: 'Proveedor B', stockMinimo: 5},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10},{id: 1, nombre: 'Producto 1', cantidad: 0, proveedor: 'Proveedor A', stockMinimo: 10} ]
+            - var claseFila = producto.cantidad <= producto.stockMinimo ? 'table-warning' : (producto.cantidad <= producto.stockMinimo / 2 ? 'table-danger' : '')
+            - var estadoStock = producto.cantidad <= producto.stockMinimo / 2 ? 'Crítico' : (producto.cantidad <= producto.stockMinimo ? 'Bajo' : 'Normal')
+            - var badgeClass = estadoStock === 'Crítico' ? 'badge badge-danger' : (estadoStock === 'Bajo' ? 'badge badge-warning' : 'badge badge-success')
+            tr(class=claseFila)
+              td #{producto.nombre}
+              td #{producto.cantidad}
+              td #{producto.proveedor}
+              td #{producto.stockMinimo}
+              td 
+                span(class=badgeClass) #{estadoStock}
+              td
+                a(href='#' class='text-primary view-details' data-id=producto.id) 
+                  i.fas.fa-info-circle.mr-2
+
+    #product-details-container.mt-4
+
+    script.
+      $(document).ready(function() {
+        // Inicializar la tabla DataTable para habilitar la ordenación
+        $('#productosTabla').DataTable();
+
+        $('.view-details').click(function(e) {
+          e.preventDefault();
+          var productId = $(this).data('id');
+          
+          $.get('/producto/' + productId, function(data) {
+            var detailsHtml = `
+              <div class="card">
+                <div class="card-header">Detalles del Producto</div>
+                <div class="card-body">
+                  <p><strong>Nombre del Producto:</strong> ${data.nombre}</p>
+                  <p><strong>Cantidad en Inventario:</strong> ${data.cantidad}</p>
+                  <p><strong>Proveedor:</strong> ${data.proveedor}</p>
+                  <p><strong>Stock Mínimo:</strong> ${data.stockMinimo}</p>
+                </div>
+              </div>`;
+            $('#product-details-container').html(detailsHtml);
+          }).fail(function() {
+            alert('Error al cargar detalles del producto');
+          });
+        });
+      });
+
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css')
