@@ -1,0 +1,72 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title= "Empresa - "+pagina
+    // Google Font: Source Sans Pro
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback")
+    // Font Awesome
+    link(rel="stylesheet", href="../../plugins/fontawesome-free/css/all.min.css")
+    // icheck bootstrap
+    link(rel="stylesheet", href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css")
+    // Theme style
+    link(rel="stylesheet", href="../../dist/css/adminlte.min.css")
+  body.hold-transition.register-page
+    .register-box
+      .register-logo
+        a(href="/")
+          b Empresa
+        if errores
+          .max-w-md.mx-auto.my-10
+            each error in errores
+              p.text-xs.alert.alert-danger.font-bold= error.msg
+      .card
+        .card-body.register-card-body
+          p.login-box-msg Registra una nuevo usuario
+          form(action="/auth/signup" method="POST")
+            input(type="hidden", name="_csrf", value=csrfToken)
+            .input-group.mb-3
+              input.form-control(type="text", placeholder="Nombre", name="nombre")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-user
+            .input-group.mb-3
+              input.form-control(type="text", placeholder="Empresa", name="empresa")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-user                  
+            .input-group.mb-3
+              input.form-control(type="email", placeholder="Correo electrónico", name="email")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-envelope
+            .input-group.mb-3
+              input.form-control(type="password", placeholder="Contraseña", name="password") 
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-lock
+            .input-group.mb-3
+              input.form-control(type="password", placeholder="Repetir contraseña", name="password2")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-lock
+            .row
+              .col-8
+                .icheck-primary
+                  input 
+              // /.col
+              .col-4
+                button.btn.btn-primary.btn-block(type="submit") Register
+              // /.col
+          p
+            a.text-center(href="/auth/login") Iniciar sesión
+        // /.form-box
+      // /.card
+    // /.register-box
+    // jQuery
+    script(src="../../plugins/jquery/jquery.min.js")
+    // Bootstrap 4
+    script(src="../../plugins/bootstrap/js/bootstrap.bundle.min.js")
+    // AdminLTE App
+    script(src="../../dist/js/adminlte.min.js")

@@ -1,0 +1,126 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Página de Inicio - AdminLTE 3.2
+    // AdminLTE CSS (CDN)
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css")
+    // FontAwesome (CDN)
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+    // Bootstrap (CDN)
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
+    // Estilos personalizados
+    style.
+        html, body {
+            height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      main {
+        flex: 1;
+      }
+
+  body
+    // Navbar Superior
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+      a.navbar-brand(href="#") Mi Software
+      button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      .collapse.navbar-collapse#navbarNav
+        ul.navbar-nav.ml-auto
+          li.nav-item
+            a.nav-link.active(href="/auth/login") Ingresar
+          li.nav-item
+            a.nav-link.active(href="/auth/signup") Registrarse
+
+    // Contenido Principal (envuelto en un "main" para flexbox)
+    main.container.mt-5
+      .row
+        .col-md-6.offset-md-3
+          h1.text-center Bienvenido a Mi Software
+          p.text-center Administra tu empresa de manera eficiente y fácil con nuestra plataforma.
+          .text-center
+            img.section-image(src="/img/servicios.jpg" alt="Imagen de Servicios" width="100%")
+      .row.mt-4
+        .col-md-4.text-center
+          i.fas.fa-cogs.fa-3x
+          h3 Gestión de Empresas
+          p Administra todos los aspectos de tu negocio desde un solo lugar.
+        .col-md-4.text-center
+          i.fas.fa-chart-line.fa-3x
+          h3 Reportes Detallados
+          p Obtén reportes detallados y estadísticas en tiempo real.
+        .col-md-4.text-center
+          i.fas.fa-users.fa-3x
+          h3 Recursos Humanos
+          p Controla y gestiona tus empleados fácilmente.
+      .row.mt-4
+        .col-md-6.text-center
+          i.fas.fa-cogs.fa-3x
+          h3 Gestión de Empresas
+          p Administra todos los aspectos de tu negocio desde un solo lugar.
+        .col-md-6.text-center
+          i.fas.fa-chart-line.fa-3x
+          h3 Reportes Detallados
+          p Obtén reportes detallados y estadísticas en tiempo real.
+      .row.mt-4
+        .col-md-6.text-center
+          i.fas.fa-cogs.fa-3x
+          h3 Gestión de Empresas
+          p Administra todos los aspectos de tu negocio desde un solo lugar.
+        .col-md-6.text-center
+          i.fas.fa-chart-line.fa-3x
+          h3 Reportes Detallados
+          p Obtén reportes detallados y estadísticas en tiempo real.
+      .row.mt-4
+        .col-md-6.text-center
+          i.fas.fa-cogs.fa-3x
+          h3 Gestión de Empresas
+          p Administra todos los aspectos de tu negocio desde un solo lugar.
+        .col-md-6.text-center
+          i.fas.fa-chart-line.fa-3x
+          h3 Reportes Detallados
+          p Obtén reportes detallados y estadísticas en tiempo real.          
+
+
+      .row.mt-4
+        .col-md-6.text-center
+          i.fas.fa-cogs.fa-3x
+          h3 Gestión de Empresas
+          p Administra todos los aspectos de tu negocio desde un solo lugar.
+        .col-md-6.text-center
+          i.fas.fa-chart-line.fa-3x
+          h3 Reportes Detallados
+          p Obtén reportes detallados y estadísticas en tiempo real.        
+    footer.text-center.text-lg-start
+      .container.p-4
+        .row
+          .col-lg-6.col-md-12.mb-4.mb-md-0
+            p Redes Sociales
+            p Dirección: Concepción, Chile
+            p Teléfono: +56 9 1234 5678
+            p Email: contacto@sync.com
+          .col-lg-6.col-md-12.mb-4.mb-md-0
+            h5 Enlaces
+            ul.list-unstyled.mb-0
+              li
+                a.text-dark(href="#!") Sobre Nosotros
+              li
+                a.text-dark(href="#!") Servicios
+              li
+                a.text-dark(href="#!") Política de Privacidad
+              li
+                a.text-dark(href="#!") Términos y Condiciones
+      .text-center.p-3(style="background-color: rgba(0, 0, 0, 0.2);")
+        | © 2024 Copyright:
+        a.text-dark(href="#") grimu.cl
+
+
+    // Scripts
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js")

@@ -1,10 +1,13 @@
 import express from 'express';
 import inventoryRoutes from './routes/inventoryRoutes.js';
+import financesRoutes from './routes/financesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import dashboard from './routes/dashboardRoutes.js';
 import index from './routes/indexRoutes.js';
 import hr from './routes/hrRoutes.js';
 import db from './config/db.js';
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
 //const Producto = require('./models/Producto');
 //import { Producto } from './models/Producto.js';
 
@@ -25,13 +28,19 @@ app.set('views', './views')
 app.use( (express.static('public')) ) 
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
-app.use('/inventory', inventoryRoutes); //app.get('/', usuarioRoutes);
+app.use( cookieParser() );
+
+app.use( csrf({ cookie: true }) );
+
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboard);
-app.use('/hr', hr);
 app.use('/', index);
 
+app.use('/hr', hr);
+app.use('/inventario', inventoryRoutes); //app.get('/', usuarioRoutes);
+app.use('/finanzas', financesRoutes); //app.get('/', usuarioRoutes);
 
 // Puerto
 const port = 3000;

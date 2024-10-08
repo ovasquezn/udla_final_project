@@ -1,0 +1,131 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Información de la Empresa
+    // Bootstrap 5 CSS
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet")
+    style.
+      body {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+      }
+      #test {
+          background-color: #320606;
+      }
+      nav {
+          background-color: #320606;
+      }
+      main {
+          flex: 1;
+      }
+      footer {
+          background-color: #cbffb1;
+      }
+      .section-content {
+          padding: 50px 0;
+          display: flex;
+          align-items: center;
+      }
+      .section-image {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+      }
+  body
+    nav.navbar.navbar-expand-lg.navbar-light.text-white
+      .container
+        a.navbar-brand(href="#")
+          img(src="/img/logo2.png" alt="Logo Empresa" width="120")
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarNav
+          ul.navbar-nav.ms-auto
+            li.nav-item.text-white
+              a.nav-link(href="/") Inicio
+            li.nav-item
+              a.nav-link(href="#") Sobre Nosotros
+            li.nav-item
+              a.nav-link(href="#") Servicios
+            li.nav-item
+              a.nav-link(href="#") Contacto
+          button.btn.btn-outline-success.me-2(type="button") Iniciar Sesión
+          button.btn.btn-success(type="button" id="test") Registrarse
+
+    main
+      //Bienvenida
+      .container.my-5.bg-light.p-3.text-center
+        h1 Bienvenido a Grimu
+        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vehicula dignissim neque, et facilisis arcu feugiat at. Vivamus convallis massa non magna ultricies, id auctor magna dapibus.
+
+      // Servicios
+      .container.section-content.bg-light
+        .row
+          .col-md-6.p-md-5
+            img.section-image(src="/img/servicios.jpg" alt="Imagen de Servicios")
+          .col-md-6.py-2.p-md-5.text-center
+            h2 Nuestros Servicios
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+
+      // Testimonios
+      .container.section-content.bg-light
+        .row
+          .col-md-6.order-md-2
+            img.section-image(src="/img/servicios.jpg" alt="Imagen de Testimonios")
+          .col-md-6.order-md-1.py-2.text-center
+            h2 Testimonios
+            p "Nuestros clientes confían en nosotros y han compartido sus experiencias."
+            p "Nuestros clientes confían en nosotros y han compartido sus experiencias."
+
+      // OTRO 1
+      .container.section-content.bg-light
+        .row
+          .col-md-6
+            img.section-image(src="/img/servicios.jpg" alt="Imagen de Servicios")
+          .col-md-6.py-2.text-center
+            h2 Nuestros Servicios
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+            p Ofrecemos una amplia gama de servicios para ayudar a su negocio a crecer y prosperar.
+
+      // OTRO 2
+      .container.section-content.bg-light
+        .row
+          .col-md-6.order-md-2
+            img.section-image(src="/img/servicios.jpg" alt="Imagen de Testimonios")
+          .col-md-6.order-md-1.py-2.text-center
+            h2 Testimonios
+            p "Nuestros clientes confían en nosotros y han compartido sus experiencias."
+            p "Nuestros clientes confían en nosotros y han compartido sus experiencias."
+
+    // Footer
+    footer.text-center.text-lg-start
+      .container.p-4
+        .row
+          .col-lg-6.col-md-12.mb-4.mb-md-0
+            p Redes Sociales
+            p Dirección: Concepción, Chile
+            p Teléfono: +56 9 1234 5678
+            p Email: contacto@sync.com
+          .col-lg-6.col-md-12.mb-4.mb-md-0
+            h5.text-uppercase Enlaces
+            ul.list-unstyled.mb-0
+              li
+                a.text-dark(href="#!") Sobre Nosotros
+              li
+                a.text-dark(href="#!") Servicios
+              li
+                a.text-dark(href="#!") Política de Privacidad
+              li
+                a.text-dark(href="#!") Términos y Condiciones
+      .text-center.p-3(style="background-color: rgba(0, 0, 0, 0.2);")
+        | © 2024 Copyright:
+        a.text-dark(href="#") grimu.cl
+
+    // Bootstrap 5 JS Bundle with Popper
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")

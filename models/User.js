@@ -1,6 +1,3 @@
-//const { DataTypes } = require('sequelize');
-//const sequelize = require('../config/db'); // Importa la configuración de la conexión a la base de datos
-
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 

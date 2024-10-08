@@ -1,0 +1,64 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title= "Empresa - "+pagina
+    // Google Font: Source Sans Pro
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback")
+    // Font Awesome
+    link(rel="stylesheet", href="../../plugins/fontawesome-free/css/all.min.css")
+    // icheck bootstrap
+    link(rel="stylesheet", href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css")
+    // Theme style
+    link(rel="stylesheet", href="../../dist/css/adminlte.min.css")
+  body.hold-transition.login-page
+    .login-box
+      .login-logo
+        a(href="/")
+          b Empresa
+        if errores
+          .max-w-md.mx-auto.my-10
+            each error in errores
+              p.text-xs.alert.alert-danger.font-bold= error.msg
+      // /.login-logo
+      .card
+        .card-body.login-card-body
+          p.login-box-msg Iniciar Sesión
+          form(action="/auth/login" method="POST")
+            input(type="hidden", name="_csrf", value=csrfToken hidden)
+            .input-group.mb-3
+              input.form-control(type="text", placeholder="Usuario", name="nombreUsuario")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-envelope
+            .input-group.mb-3
+              input.form-control(type="password", placeholder="Password", name="password")
+              .input-group-append
+                .input-group-text
+                  span.fas.fa-lock
+            .row
+              .col-6
+                .icheck-primary
+                  input#remember(type="checkbox")
+                  label(for="remember")
+                    | Recuerdame
+              // /.col
+              .col-6
+                button.btn.btn-primary.btn-block(type="submit") Iniciar Sesión
+              // /.col
+          // /.social-auth-links
+          p 
+
+          p
+            a.text-center(href="forgot-password.html") Olvidé mi contraseña
+          p
+            a.text-center(href='/auth/signup') Registrar una cuenta
+        // /.login-card-body
+    // /.login-box
+    // jQuery
+    script(src="../../plugins/jquery/jquery.min.js")
+    // Bootstrap 4
+    script(src="../../plugins/bootstrap/js/bootstrap.bundle.min.js")
+    // AdminLTE App
+    script(src="../../dist/js/adminlte.min.js")

@@ -1,0 +1,77 @@
+extends ../layout 
+
+block contenido
+    .content-wrapper
+        // Content Header (Page header)
+        .card-body
+          .d-flex.justify-content-around
+            a.btn.btn-primary(href="/productos/agregar") Agregar Producto
+            a.btn.btn-secondary(href="/productos/inventario") Agregar al Inventario
+            a.btn.btn-danger(href="/productos/inventario") Descartar Inventario
+        .content-header
+          .container-fluid
+            .row.mb-2
+              .col-sm-6
+                h1.m-0 Inventario
+
+        .card
+          .card-header.border-0
+            h3.card-title Lista de Productos
+            .card-tools
+              a.btn.btn-tool.btn-sm(href="#")
+                i.fas.fa-download
+              a.btn.btn-tool.btn-sm(href="#")
+                i.fas.fa-bars
+
+
+
+          .card-body.table-responsive.p-0
+            table#productosTable.table.table-striped.table-valign-middle
+              thead
+                tr
+                  th Producto
+                  th Producto interno                  
+                  th Unidad
+                  th Bodega
+                  th Cantidad
+                  th Stock Bajo
+                  th Proveedor
+                  th Código Interno
+                  th Código de Barras
+                  th Precio
+                  th Descripción
+                  th Más
+              tbody
+                each producto in productos
+                  tr
+                    td= producto.nombre_producto
+                    td= producto.nombre_producto_interno
+                    td= producto.unidad
+                    td= producto.bodega
+                    td
+                      if producto.cantidad_existente <= producto.stock_bajo
+                        span.badge.bg-danger.text-white Stock Bajo!
+                      else
+                        | #{producto.cantidad_existente}
+                    td= producto.stock_bajo
+                    td= producto.proveedor
+                    td= producto.codigo_interno
+                    td= producto.codigo_barra
+                    td= '$'+ producto.precio
+                    td= producto.descripcion
+                    td
+                      a.text-muted(href=`lista_inventario/${producto.id}`)
+                        i.fas.fa-search
+
+    // Initialize DataTables
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+    script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+    script.
+      $(document).ready(function() {
+        $('#productosTable').DataTable({
+          "order": [[ 0, "asc" ]],
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/Spanish.json"
+          }
+        });
+      });

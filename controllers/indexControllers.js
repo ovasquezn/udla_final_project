@@ -1,17 +1,9 @@
-const showIndex = (req, res) => {
-    res.render('index', {
+const mostrar_index = (req, res) => {
+    res.render('auth/index', {
         pagina: 'Empresa'
     })
 }
-
-const test = (req, res) => {
-    res.render('test', {
-        pagina: 'Empresa'
-    })
-}
-
 
 export {
-    showIndex,
-    test,
+    mostrar_index,
 }
