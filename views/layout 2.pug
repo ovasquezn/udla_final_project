@@ -1,0 +1,249 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Grimu
+    // Google Font: Source Sans Pro
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback")
+    // Font Awesome
+    link(rel="stylesheet", href="/plugins/fontawesome-free/css/all.min.css")
+    // Ionicons
+    link(rel="stylesheet", href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css")
+    // Tempusdominus Bootstrap 4
+    link(rel="stylesheet", href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css")
+    // iCheck
+    link(rel="stylesheet", href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css")
+    // JQVMap
+    link(rel="stylesheet", href="/plugins/jqvmap/jqvmap.min.css")
+    // Theme style
+    link(rel="stylesheet" href="/dist/css/adminlte.min.css")
+    // overlayScrollbars
+    link(rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css")
+    // Daterange picker
+    link(rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css")
+    // summernote
+    link(rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css")
+    // Custom CSS
+    link(rel="stylesheet" href="/css/custom.css")
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css")
+  body.hold-transition.sidebar-mini.layout-fixed
+    .wrapper
+      // Navbar
+      nav.main-header.navbar.navbar-expand.navbar-white.navbar-light
+        // Left navbar links
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(data-widget="pushmenu", href="#", role="button")
+              i.fas.fa-bars
+          li.nav-item.d-none.d-sm-inline-block
+            a.nav-link(href="/dashboard") Empresa - Usuario
+
+        // Right navbar links
+        ul.navbar-nav.ml-auto
+          // Display Company Name, Date, and Time
+          //- li.nav-item.d-none.d-sm-inline-block
+          //-   a.nav-link
+          //-     //| #{companyName} - 
+          //-     span#current-date
+          //-     script.
+          //-       // Update date and time dynamically
+          //-       const dateElement = document.getElementById('current-date');
+          //-       setInterval(() => {
+          //-         const now = new Date();
+                  
+          //-         const options = { 
+          //-           weekday: 'long', 
+          //-           year: 'numeric', 
+          //-           month: 'long', 
+          //-           day: 'numeric' 
+          //-         };
+                  
+          //-         const formattedDate = now.toLocaleDateString('es-ES', options); // Formatear fecha en español
+          //-         const formattedTime = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); // Formatear hora
+                  
+          //-         dateElement.innerHTML = `${formattedDate} - ${formattedTime}`;
+          //-       }, 1000);
+          // Notifications Dropdown Menu
+          li.nav-item.dropdown
+            a.nav-link(data-toggle="dropdown", href="#")
+              i.far.fa-bell(style="font-size: 1.5em;")
+              span.badge.badge-warning.navbar-badge(style="font-size: 0.5em;") 15
+            .dropdown-menu.dropdown-menu-lg.dropdown-menu-right
+              span.dropdown-item.dropdown-header 15 Notifications
+              .dropdown-divider
+              a.dropdown-item(href="#")
+                i.fas.fa-envelope.mr-2
+                | 4 new messages
+                span.float-right.text-muted.text-sm 3 mins
+              .dropdown-divider
+              a.dropdown-item(href="#")
+                i.fas.fa-users.mr-2
+                | 8 friend requests
+                span.float-right.text-muted.text-sm 12 hours
+              .dropdown-divider
+              a.dropdown-item(href="#")
+                i.fas.fa-file.mr-2
+                | 3 new reports
+                span.float-right.text-muted.text-sm 2 days
+              .dropdown-divider
+              a.dropdown-item.dropdown-footer(href="#") See All Notifications
+
+      // /.navbar
+      // Main Sidebar Container
+      aside.main-sidebar.elevation-4
+        // Brand Logo
+        a(href="/dashboard")
+          span.brand-text.font-weight-light
+            img.brand-image(src="/img/logo.png", alt="Logo", style="opacity: .8; width: 60%; display: block; margin: 0 auto;")
+
+        // Sidebar
+        .sidebar
+          // Sidebar user panel (optional)
+          // Sidebar Menu
+          nav.mt-2
+            ul.nav.nav-pills.nav-sidebar.flex-column(data-widget="treeview", role="menu", data-accordion="false")
+              //
+                Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library
+              li.nav-item
+                a.nav-link(href="/dashboard").text-bold.text-center
+                  p
+                    i.far.fa-home.nav-icon
+                    | Inicio
+                ul.nav.nav-treeview
+              li.nav-item
+                a.nav-link(href="#").primary.text-bold
+                  p
+                    | Finanzas
+                    i.right.fas.fa-angle-left
+                ul.nav.nav-treeview
+                
+                  li.nav-item
+                    a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/banco")
+                      p  Banco
+                  li.nav-item
+                    a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas' ? 'active' : '', href="/finanzas/facturas")
+                      p Facturas
+                  li.nav-item
+                    a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'gastos' ? 'active' : '', href="/finanzas/gastos")
+                      //i.far.nav-icon
+                      p Gastos                      
+                  li.nav-item
+                    a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
+                      p Proveedores
+              li.nav-item
+                a.nav-link(href="#").text-bold
+                  p
+                    | Inventarios
+                    i.right.fas.fa-angle-left
+                ul.nav.nav-treeview
+                  li.nav-item
+                    a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'inventario' ? 'active' : '', href="/inventario/lista_inventario")
+                      p Inventario
+                  li.nav-item
+                    a.nav-link(href="#")
+                      p Ingresos
+                  li.nav-item
+                    a.nav-link(href="#")
+                      p Salidas
+              li.nav-item
+                a.nav-link(href="#").text-bold
+                  p
+                    | Reservas
+                    i.right.fas.fa-angle-left
+                ul.nav.nav-treeview
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Lista de Reservas
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Cotizaciones
+              li.nav-item
+                a.nav-link(href="#").text-bold
+                  p
+                    | Recursos Humanos
+                    i.right.fas.fa-angle-left
+                ul.nav.nav-treeview
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Colaboradores
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Asistencia
+              li.nav-item
+                a.nav-link(href="#").text-bold
+                  p
+                    | Punto de Venta
+                    i.right.fas.fa-angle-left
+                ul.nav.nav-treeview
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Productos
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Mesas  
+                  li.nav-item
+                    a.nav-link(href="#")
+                      i.far.fa-circle.nav-icon
+                      p Caja    
+              li.nav-item
+                a.nav-link(href="#").text-bold.text-center
+                  p
+                    i.far.fa-cog.nav-icon
+                    | Configuraciones
+              li.nav-item
+                  a.nav-link(href="/logout").text-bold.mt-auto.text-center
+                    p
+                      i.fas.fa-sign-out-alt.nav-icon
+                      | Logout
+          // /.sidebar-menu
+        // /.sidebar
+      // Content Wrapper. Contains page content
+      block contenido 
+
+      //footer.main-footer.text-center
+        //strong UDLA - Proyecto de Título 2024
+      // Control Sidebar
+      aside.control-sidebar.control-sidebar-dark
+        // Control sidebar content goes here
+      // /.control-sidebar
+    // ./wrapper
+    // jQuery
+    script(src="/plugins/jquery/jquery.min.js")
+    // jQuery UI 1.11.4
+    script(src="/plugins/jquery-ui/jquery-ui.min.js")
+    // Resolve conflict in jQuery UI tooltip with Bootstrap tooltip
+    script.
+      $.widget.bridge('uibutton', $.ui.button)
+    // Bootstrap 4
+    script(src="/plugins/bootstrap/js/bootstrap.bundle.min.js")
+    // ChartJS
+    script(src="/plugins/chart.js/Chart.min.js")
+    // Sparkline
+    script(src="/plugins/sparklines/sparkline.js")
+    // JQVMap
+    script(src="/plugins/jqvmap/jquery.vmap.min.js")
+    script(src="/plugins/jqvmap/maps/jquery.vmap.usa.js")
+    // jQuery Knob Chart
+    script(src="/plugins/jquery-knob/jquery.knob.min.js")
+    // daterangepicker
+    script(src="/plugins/moment/moment.min.js")
+    script(src="/plugins/daterangepicker/daterangepicker.js")
+    // Tempusdominus Bootstrap 4
+    script(src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js")
+    // Summernote
+    script(src="/plugins/summernote/summernote-bs4.min.js")
+    // overlayScrollbars
+    script(src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js")
+    // AdminLTE App
+    script(src="/dist/js/adminlte.js")
+    // AdminLTE dashboard demo (This is only for demo purposes)
+    script(src="/dist/js/pages/dashboard.js")

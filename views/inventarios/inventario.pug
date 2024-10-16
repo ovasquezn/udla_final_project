@@ -1,0 +1,95 @@
+extends ../layout 
+
+block contenido
+  .content-wrapper
+        .content-header
+          .container-fluid
+            .row.mb-2
+              .col-sm-6
+                h1.m-0 Inventario
+              // /.col
+            // /.row
+          // /.container-fluid
+        // /.content-header
+        // Main content
+        section.content
+          .container-fluid
+            table#personasTable.table.table-striped
+              thead
+                tr
+                  th Nombre
+                  th Apellido
+                  th Edad
+                  th Profesión
+                  th Acciones
+                  th Profesión
+                  th Profesión
+                  th Profesión
+              tbody
+                each persona, index in personas
+                  tr
+                    td= persona.nombre
+                    td= persona.apellido
+                    td= persona.edad
+                    td= persona.profesion
+                    td= persona.profesion
+                    td= persona.profesion
+                    td= persona.profesion
+                    td
+                      button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#editModal${index}`) Detalles
+                      button.btn.btn-warning.btn-sm.mx-2(data-toggle="modal" data-target=`#editModal${index}`) Editar
+                      button.btn.btn-danger.btn-sm(data-toggle="modal" data-target=`#deleteModal${index}`) Eliminar
+                      
+                      // Modal de Editar
+                      .modal.fade(id=`editModal${index}` tabindex="-1" role="dialog")
+                        .modal-dialog(role="document")
+                          .modal-content
+                            .modal-header
+                              h5.modal-title Editar Persona
+                              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") &times;
+                            .modal-body
+                              form
+                                .form-group
+                                  label(for="nombre") Nombre
+                                  input#nombre.form-control(type="text" value=persona.nombre)
+                                .form-group
+                                  label(for="apellido") Apellido
+                                  input#apellido.form-control(type="text" value=persona.apellido)
+                                .form-group
+                                  label(for="edad") Edad
+                                  input#edad.form-control(type="number" value=persona.edad)
+                                .form-group
+                                  label(for="profesion") Profesión
+                                  input#profesion.form-control(type="text" value=persona.profesion)
+                            .modal-footer
+                              button.btn.btn-primary(type="submit") Guardar Cambios
+                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cancelar
+                      
+                      // Modal de Eliminar
+                      .modal.fade(id=`deleteModal${index}` tabindex="-1" role="dialog")
+                        .modal-dialog(role="document")
+                          .modal-content
+                            .modal-header
+                              h5.modal-title Confirmar Eliminación
+                              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") &times;
+                            .modal-body
+                              p ¿Estás seguro de que deseas eliminar a #{persona.nombre} #{persona.apellido}?
+                            .modal-footer
+                              button.btn.btn-danger(type="button") Confirmar
+                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cancelar
+
+          // Scripts de jQuery, DataTables, Popper y Bootstrap en el orden correcto
+        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+        script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+        
+        // Inicialización de DataTables
+        script.
+          new DataTable('#personasTable',{
+            "language": {
+              "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+            }
+          })

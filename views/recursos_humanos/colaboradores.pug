@@ -1,0 +1,154 @@
+extends ../layout 
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1.m-0 Recursos Humanos
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addTrabajadorModal") 
+              i.fas.fa-plus
+              |  Nuevo Trabajador
+        // /.row
+      // /.container-fluid
+    // /.content-header
+    // Main content
+    section.content
+      .container-fluid
+        table#trabajadoresTable.table.table-striped
+          thead
+            tr
+              th Nombre
+              th Apellido
+              th Cargo
+              th Estado
+              th Acciones
+          tbody
+            each trabajador, index in trabajadores
+              tr
+                td= trabajador.nombre
+                td= trabajador.apellido
+                td= trabajador.cargo
+                td= trabajador.estado
+                td
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleTrabajadorModal${index}`) 
+                    i.fas.fa-eye
+
+                  // Modal de Detalles del Trabajador
+                  .modal.fade(id=`detalleTrabajadorModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-xl(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Detalles de Trabajador - #{trabajador.nombre} #{trabajador.apellido}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          // Información Personal
+                          h5 Información Personal
+                          p Dirección: #{trabajador.direccion}
+                          p RUT: #{trabajador.rut}
+                          p Estado Civil: #{trabajador.estado_civil}
+                          p Cuenta Bancaria: #{trabajador.cuenta_bancaria}
+                          p Contacto de Emergencia: #{trabajador.contacto_emergencia}
+
+                          hr
+
+                          // Datos Laborales
+                          h5 Datos Laborales
+                          p Sueldo: $#{trabajador.sueldo}
+                          p Fecha de Ingreso: #{trabajador.fecha_ingreso.toLocaleDateString('es-ES')}
+                          p Tipo de Contrato: #{trabajador.tipo_contrato}
+
+                          hr
+
+                          // Lista de Pagos
+                          h5 Lista de Pagos
+                          table.table.table-bordered.mt-2
+                            thead
+                              tr
+                                th Fecha
+                                th Monto
+                            tbody
+                              each pago in trabajador.pagos_colaboradores
+                                tr
+                                  td= pago.fecha.toLocaleDateString('es-ES')
+                                  td= `$${pago.monto}`
+
+                          hr
+
+                          // Lista de Liquidaciones
+                          h5 Lista de Liquidaciones
+                          table.table.table-bordered.mt-2
+                            thead
+                              tr
+                                th Fecha
+                                th Detalle
+                            tbody
+                              each liquidacion in trabajador.liquidaciones
+                                tr
+                                  td= liquidacion.fecha.toLocaleDateString('es-ES')
+                                  td= liquidacion.detalle
+
+                          hr
+
+                          // Documentos
+                          h5 Documentos
+                          table.table.table-bordered.mt-2
+                            thead
+                              tr
+                                th Tipo
+                                th Descripción
+                                th Archivo
+                            tbody
+                              each documento in trabajador.documentos
+                                tr
+                                  td= documento.tipo
+                                  td= documento.descripcion
+                                  td
+                                    a(href=`/descargar/${documento.archivo}`) Descargar
+
+                        .modal-footer
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      // Modal para Agregar Nuevo Trabajador
+      .modal.fade#addTrabajadorModal(tabindex="-1" role="dialog")
+        .modal-dialog.modal-lg(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Nuevo Trabajador
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") &times;
+            .modal-body
+              form(action="/ruta/para/crear/trabajador" method="POST")
+                .form-group
+                  label(for="nombre") Nombre
+                  input#nombre.form-control(type="text" name="nombre" required)
+                .form-group
+                  label(for="apellido") Apellido
+                  input#apellido.form-control(type="text" name="apellido" required)
+                .form-group
+                  label(for="cargo") Cargo
+                  input#cargo.form-control(type="text" name="cargo" required)
+                .form-group
+                  label(for="estado") Estado
+                  select#estado.form-control(name="estado" required)
+                    option(value="activo") Activo
+                    option(value="inactivo") Inactivo
+                // Agrega otros campos necesarios para el nuevo trabajador
+                button.btn.btn-primary(type="submit") Guardar
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      // Scripts para DataTables y Bootstrap
+      script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+      script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+      script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+      script.
+        new DataTable('#trabajadoresTable',{
+          "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+          }
+        })

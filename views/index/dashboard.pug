@@ -1,0 +1,212 @@
+extends ../layout 
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1.m-0 Dashboard
+    section.content
+      .container-fluid
+        .row
+          .col-12.col-sm-6.col-md-3
+            .info-box
+              span.info-box-icon.bg-info.elevation-1
+                i.fas.fa-cog
+              .info-box-content
+                span.info-box-text CPU Traffic
+                span.info-box-number
+                  | 10
+                  small %
+          .col-12.col-sm-6.col-md-3
+            .info-box.mb-3
+              span.info-box-icon.bg-danger.elevation-1
+                i.fas.fa-thumbs-up
+              .info-box-content
+                span.info-box-text Likes
+                span.info-box-number 41,410
+          .clearfix.hidden-md-up
+          .col-12.col-sm-6.col-md-3
+            .info-box.mb-3
+              span.info-box-icon.bg-success.elevation-1
+                i.fas.fa-shopping-cart
+              .info-box-content
+                span.info-box-text Sales
+                span.info-box-number 760
+
+          .col-12.col-sm-6.col-md-3
+            .info-box.mb-3
+              span.info-box-icon.bg-warning.elevation-1
+                i.fas.fa-users
+              .info-box-content
+                span.info-box-text New Members
+                span.info-box-number 2,000
+        .row
+          .col-md-12
+            .card
+              .card-footer
+                .row
+                  .col-sm-3.col-6
+                    .description-block.border-right
+                      span.description-percentage.text-success
+                        i.fas.fa-caret-up
+                        |  1%
+                      h5.description-header $n&uacute;mero1
+                      span.description-text variante1
+                  .col-sm-3.col-6
+                    .description-block.border-right
+                      span.description-percentage.text-warning
+                        i.fas.fa-caret-left
+                        |  1%
+                      h5.description-header $n&uacute;mero2
+                      span.description-text variante2
+                  .col-sm-3.col-6
+                    .description-block.border-right
+                      span.description-percentage.text-success
+                        i.fas.fa-caret-up
+                        |  1%
+                      h5.description-header $n&uacute;mero3
+                      span.description-text variante3
+                  .col-sm-3.col-6
+                    .description-block
+                      span.description-percentage.text-danger
+                        i.fas.fa-caret-down
+                        |  1%
+                      h5.description-header $n&uacute;mero4
+                      span.description-text variante4
+        .row
+          .col-md-12
+            .card
+              .card-header.border-0
+                h3.card-title Products
+              .card-body.table-responsive.p-0
+                table.table.table-striped.table-valign-middle
+                  thead
+                    tr
+                      th Product
+                      th Price
+                      th Sales
+                      th More
+                  tbody
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Some Product
+                      td $13 USD
+                      td
+                        small.text-success.mr-1
+                          i.fas.fa-arrow-up
+                          |                         12%
+                        |                       12,000 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Another Product
+                      td $29 USD
+                      td
+                        small.text-warning.mr-1
+                          i.fas.fa-arrow-down
+                          |                         0.5%
+                        |                       123,234 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Amazing Product
+                      td $1,230 USD
+                      td
+                        small.text-danger.mr-1
+                          i.fas.fa-arrow-down
+                          |                         3%
+                        |                       198 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Perfect Item
+                        span.badge.bg-danger NEW
+                      td $199 USD
+                      td
+                        small.text-success.mr-1
+                          i.fas.fa-arrow-up
+                          |                         63%
+                        |                       87 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+
+        .row
+          .col-md-12
+            .card
+              .card-header.border-0
+                h3.card-title Products
+              .card-body.table-responsive.p-0
+                table.table.table-striped.table-valign-middle
+                  thead
+                    tr
+                      th Product
+                      th Price
+                      th Sales
+                      th More
+                  tbody
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Some Product
+                      td $13 USD
+                      td
+                        small.text-success.mr-1
+                          i.fas.fa-arrow-up
+                          |                         12%
+                        |                       12,000 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Another Product
+                      td $29 USD
+                      td
+                        small.text-warning.mr-1
+                          i.fas.fa-arrow-down
+                          |                         0.5%
+                        |                       123,234 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Amazing Product
+                      td $1,230 USD
+                      td
+                        small.text-danger.mr-1
+                          i.fas.fa-arrow-down
+                          |                         3%
+                        |                       198 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search
+                    tr
+                      td
+                        img.img-circle.img-size-32.mr-2(src='dist/img/default-150x150.png' alt='Product 1')
+                        |                       Perfect Item
+                        span.badge.bg-danger NEW
+                      td $199 USD
+                      td
+                        small.text-success.mr-1
+                          i.fas.fa-arrow-up
+                          |                         63%
+                        |                       87 Sold
+                      td
+                        a.text-muted(href='#')
+                          i.fas.fa-search

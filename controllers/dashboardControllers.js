@@ -1,5 +1,5 @@
 const dashboard = (req, res) => {
-  res.render('auth/dashboard', {
+  res.render('index/dashboard', {
       pagina: 'Dashboard'
   })
 }

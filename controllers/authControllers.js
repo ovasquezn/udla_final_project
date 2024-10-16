@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Usuario } from '../models/Usuario.js';
+import { Usuarios } from '../models/Usuarios.js';
 import e from 'express';
 import { check, validationResult } from 'express-validator'
 import { generarId, generarJWT } from '../helpers/tokens.js';
@@ -47,7 +47,7 @@ const registrar_usuario = async (req, res) => {
   const nombreFormateado = empresa.toLowerCase().replace(/\s+/g, '');
   const nombreUsuario = `admin@${nombreFormateado}`;
 
-  const existeUsuario = await Usuario.findOne({where: {email}})
+  const existeUsuario = await Usuarios.findOne({where: {email}})
 
   if (existeUsuario) {
     return res.render('auth/signup', {
@@ -62,7 +62,7 @@ const registrar_usuario = async (req, res) => {
   
   }
 
-  const usuario = await Usuario.create({
+  const usuario = await Usuarios.create({
     nombre,
     empresa,
     nombreFormateadoEmpresa: nombreFormateado,
@@ -71,8 +71,6 @@ const registrar_usuario = async (req, res) => {
     password,
     token: '123',
   })
-
-
 
   res.render('auth/mensaje',{
     pagina: 'Creación exitosa',
@@ -97,7 +95,7 @@ const iniciar_sesion = async (req, res) => {
 
   const { nombreUsuario, password } = req.body;
 
-  const usuario = await Usuario.findOne({where: {nombreUsuario}});
+  const usuario = await Usuarios.findOne({where: {nombreUsuario}});
 
   if (!usuario) {
     return res.render('auth/login', {
@@ -115,7 +113,6 @@ const iniciar_sesion = async (req, res) => {
     })
   }
 
-
   const token = generarJWT({id: usuario.id, nombre: usuario.nombre});
 
   return res.cookie('_token', token, {
@@ -123,7 +120,6 @@ const iniciar_sesion = async (req, res) => {
     //secure: true,
     maxAge: 60 * 60 * 24 * 1000
   }).redirect('/dasboard')
-
 }
 
 export { 

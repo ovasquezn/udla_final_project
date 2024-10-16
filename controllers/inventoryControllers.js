@@ -1,20 +1,16 @@
-// const mostrar_inventario = (req, res) => {
-//     res.render('inventory/inventario', {
-//         pagina: 'Inventario',
-//         pagina_activa: 'inventario'
-//     })
-// }
+import { Productos } from '../models/Productos.js';
 
-// export {
-//     mostrar_inventario
-// }
-
-import { Producto } from '../models/Producto.js';
-// Función para obtener todos los productos y renderizar la vista
 const mostrar_inventario = async (req, res) => {
     try {
-        const productos = await Producto.findAll(); 
+        const personas = [
+            { nombre: 'Juan', apellido: 'Pérez', edad: 30, profesion: 'Ingeniero' },
+            { nombre: 'Ana', apellido: 'García', edad: 25, profesion: 'Diseñadora' },
+            { nombre: 'Carlos', apellido: 'Lopez', edad: 40, profesion: 'Doctor' },
+            { nombre: 'María', apellido: 'Rodríguez', edad: 35, profesion: 'Abogada' }
+        ];
+        const productos = await Productos.findAll(); 
         res.render('inventory/inventario', {
+            personas,
             productos,
             pagina: 'Inventario',
             pagina_activa: 'inventario' });

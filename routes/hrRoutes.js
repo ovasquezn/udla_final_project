@@ -1,9 +1,8 @@
-//const express = require('express');
 import express from 'express';
+import { mostrar_colaboradores } from '../controllers/hrControllers.js';
+
 const router = express.Router();
-import { hr } from '../controllers/hrControllers.js';
 
-router.get('/', hr);
+router.get('/', mostrar_colaboradores);
 
-//module.exports = router;
 export default router;

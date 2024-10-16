@@ -7,3 +7,93 @@ block contenido
                 .row.mb-2
                     .col-sm-6
                         h1.m-0 Proveedores
+        section.content
+          .container-fluid
+          .card
+            .card-header.border-0
+              h3.card-title Products
+              .card-tools
+                a.btn.btn-tool.btn-sm(href="#")
+                  i.fas.fa-download
+                a.btn.btn-tool.btn-sm(href="#")
+                  i.fas.fa-bars
+            .card-body.table-responsive.p-0
+              table.table.table-striped.table-valign-middle
+                thead
+                  tr
+                    th Proveedor
+                    th Rut
+                    th Contacto
+                    th Telefono
+                    th.d-none.d-md-table-cell Proveedor
+                    th.d-none.d-md-table-cell Rut
+                    th.d-none.d-sm-table-cell Contacto
+                tbody
+                  tr
+                    td
+                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
+                      | Some Product
+                    td $13 USD
+                    td
+                      small.text-success.mr-1
+                        i.fas.fa-arrow-up
+                        | 12%
+                      | 12,000 Sold
+                    td
+                      a.text-muted(href="#")
+                        i.fas.fa-search
+                  tr
+                    td
+                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
+                      | Another Product
+                    td $29 USD
+                    td
+                      small.text-warning.mr-1
+                        i.fas.fa-arrow-down
+                        | 0.5%
+                      | 123,234 Sold
+                    td
+                      a.text-muted(href="#")
+                        i.fas.fa-search
+                  tr
+                    td
+                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
+                      | Amazing Product
+                    td $1,230 USD
+                    td
+                      small.text-danger.mr-1
+                        i.fas.fa-arrow-down
+                        | 3%
+                      | 198 Sold
+                    td
+                      a.text-muted(href="#")
+                        i.fas.fa-search
+                  tr
+                    td
+                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
+                      | Perfect Item
+                      span.badge.bg-danger NEW
+                    td $199 USD
+                    td
+                      small.text-success.mr-1
+                        i.fas.fa-arrow-up
+                        | 63%
+                      | 87 Sold
+                    td
+                      a.text-muted(href="#")
+                        i.fas.fa-search
+
+                      
+        
+        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+        script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+        
+        // Inicialización de DataTables
+        script.
+          new DataTable('#personasTable',{
+            "language": {
+              "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+            }
+          })

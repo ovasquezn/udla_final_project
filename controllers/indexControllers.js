@@ -1,6 +1,6 @@
 const mostrar_index = (req, res) => {
-    res.render('auth/index', {
-        pagina: 'Empresa'
+    res.render('index/index', {
+        pagina: 'Grimu'
     })
 }
 

@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 import db  from '../config/db.js';
 
-const Usuario = db.define('Usuario', {
+const Usuarios = db.define('usuarios', {
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -49,7 +49,7 @@ const Usuario = db.define('Usuario', {
   }
 });
 
-Usuario.prototype.verificarPassword = async function(password) {
+Usuarios.prototype.verificarPassword = async function(password) {
   console.log(`Password ingresada: ${password}`);
   console.log(`Password almacenada: ${this.password}`);
   const isMatch = await bcrypt.compareSync(password, this.password);
@@ -57,4 +57,4 @@ Usuario.prototype.verificarPassword = async function(password) {
   return isMatch;
 };
 
-export { Usuario };
+export { Usuarios };
