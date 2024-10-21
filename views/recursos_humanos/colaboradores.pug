@@ -10,7 +10,7 @@ block contenido
           .col-sm-6.text-right
             button.btn.btn-success(data-toggle="modal" data-target="#addTrabajadorModal") 
               i.fas.fa-plus
-              |  Nuevo Trabajador
+              |  Nuevo
         // /.row
       // /.container-fluid
     // /.content-header
@@ -22,16 +22,16 @@ block contenido
             tr
               th Nombre
               th Apellido
-              th Cargo
-              th Estado
-              th Acciones
+              th.d-none.d-sm-table-cell Cargo
+              th.d-none.d-sm-table-cell Estado
+              th 
           tbody
             each trabajador, index in trabajadores
               tr
                 td= trabajador.nombre
                 td= trabajador.apellido
-                td= trabajador.cargo
-                td= trabajador.estado
+                th.d-none.d-sm-table-cell= trabajador.cargo
+                th.d-none.d-sm-table-cell= trabajador.estado
                 td
                   button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleTrabajadorModal${index}`) 
                     i.fas.fa-eye
@@ -58,7 +58,7 @@ block contenido
                           // Datos Laborales
                           h5 Datos Laborales
                           p Sueldo: $#{trabajador.sueldo}
-                          p Fecha de Ingreso: #{trabajador.fecha_ingreso.toLocaleDateString('es-ES')}
+                          p Fecha de Ingreso: #{trabajador.fecha_ingreso ? trabajador.fecha_ingreso.toLocaleDateString('es-ES') : 'Fecha no disponible'}
                           p Tipo de Contrato: #{trabajador.tipo_contrato}
 
                           hr
@@ -121,7 +121,8 @@ block contenido
               button.close(type="button" data-dismiss="modal" aria-label="Close")
                 span(aria-hidden="true") &times;
             .modal-body
-              form(action="/ruta/para/crear/trabajador" method="POST")
+              form(action="/recursosHumanos/agregar" method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken) 
                 .form-group
                   label(for="nombre") Nombre
                   input#nombre.form-control(type="text" name="nombre" required)
@@ -136,10 +137,35 @@ block contenido
                   select#estado.form-control(name="estado" required)
                     option(value="activo") Activo
                     option(value="inactivo") Inactivo
-                // Agrega otros campos necesarios para el nuevo trabajador
+                // Campos adicionales
+                .form-group
+                  label(for="direccion") Dirección
+                  input#direccion.form-control(type="text" name="direccion")
+                .form-group
+                  label(for="rut") RUT
+                  input#rut.form-control(type="text" name="rut")
+                .form-group
+                  label(for="estado_civil") Estado Civil
+                  input#estado_civil.form-control(type="text" name="estado_civil")
+                .form-group
+                  label(for="cuenta_bancaria") Cuenta Bancaria
+                  input#cuenta_bancaria.form-control(type="text" name="cuenta_bancaria")
+                .form-group
+                  label(for="contacto_emergencia") Contacto de Emergencia
+                  input#contacto_emergencia.form-control(type="text" name="contacto_emergencia")
+                .form-group
+                  label(for="sueldo") Sueldo
+                  input#sueldo.form-control(type="number" step="0.01" name="sueldo")
+                .form-group
+                  label(for="fecha_ingreso") Fecha de Ingreso
+                  input#fecha_ingreso.form-control(type="date" name="fecha_ingreso")
+                .form-group
+                  label(for="tipo_contrato") Tipo de Contrato
+                  input#tipo_contrato.form-control(type="text" name="tipo_contrato")
                 button.btn.btn-primary(type="submit") Guardar
             .modal-footer
               button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
 
       // Scripts para DataTables y Bootstrap
       script(src="https://code.jquery.com/jquery-3.3.1.min.js")
