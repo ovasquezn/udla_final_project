@@ -1,8 +1,13 @@
+import { where } from 'sequelize';
 import { Colaboradores, PagosColaboradores , Liquidaciones, Documentos } from '../models/relations.js';
 
 
 const mostrar_colaboradores = async (req, res) => {
+
+  const empresaId = req.usuario.empresaId;
+
   const trabajadores = await Colaboradores.findAll({
+    where: { empresaId: empresaId },
     include: [
       { model: PagosColaboradores, as: 'pagos_colaboradores' },
       { model: Liquidaciones, as: 'liquidaciones' },
@@ -33,6 +38,7 @@ const agregarTrabajador = async (req, res) => {
       tipo_contrato,
     } = req.body;
 
+    const empresaId = req.usuario.empresaId;
     // Validaciones básicas (puedes agregar más según tus necesidades)
     if (!nombre || !apellido || !cargo || !estado) {
       return res.status(400).send('Los campos nombre, apellido, cargo y estado son obligatorios.');
@@ -52,6 +58,7 @@ const agregarTrabajador = async (req, res) => {
       sueldo: sueldo || null,
       fecha_ingreso: fecha_ingreso || null,
       tipo_contrato,
+      empresaId: empresaId,
     });
 
     // Redirigir a la página de trabajadores

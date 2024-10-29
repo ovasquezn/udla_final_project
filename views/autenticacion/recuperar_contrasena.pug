@@ -3,7 +3,7 @@ html(lang="en")
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    title= "Empresa - "+pagina
+    title= "Empresa - Recuperación de Contraseña"
     // Google Font: Source Sans Pro
     link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback")
     // Font Awesome
@@ -12,38 +12,34 @@ html(lang="en")
     link(rel="stylesheet", href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css")
     // Theme style
     link(rel="stylesheet", href="../../dist/css/adminlte.min.css")
-  body.hold-transition.login-page
-    .login-box
-      .login-logo
+  body.hold-transition.register-page
+    .register-box
+      .register-logo
         a(href="/")
           img(src="/img/logo.png" alt="Empresa Logo" style="width: 70%; height: auto;")
         if errores
           .max-w-md.mx-auto.my-10
             each error in errores
               p.text-xs.alert.alert-danger.font-bold= error.msg
-      // /.login-logo
       .card
-        .card-body.login-card-body
-          p.login-box-msg Iniciar Sesión
-          form(action="/autenticacion/login" method="POST")
-            input(type="hidden", name="_csrf", value=csrfToken hidden)
+        .card-body.register-card-body
+          p.login-box-msg Recuperación de Contraseña
+          form(action="/autenticacion/password-recovery" method="POST")
+            input(type="hidden", name="_csrf", value=csrfToken)
             .input-group.mb-3
-              input.form-control(type="text", placeholder="Usuario", name="nombreUsuario")
+              input.form-control(type="email", placeholder="Correo electrónico", name="email", required)
               .input-group-append
                 .input-group-text
                   span.fas.fa-envelope
-            .input-group.mb-3
-              input.form-control(type="password", placeholder="Password", name="password")
-              .input-group-append
-                .input-group-text
-                  span.fas.fa-lock
             .row.justify-content-center
               .col-6
-              button.btn.btn-primary.btn-block(type="submit") Iniciar Sesión
+                button.btn.btn-primary.btn-block(type="submit") Enviar link
+                // /.col
           p.mt-3
-            a.text-center(href="/autenticacion/recuperar_contrasena") Olvidé mi contraseña
-          p
-            a.text-center(href='/autenticacion/signup') Registrar una cuenta
+            a.text-center(href="/autenticacion/login") Volver al inicio de sesión
+        // /.form-box
+      // /.card
+    // /.register-box
     // jQuery
     script(src="../../plugins/jquery/jquery.min.js")
     // Bootstrap 4

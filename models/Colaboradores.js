@@ -1,7 +1,16 @@
+
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
 const Colaboradores = db.define('colaboradores', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id', 
+    }
+  },
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -43,6 +52,10 @@ const Colaboradores = db.define('colaboradores', {
   },
   tipo_contrato: {
     type: DataTypes.STRING,
+  },
+  permiso_acceso: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   fecha_creacion: {
     type: DataTypes.DATE,

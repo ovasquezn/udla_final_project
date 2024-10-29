@@ -1,28 +1,21 @@
 import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
-import db  from '../config/db.js';
+import db from '../config/db.js';
+import { Empresas } from './Empresas.js'; // Importar el modelo de empresas
 
 const Usuarios = db.define('usuarios', {
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  empresa: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  nombreFormateadoEmpresa: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   nombreUsuario: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // Garantizamos que el nombre de usuario sea único
+    unique: true,
   },
   email: {
     type: DataTypes.STRING(60),
-    allowNull: false
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
@@ -33,12 +26,28 @@ const Usuarios = db.define('usuarios', {
     defaultValue: true, // El usuario está activo por defecto
   },
   licencia: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('gratis','basica','estandar', 'premium', 'test'),
+    defaultValue: 'gratis',
     allowNull: true,
   },
   token: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+  empresaId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
+  colaboradorId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,  // Esta clave es opcional
+    references: {
+      model: 'colaboradores',
+      key: 'id',
+    }
   },
 }, {
   hooks: {
@@ -49,11 +58,11 @@ const Usuarios = db.define('usuarios', {
   }
 });
 
+// Relacionar usuarios con empresas
+Usuarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa' });
+
 Usuarios.prototype.verificarPassword = async function(password) {
-  console.log(`Password ingresada: ${password}`);
-  console.log(`Password almacenada: ${this.password}`);
   const isMatch = await bcrypt.compareSync(password, this.password);
-  console.log(`¿Coinciden las contraseñas?: ${isMatch}`);
   return isMatch;
 };
 

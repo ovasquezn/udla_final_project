@@ -12,6 +12,9 @@ import { Documentos } from '../models/Documentos.js';
 import { Liquidaciones } from '../models/Liquidaciones.js';
 import { PagosColaboradores } from '../models/PagosColaboradores.js';
 
+import { Usuarios } from '../models/Usuarios.js';
+import { Empresas } from '../models/Empresas.js';
+
 const syncDatabase = async () => {
   try {
     await db.sync({ force: true });

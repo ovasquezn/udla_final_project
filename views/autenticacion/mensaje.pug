@@ -16,11 +16,17 @@ html(lang="en")
     .login-box
       .login-logo
         a(href="/")
-          b Empresa
+          img(src="/img/logo.png" alt="Empresa Logo" style="width: 70%; height: auto;")
       // /.login-logo
       .card
         .card-body.login-card-body
-          p.login-box-msg Su cuenta ha sido creada exitosamente. 
+          p.login-box-msg Su cuenta ha sido creada exitosamente.
+        .card-body.login-card-body
+          p.login-box-msg(style="font-size: 1.5em; font-weight: bold;") Revise su correo electrónico para activar su cuenta.
+        //- .row.justify-content-center
+        //-   .col-6.mb-2
+        //-       a.text-center(href="/autenticacion/login")
+        //-         button.btn.btn-primary.btn-block(type="submit") Iniciar Sesión
     script(src="../../plugins/jquery/jquery.min.js")
     // Bootstrap 4
     script(src="../../plugins/bootstrap/js/bootstrap.bundle.min.js")

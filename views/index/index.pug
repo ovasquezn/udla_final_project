@@ -1,330 +1,225 @@
 doctype html
-head
-  meta(charset='utf-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
-  meta(name='description' content='')
-  meta(name='author' content='')
-  title Grimu
-  // Favicon
-  link(rel='icon' type='image/x-icon' href='assets/favicon.ico')
-  // Font Awesome icons (free version)
-  script(src='https://use.fontawesome.com/releases/v6.3.0/js/all.js' crossorigin='anonymous')
-  // Google fonts
-  link(href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css')
-  link(href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css')
-  // Core theme CSS (includes Bootstrap)
-  link(href='css/landing_styles.css' rel='stylesheet')
-// Navigation
-nav#mainNav.navbar.navbar-expand-lg.bg-secondary.text-uppercase.fixed-top
-  .container
-    img.masthead-avatar(style='width: 200px; height: auto;' src='/img/logo.png' alt='logo')
-    button.navbar-toggler.text-uppercase.font-weight-bold.bg-primary.text-white.rounded(type='button' data-bs-toggle='collapse' data-bs-target='#navbarResponsive' aria-controls='navbarResponsive' aria-expanded='false' aria-label='Toggle navigation')
-      |
-      i.fas.fa-bars
-    #navbarResponsive.collapse.navbar-collapse
-      ul.navbar-nav.ms-auto
-        li.nav-item.mx-0.mx-lg-1
-          a.nav-link.btn.py-3.px-0.px-lg-3.rounded(href='#') Iniciar Sesión
-        li.nav-item.mx-0.mx-lg-1
-          a.nav-link.btn.btn-primary.py-3.px-0.px-lg-3.rounded(href='#')  Prueba Gratis
-        li.nav-item.mx-0.mx-lg-1
-          a.nav-link.btn.py-3.px-0.px-lg-3.rounded(href='#') Contacto
-// Masthead
-header.masthead.bg-primary.text-white.text-center
-  .container.d-flex.align-items-center.flex-column
-    // Masthead Avatar Image
-    img.masthead-avatar.mb-5(src='/img/logo.png' alt='logo')
-    // Masthead Heading
-    h1.masthead-heading.text-uppercase.mb-5 Grimu
-    p.masthead-subheading.font-weight-light.mb-0 Esto es un texto de bienvenida al software
-    p.masthead-subheading.font-weight-light.mb-0 Esto es un texto de bienvenida al software
-// Portfolio Section
-section.page-section.portfolio
-  .container
-    h2.page-section-heading.text-center.text-uppercase.text-secondary.mb-1 Servicios
-    // Portfolio Grid Items
-    .row.justify-content-center
-      // Portfolio Item 1
-      .col-md-6.col-lg-4.mb-5
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio1')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service1.jpg' alt='...')
-      // Portfolio Item 2
-      .col-md-6.col-lg-4.mb-5
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio2')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service1.jpg' alt='...')
-      // Portfolio Item 3
-      .col-md-6.col-lg-4.mb-5
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio3')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service2.jpg' alt='...')
-      // Portfolio Item 4
-      .col-md-6.col-lg-4.mb-5.mb-lg-0
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio4')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service2.jpg' alt='...')
-      // Portfolio Item 5
-      .col-md-6.col-lg-4.mb-5.mb-md-0
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio5')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service3.jpg' alt='...')
-      // Portfolio Item 6
-      .col-md-6.col-lg-4
-        .portfolio-item.mx-auto(data-bs-toggle='modal' data-bs-target='#servicio6')
-          .portfolio-item-caption.d-flex.align-items-center.justify-content-center.h-100.w-100
-            .portfolio-item-caption-content.text-center.text-white
-              i.fas.fa-plus.fa-3x
-          img.img-fluid(src='/img/service4.jpg' alt='...')
-// About Section
-section#about.page-section.bg-primary.text-white.mb-0
-  .container
-    // About Section Heading
-    h2.page-section-heading.text-center.text-uppercase.text-white Acerca del servicio
-    // Icon Divider
-    .divider-custom.divider-light
-      .divider-custom-line
-      .divider-custom-icon
-        i.fas.fa-star
-      .divider-custom-line
-    // About Section Content
-    .row
-      .col-lg-4.ms-auto
-        p.lead
-          | Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.
-      .col-lg-4.me-auto
-        p.lead
-          | You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!
-// Contact Section
-section#contact.page-section
-  .container
-    // Contact Section Heading
-    h2.page-section-heading.text-center.text-uppercase.text-secondary.mb-0 Contáctanos
-    // Icon Divider
-    .row.justify-content-center
-      .col-lg-8.col-xl-7
-        form#contactForm(data-sb-form-api-token='API_TOKEN')
-          // Name input
-          .form-floating.mb-3
-            input#name.form-control(type='text' placeholder='Enter your name...' data-sb-validations='required')
-            label(for='name') Nombre
-            .invalid-feedback(data-sb-feedback='name:required') Un nombre es requerido
-          // Email address input
-          .form-floating.mb-3
-            input#email.form-control(type='email' placeholder='name@example.com' data-sb-validations='required,email')
-            label(for='email') Correo electrónico
-            .invalid-feedback(data-sb-feedback='email:required') Un correo electrónico es requerido
-            .invalid-feedback(data-sb-feedback='email:email') Correo electrónico no valido
-          // Phone number input
-          .form-floating.mb-3
-            input#phone.form-control(type='tel' placeholder='(123) 456-7890' data-sb-validations='required')
-            label(for='phone') Teléfono
-            .invalid-feedback(data-sb-feedback='phone:required') Un número telefónico es requerido
-          // Message input
-          .form-floating.mb-3
-            textarea#message.form-control(type='text' placeholder='Enter your message here...' style='height: 10rem' data-sb-validations='required')
-            label(for='message') Mensaje
-            .invalid-feedback(data-sb-feedback='message:required') Un mensaje es requerido
-          // Submit success message
-          // 
-          // This is what your users will see when the form
-          // has successfully submitted
-          #submitSuccessMessage.d-none
-            .text-center.mb-3
-              .fw-bolder Mensaje enviado correctamente
-          #submitErrorMessage.d-none
-            .text-center.text-danger.mb-3 Error al enviar el mensahe
-          // Submit Button
-          button#submitButton.btn.btn-primary.btn-xl.disabled(type='submit') Enviar
-// Footer
-footer.footer
-  .container
-    .row
-      .col-lg-4.mb-5.mb-lg-0
-        h4.text-uppercase.mb-4 Información
-        p.lead.mb-0
-          | Concepción, Chile
-        p.lead.mb-0
-          | +569 1234 5678
-        p.lead.mb-0
-          | ayuda@grimu.com
-      // Footer Social Icons
-      .col-lg-4.mb-5.mb-lg-0
-        h4.text-uppercase.mb-4 Redes sociales
-        a.btn.btn-outline-light.btn-social.mx-1(href='#!')
-          i.fab.fa-fw.fa-facebook-f
-        a.btn.btn-outline-light.btn-social.mx-1(href='#!')
-          i.fab.fa-fw.fa-twitter
-        a.btn.btn-outline-light.btn-social.mx-1(href='#!')
-          i.fab.fa-fw.fa-linkedin-in
-        a.btn.btn-outline-light.btn-social.mx-1(href='#!')
-          i.fab.fa-fw.fa-dribbble
-      // Footer About Text
-      .col-lg-4
-        h4.text-uppercase.mb-4 Empresa
-        p
-          a(href='http://startbootstrap.com') Nosotros
-        p
-          a(href='http://startbootstrap.com') Mapa del sitio
-        p  
-          a(href='http://startbootstrap.com') Preguntas frecuentes
-// Copyright Section
-.copyright.py-4.text-center.text-white
-  .container
-    small Copyright &copy; Grimu
-// Portfolio Modals
-// Portfolio Modal 1
-#servicio1.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio1' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              // Portfolio Modal - Title
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Servicio1
-              // Portfolio Modal - Image
-              img.img-fluid.rounded.mb-5(src='/img/service1.jpg' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | texto servicio 1
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Cerrar
-// Portfolio Modal 2
-#servicio2.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio2' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Tasty Cake
-              img.img-fluid.rounded.mb-5(src='assets/img/portfolio/cake.png' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | text servicio 1
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Cerrar
-// Portfolio Modal 3
-#servicio3.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio3' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              // Portfolio Modal - Title
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Circus Tent
-              // Icon Divider
-              .divider-custom
-                .divider-custom-line
-                .divider-custom-icon
-                  i.fas.fa-star
-                .divider-custom-line
-              // Portfolio Modal - Image
-              img.img-fluid.rounded.mb-5(src='assets/img/portfolio/circus.png' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Close Window
-// Portfolio Modal 4
-#servicio4.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio4' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              // Portfolio Modal - Title
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Controller
-              // Icon Divider
-              .divider-custom
-                .divider-custom-line
-                .divider-custom-icon
-                  i.fas.fa-star
-                .divider-custom-line
-              // Portfolio Modal - Image
-              img.img-fluid.rounded.mb-5(src='assets/img/portfolio/game.png' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Cerrar
-// Portfolio Modal 5
-#servicio5.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio5' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              // Portfolio Modal - Title
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Locked Safe
-              // Icon Divider
-              .divider-custom
-                .divider-custom-line
-                .divider-custom-icon
-                  i.fas.fa-star
-                .divider-custom-line
-              // Portfolio Modal - Image
-              img.img-fluid.rounded.mb-5(src='assets/img/portfolio/safe.png' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Cerrar
-// Portfolio Modal 6
-#servicio6.portfolio-modal.modal.fade(tabindex='-1' aria-labelledby='servicio6' aria-hidden='true')
-  .modal-dialog.modal-xl
-    .modal-content
-      .modal-header.border-0
-        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-      .modal-body.text-center.pb-5
-        .container
-          .row.justify-content-center
-            .col-lg-8
-              // Portfolio Modal - Title
-              h2.portfolio-modal-title.text-secondary.text-uppercase.mb-0 Submarine
-              // Icon Divider
-              .divider-custom
-                .divider-custom-line
-                .divider-custom-icon
-                  i.fas.fa-star
-                .divider-custom-line
-              // Portfolio Modal - Image
-              img.img-fluid.rounded.mb-5(src='assets/img/portfolio/submarine.png' alt='...')
-              // Portfolio Modal - Text
-              p.mb-4
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.
-              button.btn.btn-primary(data-bs-dismiss='modal')
-                i.fas.fa-xmark.fa-fw
-                |                                         Cerrar
-script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js')
-script(src='js/scripts.js')
-script(src='https://cdn.startbootstrap.com/sb-forms-latest.js')
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title Software Management - Inicio
+    link(rel='stylesheet' href='/plugins/fontawesome-free/css/all.min.css') 
+    link(rel='stylesheet' href='/dist/css/adminlte.min.css')
+    link(rel='stylesheet' href='/css/style.css')
+    script(src='/plugins/jquery/jquery.min.js')
+    script(src='/plugins/bootstrap/js/bootstrap.bundle.min.js')
+    script(src='/dist/js/adminlte.misn.js')
+
+  body
+
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.sticky-top
+      .container
+        a.navbar-brand(href='/')
+          img(src='/img/logo.png' alt='Logo' width='160')
+        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarSupportedContent.collapse.navbar-collapse.mb-1
+          ul.navbar-nav.ml-auto
+            li.nav-item
+              a.nav-link.btn.btn-info.btn-lg.text-white.px-2.m-1(href='/autenticacion/login') Iniciar Sesión
+            li.nav-item
+              a.nav-link.btn.btn-info.btn-lg.text-white.px-2.m-1(href='/autenticacion/signup') Prueba Gratis
+
+
+    .container-fluid.hero-section
+      .row
+        .col-12
+          .hero-content.text-center
+            h1.text-white Bienvenido a Grimu
+            p.lead.text-white Administra tu empresa de manera sencilla y eficiente con nuestro software de gestión empresarial.
+
+
+    .mt-5
+      .container
+        .row
+          // Columna izquierda para otro contenido
+          .col-md-6
+            h2.text-center.text-info Otra Sección
+            p Aquí puedes agregar cualquier otro contenido, como una presentación del software, imágenes, o testimonios de clientes.
+            p Proporciona detalles relevantes sobre el software en esta sección.
+
+          // Columna derecha con el formulario de registro
+          .col-md-6
+            .card.card-info
+              .card-header
+                h3.card-title Registro
+              .card-body
+                form(action="/autenticacion/signup" method="POST")
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    .input-group.mb-3
+                      input.form-control(type="text", placeholder="Nombre", name="nombre")
+                      .input-group-append
+                        .input-group-text
+                          span.fas.fa-user
+                    .input-group.mb-3
+                      input.form-control(type="text", placeholder="Empresa", name="empresa")
+                      .input-group-append
+                        .input-group-text
+                          span.fas.fa-user                  
+                    .input-group.mb-3
+                      input.form-control(type="email", placeholder="Correo electrónico", name="email")
+                      .input-group-append
+                        .input-group-text
+                          span.fas.fa-envelope
+                    .input-group.mb-3
+                      input.form-control(type="password", placeholder="Contraseña", name="password") 
+                      .input-group-append
+                        .input-group-text
+                          span.fas.fa-lock
+                    .input-group.mb-3
+                      input.form-control(type="password", placeholder="Repetir contraseña", name="password2")
+                      .input-group-append
+                        .input-group-text
+                          span.fas.fa-lock
+                    .row.justify-content-center
+                      .col-6
+                      button.btn.btn-info.btn-block(type="submit") Registrar Cuenta
+        .row
+          .col-12
+            h2.text-center.text-info.m-3 Funcionalidades
+        .row.m-5
+            // Columna izquierda para otro contenido
+            .col-md-6
+              h2.text-center.text-info Finanzas
+              p Controla tus finanzas
+              p Conciliación bancaria 
+              p Reportes financieros automáticos
+            .col-md-6
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+
+        .row.m-5
+            // Columna izquierda para otro contenido
+            .col-md-6
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+            .col-md-6
+              h2.text-center.text-info Gestión de Proveedores
+              p Lleva un control de los proveedores
+              p Mejora la eficiencia de tus compras
+              p Realiza pedidos de manera sencilla
+              p Historial de precios
+
+        .row.m-5
+            // Columna izquierda para otro contenido
+            .col-md-6
+              h2.text-center.text-info Recursos Humanos
+              p Lleva un control de tus empleados
+              p Realiza evaluaciones de desempeño
+              p Gestiona las vacaciones
+              p Controla los permisos
+            .col-md-6
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+
+        .row.m-5
+            // Columna izquierda para otro contenido
+            .col-md-6
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+              img(src='/img/service1.jpg' alt='Gestión de Proveedores' class='img-fluid' width='400')
+            .col-md-6
+              h2.text-center.text-info Gestión de Inventario
+              p Lleva un control de tu inventario
+              p Realiza inventarios físicos
+              p Controla las existencias
+              p Gestiona los niveles de stock y alertas
+
+        .row.m-5
+          .col-12
+            h2.text-center.text-info.m-3 Precios
+
+        .row.m-5
+          .col-md-4
+            .card
+              .card-header.bg-secondary.text-white.text-center
+                h3 Básico
+                    .card-body
+                h4.text-center $5.900/mes
+                ul
+                  p Hasta 10 usuarios
+                  p Soporte básico
+                  p Acceso a todas las funcionalidades
+                .text-center
+                  a.btn.btn-info(href='/comprar/basico') Comprar
+
+          .col-md-4
+            .card
+              .card-header.bg-secondary.text-white.text-center
+                h3 Estándar
+                    .card-body
+                h4.text-center $14.900/mes
+                ul
+                  p Hasta 50 usuarios
+                  p Soporte prioritario
+                  p Acceso a todas las funcionalidades
+                .text-center
+                  a.btn.btn-info(href='/comprar/estandar') Comprar
+
+          .col-md-4
+            .card
+              .card-header.bg-secondary.text-white.text-center
+                h3 Premium
+                    .card-body
+                h4.text-center $19.900/mes
+                ul
+                  p Usuarios ilimitados
+                  p Soporte 24/7
+                  p Acceso a todas las funcionalidades
+                .text-center
+                  a.btn.btn-info(href='/comprar/premium') Comprar
+
+
+    footer.bg-dark.text-white.mt-5
+      .container
+        .row
+          // Columna izquierda
+          .col-md-6.mt-4
+            h5 Enlaces Internos
+            ul.list-unstyled
+              li
+                a.text-white(href='#') Nosotros
+              li
+                a.text-white(href='#') Política de Privacidad
+              li
+                a.text-white(href='#') Términos y Condiciones
+              li
+                a.text-white(href='#') Contacto
+              li
+                a.text-white(href='#') Tutoriales
+
+          // Columna derecha (redes sociales)
+          .col-md-6.mt-4
+            h5 Escribemos al correo electrónico: 
+            a(href='mailto:contacto@grimu.online').text-white contacto@grimu.online
+            h5.mt-2 Llámanos al:
+            a(href='tel:+56912345678').text-white +56 9 1234 5678
+            
+            h5.mt-2 Síguenos en Redes Sociales
+            p Mantente conectado con nosotros en nuestras redes sociales.
+            ul.list-inline
+              li.list-inline-item
+                a(href='https://facebook.com' target='_blank').text-white
+                  i.fab.fa-facebook.fa-2x
+              li.list-inline-item
+                a(href='https://twitter.com' target='_blank').text-white
+                  i.fab.fa-twitter.fa-2x
+              li.list-inline-item
+                a(href='https://linkedin.com' target='_blank').text-white
+                  i.fab.fa-linkedin.fa-2x
+              li.list-inline-item
+                a(href='https://instagram.com' target='_blank').text-white
+                  i.fab.fa-instagram.fa-2x
+              li.list-inline-item
+                a(href='https://x.com' target='_blank').text-white
+                  i.fab.fa-x-twitter.fa-2x
+
+      .text-center.py-3
+        p &copy; 2024 Grimu. Todos los derechos reservados.
+
+    script

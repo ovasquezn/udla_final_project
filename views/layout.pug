@@ -63,8 +63,11 @@ head
         //.image
         //  img.img-circle.elevation-2(src='dist/img/user2-160x160.jpg' alt='User Image')
       div.text-center
-        p.text-white.text-center.font-d  Orlando Vásquez
-        p.text-white.text-center(style="font-size: 0.7em") Tijuana Multiespacio - Administrador
+        //p.text-white.text-center.font-d #{req.session.usuarioNombre}  
+        //- p.text-white.text-center(style="font-size: 0.7em") #{req.session.empresaNombre}
+
+        p.text-white.text-center.font-d #{usuario}
+        p.text-white.text-center(style="font-size: 0.7em") #{empresa}
         //a.d-block(href='#') Usuario - Ti
       nav.mt-2
         ul.nav.nav-pills.nav-sidebar.flex-column(data-widget='treeview' role='menu' data-accordion='false')

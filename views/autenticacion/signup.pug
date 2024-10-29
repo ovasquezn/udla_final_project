@@ -16,7 +16,7 @@ html(lang="en")
     .register-box
       .register-logo
         a(href="/")
-          b Empresa
+          img(src="/img/logo.png" alt="Empresa Logo" style="width: 70%; height: auto;")
         if errores
           .max-w-md.mx-auto.my-10
             each error in errores
@@ -24,7 +24,7 @@ html(lang="en")
       .card
         .card-body.register-card-body
           p.login-box-msg Registra una nuevo usuario
-          form(action="/auth/signup" method="POST")
+          form(action="/autenticacion/signup" method="POST")
             input(type="hidden", name="_csrf", value=csrfToken)
             .input-group.mb-3
               input.form-control(type="text", placeholder="Nombre", name="nombre")
@@ -51,16 +51,12 @@ html(lang="en")
               .input-group-append
                 .input-group-text
                   span.fas.fa-lock
-            .row
-              .col-8
-                .icheck-primary
-                  input 
+            .row.justify-content-center
+              .col-6
+              button.btn.btn-primary.btn-block(type="submit") Registrar Cuenta
               // /.col
-              .col-4
-                button.btn.btn-primary.btn-block(type="submit") Register
-              // /.col
-          p
-            a.text-center(href="/auth/login") Iniciar sesión
+          p.mt-3
+            a.text-center(href="/autenticacion/login") Iniciar sesión
         // /.form-box
       // /.card
     // /.register-box

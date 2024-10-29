@@ -3,6 +3,7 @@ import { Productos } from '../models/Productos.js';
 import { Facturas, Proveedores, DetalleFacturas } from '../models/relations.js';
 
 import { MovimientosBancarios } from '../models/MovimientosBancarios.js';
+import { verificarToken } from '../helpers/protegerRuta.js';
 
 // import { Productos } from "../models/Productos.js"
 // import { Facturas } from "../models/Facturas.js"
@@ -88,7 +89,10 @@ const mostrar_facturas = async (req, res) => {
 const mostrar_gastos = (req, res) => {
     res.render('finanzas/gastos', {
         pagina: 'Gastos',
-        pagina_activa: 'gastos'
+        pagina_activa: 'gastos',
+        usuario: req.usuario.nombre,
+        empresa: req.usuario.empresa,
+        rol: req.usuario.rol
     })
 }
 

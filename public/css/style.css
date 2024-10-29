@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    overflow-x: hidden; /* Evita el desbordamiento horizontal */
+  }
+
+
+  /* Estilos para la sección con la imagen de fondo borrosa */
+.hero-section {
+    position: relative;
+    height: 500px;  /* Ajusta la altura según lo que necesites */
+    background-image: url('/img/desktop.jpg');  /* Ruta de la imagen */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;  /* Centra verticalmente el contenido */
+    justify-content: center;  /* Centra horizontalmente el contenido */
+    z-index: 1;
+  }
+  
+  /* Contenido superpuesto */
+  .hero-section .hero-content {
+    position: absolute;
+    z-index: 2;  /* Para que el contenido esté sobre la imagen */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);  /* Centrar el contenido exactamente */
+    color: white;
+    text-align: center;
+    width: 400px;  
+    max-width: 1200px;
+  }
+  
+  .hero-section .hero-content h1, .hero-section .hero-content p {
+    background: rgba(0, 0, 0, 0.5);  /* Fondo oscuro semitransparente para el texto */
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .hero-section .hero-content a.btn {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #000;
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+  
+  .hero-section .hero-content a.btn:hover {
+    background-color: #fff;
+    color: #000;
+  }
+  
