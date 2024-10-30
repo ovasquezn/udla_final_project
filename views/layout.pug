@@ -2,6 +2,7 @@ doctype html
 head
   meta(charset='utf-8')
   meta(name='viewport' content='width=device-width, initial-scale=1')
+  meta(name="csrf-token" content=csrfToken)
   title Grimu
   // Google Font: Source Sans Pro
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback')
@@ -9,19 +10,13 @@ head
   link(rel='stylesheet' href='/plugins/fontawesome-free/css/all.min.css')
   // overlayScrollbars
   link(rel='stylesheet' href='/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')
-  // Theme style
+  // AdminLTE Theme style
   link(rel='stylesheet' href='/dist/css/adminlte.min.css')
-  // Font Awesome
-  // DataTables
+  // DataTables Styles (integración con AdminLTE)
   link(rel='stylesheet' href='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')
   link(rel='stylesheet' href='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')
   link(rel='stylesheet' href='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')
-  // Theme style
-  link(rel='stylesheet' href='/dist/css/adminlte.min.css')
 
-  //Propios
-  link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
-  link(rel="stylesheet", href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css")
 .wrapper
   // Navbar
   nav.main-header.navbar.navbar-expand.navbar-dark
@@ -30,14 +25,26 @@ head
       li.nav-item
         a.nav-link(data-widget='pushmenu' href='#' role='button')
           i.fas.fa-bars
-      li.nav-item
-        a.nav-link(href='index3.html') Configuración
+      li.nav-item.dropdown
+        a.nav-link(data-toggle='dropdown' href='#')
+          |  Configuración
+        .dropdown-menu.dropdown-menu-lg.dropdown-menu-right
+          a.dropdown-item(href='#')
+            i.fas.fa-user
+            |  Permisos
+          a.dropdown-item(href='#')
+            i.fas.fa-lock
+            |  Impresoras
+          a.dropdown-item(href='#')
+            i.fas.fa-cogs
+            |  Seguridad
 
     // Right navbar links
     ul.navbar-nav.ml-auto
       li.nav-item.dropdown
         a.nav-link(data-toggle='dropdown' href='#')
-          span.badge.badge-warning.navbar-badge 3 Notificaciones
+          i.fas.fa-bell
+          span.badge.badge-warning.navbar-badge 3
         .dropdown-menu.dropdown-menu-lg.dropdown-menu-right
           a.dropdown-item(href='#')
             i.fas.fa-file.mr-2
@@ -53,7 +60,7 @@ head
             span.float-right.text-muted.text-sm 1
           a.dropdown-item.dropdown-footer(href='#') Ver todas las notificaciones
       li.nav-item
-        a.nav-link(href='#') Salir
+        a.nav-link(href='/autenticacion/logout') Salir
   aside.main-sidebar.sidebar-dark-primary.elevation-4
     a(href="/dashboard") 
       img.brand-image(src="/img/logo.png", alt="Logo", style="opacity: .8; width: 60%; display: block; margin: 0 auto; filter: brightness(0) invert(1);")
@@ -65,13 +72,13 @@ head
       div.text-center
         //p.text-white.text-center.font-d #{req.session.usuarioNombre}  
         //- p.text-white.text-center(style="font-size: 0.7em") #{req.session.empresaNombre}
-
-        p.text-white.text-center.font-d #{usuario}
-        p.text-white.text-center(style="font-size: 0.7em") #{empresa}
+        p.text-white.text-center.font-d= locals.usuario + " - " +empresa
+        //p.text-white.text-center.font-d #{usuario}
+        //p.text-white.text-center(style="font-size: 0.7em") #{empresa}
         //a.d-block(href='#') Usuario - Ti
       nav.mt-2
         ul.nav.nav-pills.nav-sidebar.flex-column(data-widget='treeview' role='menu' data-accordion='false')
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas', 'gastos'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas', 'gastos', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-dollar-sign
               p
@@ -82,78 +89,120 @@ head
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/banco")
                   p Bancos
               li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas' ? 'active' : '', href="/finanzas/facturas")
-                  p Facturas
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_emitidas' ? 'active' : '', href="/finanzas/facturas_emitidas")
+                  p Facturas Emitidas
+
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_recibidas' ? 'active' : '', href="/finanzas/facturas_recibidas")
+                  p Facturas Recibidas
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'gastos' ? 'active' : '', href="/finanzas/gastos")
                   p Gastos
-          li.nav-item.mt-2
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'precios' ? 'active' : '', href="/finanzas/precios")
+                  p Precios
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
+                  p Proveedores
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['mesas','caja','productos_a_la_venta', 'cliente', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
-              i.nav-icon.fas.fa-copy
+              i.nav-icon.fas.fa-cash-register
               p
-                | Otro
+                | Punto de Venta
                 i.fas.fa-angle-left.right
             ul.nav.nav-treeview
               li.nav-item
-                a.nav-link(href='pages/layout/top-nav.html')
-                  i.far.fa-circle.nav-icon
-                  p title1
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'mesas' ? 'active' : '', href="#")
+                  p Mesas
               li.nav-item
-                a.nav-link(href='pages/layout/top-nav-sidebar.html')
-                  i.far.fa-circle.nav-icon
-                  p title2
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'caja' ? 'active' : '', href="#")
+                  p Caja
               li.nav-item
-                a.nav-link(href='pages/layout/boxed.html')
-                  i.far.fa-circle.nav-icon
-                  p title3
-          li.nav-item.mt-2
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'productos_a_la_venta' ? 'active' : '', href="#")
+                  p Productos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'clientes' ? 'active' : '', href="#")
+                  p Clientes
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['colaboradores', 'liquidaciones','comite_paritario','personal_antiguo', 'control_asistencia'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
-              i.nav-icon.fas.fa-chart-pie
+              i.nav-icon.fas.fa-users-cog
               p
                 | Recursos Humanos
                 i.right.fas.fa-angle-left
             ul.nav.nav-treeview
               li.nav-item
-                a.nav-link(href='/recursosHumanos')
-                  i.far.fa-circle.nav-icon
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'colaboradores' ? 'active' : '', href="/recursos_humanos/colaboradores")
                   p Colaboradores
               li.nav-item
-                a.nav-link(href='pages/charts/flot.html')
-                  i.far.fa-circle.nav-icon
-                  p title2
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'liquidaciones' ? 'active' : '', href="/recursos_humanos/liquidaciones")
+                  p Liquidaciones
               li.nav-item
-                a.nav-link(href='pages/charts/inline.html')
-                  i.far.fa-circle.nav-icon
-                  p title3
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'comite_paritario' ? 'active' : '', href="/recursos_humanos/comite_paritario")
+                  p Comite Paritario
               li.nav-item
-                a.nav-link(href='pages/charts/uplot.html')
-                  i.far.fa-circle.nav-icon
-                  p title4
-          li.nav-item.mt-2
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'personal_antiguo' ? 'active' : '', href="/recursos_humanos/personal_antiguo")
+                  p Personal Antiguo
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'control_asistencia' ? 'active' : '', href="/recursos_humanos/control_asistencia")
+                  p Control Asistencia
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['lista_inventario', 'productos','ingresos','salidas', 'pedidos'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
-              i.nav-icon.fas.fa-tree
+              i.nav-icon.fas.fa-boxes
               p
                 | Inventarios
                 i.fas.fa-angle-left.right
             ul.nav.nav-treeview
               li.nav-item
-                a.nav-link(href='pages/UI/general.html')
-                  i.far.fa-circle.nav-icon
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'lista_inventario' ? 'active' : '', href='/inventario/lista_inventario')
                   p Inventario
               li.nav-item
-                a.nav-link(href='pages/UI/icons.html')
-                  i.far.fa-circle.nav-icon
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'productos' ? 'active' : '', href='/inventario/productos')
+                  p Productos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'ingresos' ? 'active' : '', href='/inventario/ingresos')
                   p Ingresos
               li.nav-item
-                a.nav-link(href='pages/UI/buttons.html')
-                  i.far.fa-circle.nav-icon
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'salidas' ? 'active' : '', href='/inventario/salidas')
                   p Salidas
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'pedidos' ? 'active' : '', href='/inventario/pedidos')
+                  p Pedidos
+          li.nav-item.mt-2
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-bookmark
+              p
+                | Reservas
+                i.fas
+          li.nav-item.mt-2
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-laptop-code
+              p
+                | Sitio Web
+                i.fas  
+          li.nav-item.mt-2
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-file-alt
+              p
+                | Informes
+                i.fas   
+          li.nav-item.mt-2
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-calendar-day
+              p
+                | Agenda
+                i.fas   
+          li.nav-item.mt-2
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-chart-pie
+              p
+                | Proyecciones
+                i.fas   
           li.nav-item.mt-2
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-edit
               p
-                | Reservas
-                i.fas
+                | Notificaciones
+                i.fas   
     // sidebar
   block contenido
 // Scripts requeridos
@@ -163,15 +212,10 @@ script(src='/plugins/jquery/jquery.min.js')
 script(src='/plugins/bootstrap/js/bootstrap.bundle.min.js')
 // overlayScrollbars
 script(src='/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')
+// DataTables Scripts
+script(src='/plugins/datatables/jquery.dataTables.min.js')
+script(src='/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')
+script(src='/plugins/datatables-responsive/js/dataTables.responsive.min.js')
+script(src='/plugins/datatables-buttons/js/dataTables.buttons.min.js')
 // AdminLTE App
 script(src='/dist/js/adminlte.js')
-// PAGE PLUGINS
-// jQuery Mapael
-script(src='/plugins/jquery-mousewheel/jquery.mousewheel.js')
-script(src='/plugins/raphael/raphael.min.js')
-script(src='/plugins/jquery-mapael/jquery.mapael.min.js')
-script(src='/plugins/jquery-mapael/maps/usa_states.min.js')
-// ChartJS
-script(src='/plugins/chart.js/Chart.min.js')
-// AdminLTE dashboard demo (This is only for demo purposes)
-// <script src="dist/js/pages/dashboard2.js"></script>

@@ -2,6 +2,14 @@ import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
 const MovimientosBancarios = db.define('movimientos_bancarios', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
   fecha: {
     type: DataTypes.DATE,
     allowNull: false,

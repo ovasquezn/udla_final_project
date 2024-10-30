@@ -1,4 +1,3 @@
-
 import { Facturas } from './Facturas.js';
 import { Proveedores } from './Proveedores.js';
 import { DetalleFacturas } from './DetalleFacturas.js';
@@ -8,6 +7,11 @@ import { Liquidaciones } from './Liquidaciones.js';
 import { Documentos } from './Documentos.js';
 import { Usuarios } from './Usuarios.js';
 import { Empresas } from './Empresas.js';
+import { Inventarios } from './Inventarios.js';
+import { Movimientos } from './Movimientos.js';
+import { MovimientosBancarios } from './MovimientosBancarios.js';
+import { Productos } from './Productos.js';
+import { FacturasEmitidas } from './FacturasEmitidas.js';
 
 // Relación Colaboradores - Pagos (uno a muchos)
 Colaboradores.hasMany(PagosColaboradores, { foreignKey: 'trabajador_id', as: 'pagos_colaboradores' });
@@ -31,11 +35,23 @@ DetalleFacturas.belongsTo(Facturas, { foreignKey: 'factura_id', as: 'factura' })
 
 // Relación entre Usuarios y Empresas (Uno a Muchos)
 Empresas.hasMany(Usuarios, { foreignKey: 'empresaId', as: 'usuarios' });
-Usuarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresas' });
 
-Empresas.hasMany(Colaboradores, { foreignKey: 'empresaId', as: 'colaboradores' });
-Colaboradores.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresas' });
-
+// Duplicado?
+//Empresas.hasMany(Colaboradores, { foreignKey: 'empresaId', as: 'colaboradores' });
 Usuarios.belongsTo(Colaboradores, { foreignKey: 'colaboradorId', as: 'colaboradores' });  // Relación opcional
 
-export { Facturas, Proveedores, DetalleFacturas, Colaboradores, PagosColaboradores, Liquidaciones, Documentos, Usuarios, Empresas };
+// Relación entre todas las tablas y Empresas
+DetalleFacturas.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_detalle_facturas' });
+Colaboradores.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_colaboradores' });
+Usuarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_usuarios' });
+Facturas.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_facturas' });
+Inventarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_inventarios' });
+Liquidaciones.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_liquidaciones' });
+Movimientos.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_movimientos' });
+MovimientosBancarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_movimientos_bancarios' });
+PagosColaboradores.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_pagos_colaboradores' });    
+Productos.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_productos' });
+Proveedores.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_proveedores' });
+FacturasEmitidas.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_facturas_emitidas' });
+
+export { Facturas, Proveedores, DetalleFacturas, Colaboradores, PagosColaboradores, Liquidaciones, Documentos, Usuarios, Empresas, Inventarios, Movimientos, MovimientosBancarios, Productos, FacturasEmitidas};

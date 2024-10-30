@@ -1,99 +1,113 @@
-extends ../layout 
+extends ../layout
 
 block contenido
-    .content-wrapper
-        .content-header
-            .container-fluid
-                .row.mb-2
-                    .col-sm-6
-                        h1.m-0 Proveedores
-        section.content
-          .container-fluid
-          .card
-            .card-header.border-0
-              h3.card-title Products
-              .card-tools
-                a.btn.btn-tool.btn-sm(href="#")
-                  i.fas.fa-download
-                a.btn.btn-tool.btn-sm(href="#")
-                  i.fas.fa-bars
-            .card-body.table-responsive.p-0
-              table.table.table-striped.table-valign-middle
-                thead
-                  tr
-                    th Proveedor
-                    th Rut
-                    th Contacto
-                    th Telefono
-                    th.d-none.d-md-table-cell Proveedor
-                    th.d-none.d-md-table-cell Rut
-                    th.d-none.d-sm-table-cell Contacto
-                tbody
-                  tr
-                    td
-                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
-                      | Some Product
-                    td $13 USD
-                    td
-                      small.text-success.mr-1
-                        i.fas.fa-arrow-up
-                        | 12%
-                      | 12,000 Sold
-                    td
-                      a.text-muted(href="#")
-                        i.fas.fa-search
-                  tr
-                    td
-                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
-                      | Another Product
-                    td $29 USD
-                    td
-                      small.text-warning.mr-1
-                        i.fas.fa-arrow-down
-                        | 0.5%
-                      | 123,234 Sold
-                    td
-                      a.text-muted(href="#")
-                        i.fas.fa-search
-                  tr
-                    td
-                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
-                      | Amazing Product
-                    td $1,230 USD
-                    td
-                      small.text-danger.mr-1
-                        i.fas.fa-arrow-down
-                        | 3%
-                      | 198 Sold
-                    td
-                      a.text-muted(href="#")
-                        i.fas.fa-search
-                  tr
-                    td
-                      img.img-circle.img-size-32.mr-2(src="dist/img/default-150x150.png", alt="Product 1")
-                      | Perfect Item
-                      span.badge.bg-danger NEW
-                    td $199 USD
-                    td
-                      small.text-success.mr-1
-                        i.fas.fa-arrow-up
-                        | 63%
-                      | 87 Sold
-                    td
-                      a.text-muted(href="#")
-                        i.fas.fa-search
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1.m-0 Proveedores
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addProveedorModal")
+              i.fas.fa-plus
+              |  Nuevo Proveedor
+        // /.row
 
-                      
-        
-        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
-        script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
-        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
-        
-        // Inicialización de DataTables
-        script.
-          new DataTable('#personasTable',{
-            "language": {
-              "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+    // Main content
+    section.content
+      .container-fluid
+        .section-notification
+          p#notification.alert.hidden
+        table#proveedoresTable.table.table-striped
+          thead
+            tr
+              th ID
+              th Nombre del Proveedor
+              th Contacto
+              th Dirección
+              th Teléfono
+              th Acciones
+          tbody
+            each proveedor, index in proveedores
+              tr
+                td= proveedor.id
+                td= proveedor.nombre_proveedor
+                td= proveedor.contacto
+                td= proveedor.direccion
+                td= proveedor.telefono
+                td
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleProveedorModal${index}`)
+                    i.fas.fa-eye
+                    |  Detalles
+
+                  // Modal de Detalles del Proveedor
+                  .modal.fade(id=`detalleProveedorModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-lg(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Detalles del Proveedor - #{proveedor.nombre_proveedor}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          p Nombre: #{proveedor.nombre_proveedor}
+                          p Contacto: #{proveedor.contacto}
+                          p Dirección: #{proveedor.direccion}
+                          p Teléfono: #{proveedor.telefono}
+                          p Fecha de Creación: #{proveedor.fecha_creacion.toLocaleDateString('es-ES')}
+                          p Última Actualización: #{proveedor.fecha_actualizacion.toLocaleDateString('es-ES')}
+                        .modal-footer
+                          button.btn.btn-danger(type="button" onclick=`eliminarProveedor(${proveedor.id})`) Elimin
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      // Modal para Agregar Nuevo Proveedor
+      .modal.fade#addProveedorModal(tabindex="-1" role="dialog")
+        .modal-dialog.modal-lg(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Nuevo Proveedor
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") &times;
+            .modal-body
+              form(action="/finanzas/proveedores/agregar" method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken) 
+                .form-group
+                  label(for="nombre_proveedor") Nombre del Proveedor
+                  input#nombre_proveedor.form-control(type="text" name="nombre_proveedor" required)
+                .form-group
+                  label(for="contacto") Contacto
+                  input#contacto.form-control(type="text" name="contacto")
+                .form-group
+                  label(for="direccion") Dirección
+                  input#direccion.form-control(type="text" name="direccion")
+                .form-group
+                  label(for="telefono") Teléfono
+                  input#telefono.form-control(type="text" name="telefono")
+                button.btn.btn-primary(type="submit") Guardar
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+    script.
+      // Función para eliminar proveedor
+      function eliminarProveedor(id) {
+        console.log("Eliminando proveedor con ID:", id); 
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Obtener el token CSRF
+
+        if (confirm("¿Estás seguro de que deseas eliminar este proveedor?")) {
+          fetch(`/finanzas/proveedores/eliminar/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': csrfToken // Incluir el token CSRF en el encabezado
             }
           })
+          .then(response => {
+            if (response.ok) {
+              alert("Proveedor eliminado con éxito");
+              location.reload(); // Recargar la página para actualizar la lista de proveedores
+            } else {
+              alert("Error al eliminar el proveedor");
+            }
+          })
+          .catch(error => console.error("Error:", error));
+        }
+      }

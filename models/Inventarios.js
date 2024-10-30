@@ -2,6 +2,14 @@ import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
 const Inventarios = db.define('inventarios', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
     tipo_producto: {
       type: DataTypes.STRING,
       allowNull: false,

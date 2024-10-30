@@ -1,15 +1,14 @@
 import { DataTypes } from 'sequelize';
-import { Proveedores } from './Proveedores.js';
 import db from '../config/db.js';
 
-const Facturas = db.define('facturas', {
+const FacturasEmitidas = db.define('facturas_emitidas', {
   empresaId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'empresas',
-      key: 'id',
-    },
+  },
+  numero_factura: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   fecha_emision: {
     type: DataTypes.DATE,
@@ -17,17 +16,10 @@ const Facturas = db.define('facturas', {
   },
   fecha_vencimiento: {
     type: DataTypes.DATE,
-  },
-  proveedor_id: {
-    type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'proveedores',
-      key: 'id',
-    },
   },
-  numero_factura: {
-    type: DataTypes.STRING,
+  clienteId: { 
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   monto: {
@@ -42,13 +34,8 @@ const Facturas = db.define('facturas', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  fecha_creacion: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  fecha_actualizacion: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+  comentarios: {
+    type: DataTypes.TEXT,
   },
 }, {
   timestamps: true,
@@ -56,4 +43,4 @@ const Facturas = db.define('facturas', {
   updatedAt: 'fecha_actualizacion',
 });
 
-export { Facturas };
+export { FacturasEmitidas};

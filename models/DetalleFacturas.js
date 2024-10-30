@@ -2,6 +2,14 @@ import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
 const DetalleFacturas = db.define('detalle_facturas', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
   factura_id: {
     type: DataTypes.INTEGER,
     allowNull: false,

@@ -17,7 +17,10 @@ const mostrar_colaboradores = async (req, res) => {
 
   res.render('recursos_humanos/colaboradores', { 
     trabajadores,
-    csrfToken: req.csrfToken(), });
+    csrfToken: req.csrfToken(),
+    pagina: 'colaboradores',
+    pagina_activa: 'colaboradores'
+  });
 };
   
 
@@ -69,10 +72,57 @@ const agregarTrabajador = async (req, res) => {
   }
 };
 
+const mostrar_liquidaciones = async (req, res) => {
+  // const empresaId = req.usuario.empresaId;
+
+  // const liquidaciones = await Liquidaciones.findAll({
+  //   where: { empresaId: empresaId },
+  //   include: [
+  //     { model: Colaboradores, as: 'colaborador' },
+  //   ],
+  // });
+
+  res.render('recursos_humanos/liquidaciones', {
+    csrfToken: req.csrfToken(),
+    pagina: 'liquidaciones',
+    pagina_activa: 'liquidaciones'    
+  });
+}
+
+const mostrar_comite_paritario = async (req, res) => {
+
+  res.render('recursos_humanos/comite_paritario', { 
+    csrfToken: req.csrfToken(), 
+    pagina: 'comite_paritario',
+    pagina_activa: 'comite_paritario'
+  });
+}
+
+const mostrar_personal_antiguo = async (req, res) => {
+  
+    res.render('recursos_humanos/personal_antiguo', { 
+      csrfToken: req.csrfToken(), 
+      pagina: 'personal_antiguo',
+      pagina_activa: 'personal_antiguo'
+    });
+  }
+
+const mostrar_control_asisitencia = async (req, res) => {
+
+      res.render('recursos_humanos/control_asistencia', { 
+        csrfToken: req.csrfToken(), 
+        pagina: 'control_asistencia',
+        pagina_activa: 'control_asistencia'
+      });
+    } 
 
 export { 
       mostrar_colaboradores,
-      agregarTrabajador
+      agregarTrabajador,
+      mostrar_liquidaciones,
+      mostrar_comite_paritario,
+      mostrar_personal_antiguo,
+      mostrar_control_asisitencia
 };
   
   

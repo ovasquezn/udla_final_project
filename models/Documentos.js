@@ -3,6 +3,14 @@ import db from '../config/db.js';
 import { Colaboradores } from './Colaboradores.js';
 
 const Documentos = db.define('documentos', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
     trabajador_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -10,6 +10,7 @@ import db from './config/db.js';
 import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
 
+
 const app = express();
 
 try{
@@ -49,7 +50,7 @@ app.use('/autenticacion', authRoutes);
 app.use('/dashboard', dashboard);
 app.use('/', index);
 
-app.use('/recursosHumanos', hrRoutes);
+app.use('/recursos_humanos', hrRoutes);
 app.use('/inventario', inventoryRoutes); 
 app.use('/finanzas', financesRoutes);
 

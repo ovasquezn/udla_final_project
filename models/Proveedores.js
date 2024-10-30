@@ -3,6 +3,14 @@ import { Facturas } from './Facturas.js';
 import db from '../config/db.js';
 
 const Proveedores = db.define('proveedores', {
+  empresaId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'empresas',
+      key: 'id',
+    },
+  },
   nombre_proveedor: {
     type: DataTypes.STRING,
     allowNull: false,

@@ -214,6 +214,11 @@ const mostrar_mensaje = (req, res) => {
   });
 }
 
+const salir = (req, res) => {
+  res.clearCookie('_token');
+  res.redirect('/autenticacion/login');
+}
+
 export { 
     mostrar_login,
     mostrar_signup,
@@ -221,7 +226,8 @@ export {
     iniciar_sesion,
     recuperar_contrasena,
     mostrar_recuperar_contrasena, 
-    mostrar_mensaje
+    mostrar_mensaje,
+    salir
 };
 
 

@@ -4,7 +4,9 @@ block contenido
   .content-wrapper
     .content-header
       .container-fluid
-              
+        .row.mb-2
+          .col-sm-6
+              h1.m-0 Banco
         .row
           .col-sm-4.text-right.my-2
             form.inline-form(action="/ruta/para/filtrar/banco" method="GET")
@@ -40,7 +42,7 @@ block contenido
 
         .row.mb-2
           .col-sm-6
-            h1.m-0 Movimientos Bancarios - Banco #{banco}
+            h1.m-0 Movimientos - #{banco}
           .col-sm-6.text-right
             button.btn.btn-success(data-toggle="modal" data-target="#addMovimientoModal") 
               i.fas.fa-plus
