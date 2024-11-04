@@ -20,12 +20,11 @@ html(lang="en")
       // /.login-logo
       .card
         .card-body.login-card-body
-          p.login-box-msg(style="font-size: 1.5em; font-weight: bold;")= mensaje
-          if cuenta_activada == true
-            .row.justify-content-center
-              .col-6.mb-2
-                  a.text-center(href="/autenticacion/login")
-                    button.btn.btn-primary.btn-block(type="submit") Iniciar Sesión
+          p.login-box-msg Cuenta confirmada correctamente
+        .row.justify-content-center
+          .col-6.mb-2
+              a.text-center(href="/autenticacion/login")
+                button.btn.btn-primary.btn-block(type="submit") Iniciar Sesión
     script(src="../../plugins/jquery/jquery.min.js")
     // Bootstrap 4
     script(src="../../plugins/bootstrap/js/bootstrap.bundle.min.js")

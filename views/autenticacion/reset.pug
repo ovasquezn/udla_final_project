@@ -3,7 +3,7 @@ html(lang="en")
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    title= "Empresa - Recuperación de Contraseña"
+    title= "Empresa - "+pagina
     // Google Font: Source Sans Pro
     link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback")
     // Font Awesome
@@ -12,34 +12,24 @@ html(lang="en")
     link(rel="stylesheet", href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css")
     // Theme style
     link(rel="stylesheet", href="../../dist/css/adminlte.min.css")
-  body.hold-transition.register-page
-    .register-box
-      .register-logo
+  body.hold-transition.login-page
+    .login-box
+      .login-logo
         a(href="/")
           img(src="/img/logo.png" alt="Empresa Logo" style="width: 70%; height: auto;")
-        if errores
-          .max-w-md.mx-auto.my-10
-            each error in errores
-              p.text-xs.alert.alert-danger.font-bold= error.msg
       .card
-        .card-body.register-card-body
-          p.login-box-msg Recuperación de Contraseña
-          form(action="/autenticacion/recuperar_contrasena" method="POST")
-            input(type="hidden", name="_csrf", value=csrfToken)
+        .card-body.login-card-body
+          form(method="POST")
+            input(type="hidden", name="_csrf", value=csrfToken hidden)
+            Ingres
             .input-group.mb-3
-              input.form-control(type="email", placeholder="Correo electrónico", name="email", required)
+              input.form-control(type="password", placeholder="Password", name="password")
               .input-group-append
                 .input-group-text
-                  span.fas.fa-envelope
+                  span.fas.fa-lock
             .row.justify-content-center
               .col-6
-                button.btn.btn-primary.btn-block(type="submit") Enviar link
-                // /.col
-          p.mt-3
-            a.text-center(href="/autenticacion/login") Volver al inicio de sesión
-        // /.form-box
-      // /.card
-    // /.register-box
+              button.btn.btn-primary.btn-block(type="submit") Confirma tu nueva contraseña
     // jQuery
     script(src="../../plugins/jquery/jquery.min.js")
     // Bootstrap 4
