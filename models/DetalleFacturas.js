@@ -1,28 +1,36 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
+import { Facturas } from './Facturas.js';
+import { Productos } from './Productos.js';
 
 const DetalleFacturas = db.define('detalle_facturas', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },
   factura_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'facturas',
+      model: Facturas,
       key: 'id',
     },
   },
   producto_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'productos',
+      model: Productos,
       key: 'id',
     },
   },
@@ -39,6 +47,10 @@ const DetalleFacturas = db.define('detalle_facturas', {
     allowNull: false,
   },
   precio: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  cantidad: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },

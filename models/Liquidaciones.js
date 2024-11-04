@@ -1,21 +1,27 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 import { Colaboradores } from './Colaboradores.js';
+import { Empresas } from './Empresas.js';
 
 const Liquidaciones = db.define('liquidaciones', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },
     trabajador_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'colaboradores',
+        model: Colaboradores,
         key: 'id',
       },
     },

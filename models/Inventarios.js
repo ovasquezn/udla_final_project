@@ -1,28 +1,39 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
 
 const Inventarios = db.define('inventarios', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },
-    tipo_producto: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    cantidad_total: {
-      type: DataTypes.DECIMAL(10, 2),
+    unidad: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 0,
     },
-    stock_minimo: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0,
+    descripcion: {
+      type: DataTypes.TEXT,
+    },
+    bodega: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    encargado: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     fecha_creacion: {
       type: DataTypes.DATE,

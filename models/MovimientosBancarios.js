@@ -1,12 +1,18 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
 
 const MovimientosBancarios = db.define('movimientos_bancarios', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },

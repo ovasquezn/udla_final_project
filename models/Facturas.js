@@ -1,13 +1,27 @@
 import { DataTypes } from 'sequelize';
 import { Proveedores } from './Proveedores.js';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
 
 const Facturas = db.define('facturas', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
+      key: 'id',
+    },
+  },
+  proveedor_id: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: Proveedores,
       key: 'id',
     },
   },
@@ -18,13 +32,8 @@ const Facturas = db.define('facturas', {
   fecha_vencimiento: {
     type: DataTypes.DATE,
   },
-  proveedor_id: {
+  plazo: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'proveedores',
-      key: 'id',
-    },
   },
   numero_factura: {
     type: DataTypes.STRING,

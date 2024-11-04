@@ -1,8 +1,22 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
 
 const FacturasEmitidas = db.define('facturas_emitidas', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: Empresas,
+      key: 'id',
+    },
+  },
+  clienteId: { 
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -16,10 +30,6 @@ const FacturasEmitidas = db.define('facturas_emitidas', {
   },
   fecha_vencimiento: {
     type: DataTypes.DATE,
-    allowNull: false,
-  },
-  clienteId: { 
-    type: DataTypes.INTEGER,
     allowNull: false,
   },
   monto: {

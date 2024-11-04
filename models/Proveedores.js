@@ -1,13 +1,18 @@
 import { DataTypes } from 'sequelize';
-import { Facturas } from './Facturas.js';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
 
 const Proveedores = db.define('proveedores', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },

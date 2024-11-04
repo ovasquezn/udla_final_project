@@ -1,18 +1,38 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
+import { Proveedores } from './Proveedores.js';
+import { Inventarios } from './Inventarios.js';
 
 const Productos = db.define('productos', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },
   inventario_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
+    relations: {
+      model: Inventarios,
+      key: 'id',
+    },
+  },
+  proveedor_id: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: Proveedores,
+      key: 'id',
+    },
   },
   nombre_producto: {
     type: DataTypes.STRING,
@@ -20,14 +40,6 @@ const Productos = db.define('productos', {
   },
   precio: {
     type: DataTypes.DECIMAL(10, 2),
-  },
-  proveedor_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'proveedores',
-      key: 'id',
-    },
   },
   descripcion: {
     type: DataTypes.TEXT,

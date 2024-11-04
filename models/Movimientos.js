@@ -1,20 +1,27 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import { Empresas } from './Empresas.js';
+import { Productos } from './Productos.js';
 
 const Movimientos = db.define('movimientos', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   empresaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'empresas',
+      model: Empresas,
       key: 'id',
     },
   },
   producto_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'productos',
+      model: Productos,
       key: 'id'
     }
   },
@@ -33,6 +40,7 @@ const Movimientos = db.define('movimientos', {
   fecha_creacion: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
+    
   },
   fecha_actualizacion: {
     type: DataTypes.DATE,
