@@ -1,0 +1,124 @@
+extends ../layout/layout 
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1.m-0 Usuarios
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addUsuarioModal") 
+              i.fas.fa-plus
+              |  Nuevo Usuario
+        // /.row
+      // /.container-fluid
+    // /.content-header
+    // Main content
+    section.content
+      .container-fluid
+        table#usuariosTable.table.table-striped
+          thead
+            tr
+              th Nombre
+              th Nombre de Usuario
+              th Email
+              th Estado
+              th Permisos
+          tbody
+            each usuario, index in usuarios
+              tr
+                td= usuario.nombre
+                td= usuario.nombreUsuario
+                td= usuario.email
+                td= usuario.permisos
+                td
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleUsuarioModal${index}`) 
+                    i.fas.fa-eye
+
+                  // Modal de Detalles del Usuario
+                  .modal.fade(id=`detalleUsuarioModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-lg(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Detalles de Usuario - #{usuario.nombre} #{usuario.nombreUsuario}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          // Información del Usuario
+                          h5 Información del Usuario
+                          p Email: #{usuario.email}
+                          p Permisos: #{usuario.permisos}
+                          hr
+                          // Información de Creación y Actualización
+                          h5 Fechas
+                          p Creado en: #{usuario.createdAt.toLocaleDateString('es-ES')}
+                          p Actualizado en: #{usuario.updatedAt.toLocaleDateString('es-ES')}
+
+                        .modal-footer
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      .modal.fade#addUsuarioModal(tabindex="-1" role="dialog")
+        .modal-dialog.modal-lg(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Nuevo Usuario
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") &times;
+            .modal-body
+              form(action="/configuraciones/usuarios/agregar_usuario" method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken) 
+                input(type="hidden" name="empresaId" value=usuario.empresaId)
+                
+                .form-row 
+                    .col-md-6
+                        .form-group
+                            label(for="nombre") Nombre
+                            input#nombre.form-control(type="text" name="nombre" required)
+                    .col-md-6
+                        .form-group
+                            label(for="colaboradorId") Asignar a Colaborador
+                            select#colaboradorId.form-control(name="colaboradorId")
+                                option(value="") Selecciona un colaborador
+                                    each colaborador in colaboradores
+                                        option(value=colaborador.id) #{colaborador.nombre} #{colaborador.apellido}
+
+                    .col-md-6
+                        .form-group
+                            label(for="nombreUsuario") Nombre de Usuario
+                            .input-group
+                                input#nombreUsuario.form-control(type="text" name="nombreUsuario" placeholder="Ingresa el nombre de usuario" required)
+                                .input-group-append
+                                    span.input-group-text @#{nombre_formateado}
+                    .col-md-6
+                        .form-group
+                            label(for="password") Contraseña
+                            input#password.form-control(type="password" name="password" required)
+
+                .form-row
+                    .col-md-6
+                        .form-group
+                        label(for="email") Email
+                        input#email.form-control(type="email" name="email" required)
+                    .col-md-6
+                        .form-group
+                        label(for="permisos") Permisos
+                        select#permisos.form-control(name="permisos" required)
+                            option(value="propietario") Propietario
+                            option(value="admin") Admin
+                            option(value="colaborador") Colaborador
+                
+                button.btn.btn-primary.mt-2(type="submit") Guardar
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+      script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+      script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+      script.
+        new DataTable('#usuariosTable',{
+          "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+          }
+        })
