@@ -1,136 +1,120 @@
-extends ../layout
+extends ../layout/layout
 
 block contenido
   .content-wrapper
     .content-header
       .container-fluid
-        .row.mb-2
+        .row
           .col-sm-6
-            h1.m-0 Inventario
+            h1.m-0 Inventario de Productos
           .col-sm-6.text-right
-            button.btn.btn-success(data-toggle="modal" data-target="#addProductoModal")
+            button.btn.btn-success(data-toggle="modal" data-target="#addInventarioModal") 
               i.fas.fa-plus
               |  Nuevo Producto
     // Main content
     section.content
       .container-fluid
-        // Tabla de Productos
-        h2 Productos
-        table#productosTable.table.table-striped
-          thead
-            tr
-              th ID
-              th Nombre
-              th Precio
-              th Proveedor
-              th Código de Barra
-              th Acciones
-          tbody
-            each producto, index in productos
-              tr
-                td= producto.id
-                td= producto.nombre_producto
-                td= `$${producto.precio}`
-                td= producto.proveedor_id
-                td= producto.codigo_barra
-                td
-                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleProductoModal${index}`)
-                    i.fas.fa-eye
-                    |  Detalles
-
-                  // Modal de Detalles del Producto
-                  .modal.fade(id=`detalleProductoModal${index}` tabindex="-1" role="dialog")
-                    .modal-dialog.modal-lg(role="document")
-                      .modal-content
-                        .modal-header
-                          h5.modal-title Detalles de Producto - #{producto.nombre_producto}
-                          button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                        .modal-body
-                          p Nombre: #{producto.nombre_producto}
-                          p Precio: $#{producto.precio}
-                          p Descripción: #{producto.descripcion}
-                          p Proveedor: #{producto.proveedor_id}
-                          p Código Interno: #{producto.codigo_interno}
-                          p Código de Barra: #{producto.codigo_barra}
-                        .modal-footer
-                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
-
-        hr
-
-        // Tabla de Inventario
-        h2 Inventario
         table#inventarioTable.table.table-striped
           thead
             tr
-              th ID
-              th Tipo de Producto
-              th Cantidad Total
-              th Stock Mínimo
-          tbody
-            each item, idx in inventario
-              tr
-                td= item.id
-                td= item.tipo_producto
-                td= item.cantidad_total
-                td= item.stock_minimo
-                td
-                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleInventarioModal${idx}`)
-                    i.fas.fa-eye
-                    |  Detalles
-
-                  // Modal de Detalles de Inventario
-                  .modal.fade(id=`detalleInventarioModal${idx}` tabindex="-1" role="dialog")
-                    .modal-dialog.modal-lg(role="document")
-                      .modal-content
-                        .modal-header
-                          h5.modal-title Detalles de Inventario - #{item.tipo_producto}
-                          button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                        .modal-body
-                          p Tipo de Producto: #{item.tipo_producto}
-                          p Cantidad Total: #{item.cantidad_total}
-                          p Stock Mínimo: #{item.stock_minimo}
-                        .modal-footer
-                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
-
-        hr
-
-        // Tabla de Movimientos
-        h2 Movimientos de Productos
-        table#movimientosTable.table.table-striped
-          thead
-            tr
-              th ID
-              th Producto
-              th Tipo de Movimiento
+              th Nombre
+              th.d-none.d-mm-table-cell= Unidad
+              th.d-none.d-mm-table-cell= Bodega
+              th.d-none.d-sm-table-cell= Encargado
               th Cantidad
-              th Fecha
+              th Estado
+              th 
           tbody
-            each movimiento, index in movimientos
+            each item, index in inventario
               tr
-                td= movimiento.id
-                td= movimiento.producto_id 
-                td= movimiento.tipo_movimiento
-                td= movimiento.cantidad
-                td= movimiento.fecha.toLocaleDateString('es-ES')
+                td= item.nombre
+                td.d-none.d-mm-table-cell= item.unidad
+                td.d-none.d-mm-table-cell= item.bodega
+                td.d-none.d-sm-table-cell= item.encargado
+                th= "Normal"
+                th= 0
                 td
-                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleMovimientoModal${index}`)
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleInventarioModal${index}`) 
                     i.fas.fa-eye
-                    |  Detalles
 
-                  // Modal de Detalles del Movimiento
-                  .modal.fade(id=`detalleMovimientoModal${index}` tabindex="-1" role="dialog")
+                  // Modal de Detalles del Producto en Inventario
+                  .modal.fade(id=`detalleInventarioModal${index}` tabindex="-1" role="dialog")
                     .modal-dialog.modal-lg(role="document")
                       .modal-content
                         .modal-header
-                          h5.modal-title Detalles del Movimiento - #{movimiento.tipo_movimiento}
+                          h5.modal-title Detalles del Producto - #{item.nombre}
                           button.close(type="button" data-dismiss="modal" aria-label="Close")
                             span(aria-hidden="true") &times;
                         .modal-body
-                          p Producto: #{movimiento.producto_id}
-                          p Tipo de Movimiento: #{movimiento.tipo_movimiento}
-                          p Cantidad: #{movimiento.cantidad}
-                          p Fecha: #{movimiento.fecha.toLocaleDateString('es-ES')}
+                          p Nombre: #{item.nombre}
+                          p Unidad: #{item.unidad}
+                          p Descripción: #{item.descripcion || 'Sin descripción'}
+                          p Bodega: #{item.bodega || 'No especificada'}
+                          p Encargado: #{item.encargado || 'No asignado'}
                         .modal-footer
+                          form(action=`/inventario/eliminar/${item.id}` method="POST" style="display:inline;")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            button.btn.btn-danger(type="submit") 
+                              i.fas.fa-trash
+                              |  Eliminar
                           button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+    // Modal para Crear Nuevo Producto en Inventario
+    .modal.fade#addInventarioModal(tabindex="-1" role="dialog")
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Nuevo Producto
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form(action="/inventario/agregar_producto_inventario" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken) 
+              
+              // Nombre del Producto
+              .form-group
+                label(for="nombre") Nombre
+                input#nombre.form-control(type="text" name="nombre" required)
+
+              // Unidad de Medida
+              .form-group
+                label(for="unidad") Unidad de Medida
+                input#unidad.form-control(type="text" name="unidad" required)
+
+              // Descripción
+              .form-group
+                label(for="descripcion") Descripción
+                textarea#descripcion.form-control(name="descripcion")
+
+              // Bodega
+              .form-group
+                label(for="bodega") Bodega
+                input#bodega.form-control(type="text" name="bodega")
+
+              // Encargado
+              .form-group
+                label(for="encargado") Encargado
+                input#encargado.form-control(type="text" name="encargado")
+
+              button.btn.btn-primary(type="submit") Guardar
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+          // Scripts para DataTables y Bootstrap
+          script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+          script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+          script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+          script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+          script.
+            new DataTable('#inventarioTable', {
+              "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+              },
+              "order": [[ 0, "asc" ]],
+              "columnDefs": [
+                { "orderable": false, "targets": 6 }
+              ],
+              "lengthMenu": [50,100],
+              "pagingType": "full_numbers",
+              "pageLength": 50
+            })
