@@ -1,4 +1,4 @@
-extends ../layout 
+extends ../layout/layout
 
 block contenido
   .content-wrapper
@@ -35,6 +35,7 @@ block contenido
               .info-box-content
                 span.info-box-text Monto a vencer (7 días)
                 span.info-box-number $1.800.000
+
         .row.mb-2
           .col-sm-6
             h1.m-0 Facturas Recibidas
@@ -42,49 +43,194 @@ block contenido
             button.btn.btn-success(data-toggle="modal" data-target="#addFacturaModal") 
               i.fas.fa-plus
               |  Nueva Factura
-        // Main content
-        section.content
-          .container-fluid
-            table#facturasTable.table.table-striped
-              thead
-                tr
-                  th Fecha de Ingreso
-                  th Número
-                  th Proveedor
-                  th Monto
-                  th Estado de Pago
-                  th Acciones
-              tbody
-                each factura, index in facturas
-                  tr
-                    td= factura.fecha_emision.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
-                    td= factura.numero_factura
-                    td= factura.proveedor.nombre_proveedor
-                    td= factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
-                    td= factura.estado_pago ? 'Pagado' : 'Pendiente'
-                    td
-                      button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
-                        i.fas.fa-eye
-                        |  Detalles
 
-                      // Modal de Detalles
-                      .modal.fade(id=`detalleModal${index}` tabindex="-1" role="dialog")
-                        .modal-dialog.modal-lg(role="document")
-                          .modal-content
-                            .modal-header
-                              h5.modal-title Detalles de Factura - #{factura.numero_factura}
-                              button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                span(aria-hidden="true") &times;
-                            .modal-body
-                              p Número de Factura: #{factura.numero_factura}
-                              p Fecha de Emisión: #{factura.fecha_emision.toLocaleDateString('es-ES')}
-                              p Proveedor: #{factura.proveedor.nombre_proveedor}
-                              p Monto: #{factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
-                              p Estado de Pago: #{factura.estado_pago ? 'Pagado' : 'Pendiente'}
-                            .modal-footer
-                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+    // Main content
+    section.content
+      .container-fluid
+        // Table displaying invoices
+        table#facturasTable.table.table-striped
+          thead
+            tr
+              th Fecha de Ingreso
+              th Número
+              th Proveedor
+              th Monto
+              th Estado de Pago
+              th Acciones
+          tbody
+            each factura, index in facturas
+              tr
+                td= factura.fecha_emision.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                td= factura.numero_factura
+                td= factura.proveedor.nombre_proveedor
+                td= factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+                td= factura.estado_pago ? 'Pagado' : 'Pendiente'
+                td
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
+                    i.fas.fa-eye
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#crearModal${index}`) 
+                    i.fas.
+                    | Crear
+                  button.btn.btn-danger.btn-sm.mx-2(data-toggle="modal" data-target=`#crearModal${index}`) 
+                    i.fas.
+                    | Eliminar
 
-        // Modal para Crear Nueva Factura
+                  .modal.fade(id=`crearModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-lg(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Crear Producto - Factura #{factura.numero_factura}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          form#formCrearProducto(action=`/facturas/${factura.id}/agregarProducto` method="POST")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            
+                            // Código de Barra
+                            .form-group 
+                              label(for="codigo") Código de Barra
+                              input#codigo_de_barra.form-control(type="text" name="codigo" placeholder="Ingrese código" required)
+
+                            // Nombre Producto
+                            .form-group
+                              label(for="producto") Nombre Producto
+                              input#producto_nombre.form-control(type="text" name="nombre_producto" placeholder="Ingrese nombre del producto" required)
+
+                            // Inventario (Selector de Producto Agrupado)
+                            .form-group
+                              label(for="inventario") Inventario
+                              select#inventario.form-control(name="inventario_id" required)
+                                each inventario in inventarios
+                                  option(value=inventario.id)= inventario.nombre
+
+                            // Proveedor (Valor por defecto de la factura actual)
+                            input(type="hidden" name="proveedor_id" value=`${factura.proveedor_id}`)
+
+                            // Botón para Crear Producto
+                            button.btn.btn-primary(type="button" onclick="crearProducto()") Crear Producto
+
+
+                        // Modal Body for Listing and Managing Products
+                        .modal-body
+                          h5.mt-4 Productos del Proveedor
+                          table#tablaProductos.table.table-striped
+                            thead
+                              tr
+                                th Código de Barra
+                                th Producto
+                                th 
+                            tbody
+                              each producto, index in productos
+                                tr
+                                  td= producto.codigo_barra
+                                  td= producto.nombre_producto
+                                  td
+                                    // Button to Edit Product
+                                    button.btn.btn-warning.btn-sm(type="button" onclick=`abrirEditarModal(${producto.id}, '${producto.nombre_producto}', '${producto.codigo_barra}')`)
+                                      i.fas.fa-edit
+                                      |  
+
+                                    // Button to Delete Product
+                                    button.btn.btn-danger.btn-sm(type="button" onclick=`eliminarProducto(${producto.id})`)
+                                      i.fas.fa-trash
+                                      |  
+
+                        .modal-footer
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+                                                // Edit Product Modal
+                        .modal.fade#editarProductoModal(tabindex="-1" role="dialog")
+                          .modal-dialog(role="document")
+                            .modal-content
+                              .modal-header
+                                h5.modal-title Editar Producto
+                                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                  span(aria-hidden="true") &times;
+                              .modal-body
+                                form#formEditarProducto(action="/productos/editar" method="POST")
+                                  input(type="hidden" name="_csrf" value=csrfToken)
+                                  input#editarProductoId(type="hidden" name="productoId")
+                                  
+                                  // Código de Barra
+                                  .form-group
+                                    label(for="editarProductoCodigo") Código de Barra
+                                    input#editarProductoCodigo.form-control(type="text" name="codigo")
+
+                                  // Nombre Producto
+                                  .form-group
+                                    label(for="editarProductoNombre") Nombre Producto
+                                    input#editarProductoNombre.form-control(type="text" name="nombre_producto")
+                                  
+                                  button.btn.btn-primary(type="submit") Guardar Cambios
+                              .modal-footer
+                                button.btn.btn-secondary(type="button" onclick="cerrarModal('editarProductoModal')") Cerrar
+
+
+                  .modal.fade(id=`detalleModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-lg(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Detalles de Factura - #{factura.numero_factura}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          p Número de Factura: #{factura.numero_factura}
+                          p Fecha de Emisión: #{factura.fecha_emision.toLocaleDateString('es-ES')}
+                          p Proveedor: #{factura.proveedor.nombre_proveedor}
+                          p Monto: #{factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
+                          p Estado de Pago: #{factura.estado_pago ? 'Pagado' : 'Pendiente'}
+                          
+                          // Section to Add Products to the Invoice
+
+                          h5.mt-4 Agregar Productos a la Factura
+
+                          // Formulario para agregar productos existentes a la factura
+                          form#addExistingProductForm(onsubmit="agregarProductoAFactura(event)")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            input(type="hidden" id="facturaId" value=factura.id)
+
+                            // Desplegable de Productos
+                            .form-group
+                              label(for="producto") Producto
+                              select#producto.form-control(name="producto_id" required)
+                                option(value="") Seleccionar Producto
+                                each producto in productos
+                                  option(value=producto.id)= producto.nombre_producto
+                            // Campo de Precio
+                            .form-group
+                              label(for="precio") Precio Unitario
+                              input#precio.form-control(type="number" step="0.01" name="precio" placeholder="Ingrese precio" required)
+
+
+                            // Campo de Cantidad
+                            .form-group
+                              label(for="cantidad") Cantidad
+                              input#cantidad.form-control(type="number" name="cantidad" placeholder="Ingrese cantidad" required)
+
+                            // Botón para agregar producto a la factura
+                            button.btn.btn-primary.mt-2(type="button" onclick="agregarProductoAFactura(event)") Agregar Producto
+
+                          // Lista de productos añadidos a la factura
+                          h5.mt-4 Productos en la Factura
+                          table.table.table-bordered
+                            thead
+                              tr
+                                th Producto
+                                th Cantidad
+                                th Precio Unitario
+                                th Subtotal
+                            tbody#productosTabla
+                              each detalle in factura.detalle_factura
+                                tr
+                                  td= detalle.producto.nombre_producto
+                                  td= detalle.cantidad
+                                  td= detalle.precio.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+                                  td= (detalle.cantidad * detalle.precio).toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+
+                        .modal-footer
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+
         .modal.fade#addFacturaModal(tabindex="-1" role="dialog")
           .modal-dialog.modal-lg(role="document")
             .modal-content
@@ -143,14 +289,149 @@ block contenido
               .modal-footer
                 button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
-        // Scripts para DataTables y Bootstrap
-        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
-        script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
-        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
-        script.
-          new DataTable('#facturasTable', {
-            "language": {
-              "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
-            }
+    // Scripts for DataTables and handling new product creation
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+    script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+    script.
+      new DataTable('#facturasTable', {
+        "language": {
+          "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+        }
+      })
+
+      // Show new product fields if 'Crear Nuevo Producto' is selected
+      $('#producto').on('change', function() {
+        if (this.value === 'nuevo') {
+          $('.new-product-fields').show();
+        } else {
+          $('.new-product-fields').hide();
+        }
+      })
+
+    script.
+      function crearProducto() {
+        const codigoBarra = document.querySelector('#codigo_de_barra').value;
+        const nombreProducto = document.querySelector('#producto_nombre').value;
+        const inventarioId = document.querySelector('#inventario').value;
+        const proveedorId = document.querySelector('input[name="proveedor_id"]').value;
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+        fetch('/finanzas/facturas_recibidas/crear_producto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify({
+            codigo_barra: codigoBarra,
+            nombre_producto: nombreProducto,
+            inventario_id: inventarioId,
+            proveedor_id: proveedorId
           })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Limpiar el formulario
+            document.querySelector('#codigo_de_barra').value = '';
+            document.querySelector('#producto_nombre').value = '';
+            document.querySelector('#inventario').value = '';
+
+            // Actualizar la lista de productos en el modal
+            agregarProductoATabla(data.producto);
+          } else {
+            alert('Error al crear el producto');
+          }
+        })
+        .catch(error => console.error('Error al crear el producto:', error));
+      }
+
+          // Función para agregar un producto a la tabla de productos en el modal
+      function agregarProductoATabla(producto) {
+        // Selecciona el cuerpo de la tabla de productos
+        const tablaProductos = document.querySelector('#tablaProductos tbody');
+
+        // Crear una nueva fila con los datos del producto
+        const nuevaFila = document.createElement('tr');
+        nuevaFila.innerHTML = `
+          <td>${producto.codigo_barra}</td>
+          <td>${producto.nombre_producto}</td>
+        `;
+
+        // Añadir la nueva fila a la tabla
+        tablaProductos.appendChild(nuevaFila);
+      }
+
+      function abrirEditarModal(id, nombre, codigo) {
+        document.querySelector('#editarProductoId').value = id;
+        document.querySelector('#editarProductoNombre').value = nombre;
+        document.querySelector('#editarProductoCodigo').value = codigo;
+        $('#editarProductoModal').modal('show');
+      }
+
+      function cerrarModal(modalId) {
+        $(`#${modalId}`).modal('hide');
+      }
+
+      function agregarProductoAFactura(event) {
+        event.preventDefault();
+        
+        const facturaId = document.getElementById('facturaId').value; 
+        const productoId = document.getElementById('producto').value;
+        const cantidad = document.getElementById('cantidad').value;
+        const precio = document.getElementById('precio').value;
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+        if (!productoId || !cantidad) {
+        alert('Por favor, selecciona un producto y una cantidad.');
+        return;
+        }
+
+        // Construir un objeto de datos para enviar al controlador
+        const data = {
+        producto_id: productoId,
+        cantidad,
+        precio,
+        _csrf: csrfToken
+        };
+
+        fetch(`/finanzas/facturas_recibidas/${facturaId}/agregar_producto`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'CSRF-Token': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+        if (data.success) {
+            actualizarTablaProductos(data.detalle); // Actualizar la tabla sin recargar
+            //$('#addProductModal').modal('hide');    // Cerrar el modal
+        } else {
+            alert(data.message || 'Error al agregar producto');
+        }
+        })
+        .catch(error => console.error('Error al agregar producto:', error));
+      }
+
+
+      // Función para actualizar la tabla de productos en la factura
+      function actualizarTablaProductos(detalle) {
+        console.log(detalle);
+        const tablaProductos = document.getElementById('productosTabla');
+        
+        const nuevaFila = document.createElement('tr');
+        nuevaFila.innerHTML = `
+          <td>${detalle.producto.nombre_producto ? detalle.producto.nombre_producto : 'Producto no disponible'}</td>
+          <td>${detalle.cantidad}</td>
+          <td>${detalle.precio.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}</td>
+          <td>${(detalle.cantidad * detalle.precio).toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}</td>
+        `;
+
+        tablaProductos.appendChild(nuevaFila);
+      }
+
