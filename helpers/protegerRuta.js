@@ -1,24 +1,40 @@
 import jwt from 'jsonwebtoken';
 
 const verificarToken = (req, res, next) => {
-  const token = req.cookies._token;  // Leer el token de la cookie
+  const token = req.cookies._token; 
 
-  // Verificar si el token existe
   if (!token) {
-    return res.redirect('/autenticacion/login');  // Redirigir si no hay token
+    return res.redirect('/autenticacion/login');  
   }
 
-  // Verificar el token
   jwt.verify(token, 'secreto_seguro', (err, decoded) => {
     if (err) {
-      return res.redirect('/autenticacion/login');  // Redirigir si el token es inválido
+      return res.redirect('/autenticacion/login');
     }
 
-    // El token es válido, pasar los datos decodificados al request
-    req.usuario = decoded;  // Aquí almacenamos los datos del token en req.usuario
+    req.usuario = decoded; 
     console.log(req.usuario);
     next();
   });
 };
 
-export { verificarToken };
+
+const permiso_nivel_1 = (req, res, next) => {
+  if (!req.usuario || req.usuario.permisos !== 'propietario') {
+    return res.redirect('/dashboard');
+  }
+  next();
+};
+
+const permiso_colaborador = (req, res, next) => {
+  if (!req.usuario || req.usuario.permisos === 'colaborador') {
+    return res.redirect(`/recursos_humanos/perfil_colaborador/${req.usuario.id}`);
+  }
+  next();
+};
+
+export { 
+  verificarToken,
+  permiso_nivel_1,
+  permiso_colaborador
+};

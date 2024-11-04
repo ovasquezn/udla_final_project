@@ -5,6 +5,7 @@ import e from 'express';
 import { check, validationResult } from 'express-validator'
 import { generarId, generarJWT } from '../helpers/tokens.js';
 import jwt from 'jsonwebtoken';
+import { emailRegistro, emailRecuperar } from '../helpers/emails.js';
 
 const mostrar_signup = (req, res) => {
   res.render('autenticacion/signup', {
@@ -19,6 +20,10 @@ const mostrar_login = (req, res) => {
       csrfToken: req.csrfToken()
   })
 }
+
+export const formatearNombreEmpresa = (nombreEmpresa) => {
+  return nombreEmpresa.toLowerCase().replace(/\s+/g, '');
+};
 
 const registrar_usuario = async (req, res) => {
   
@@ -42,14 +47,12 @@ const registrar_usuario = async (req, res) => {
     });
   }
 
-  // Extraer los datos del formulario
   const { nombre, empresa, email, password } = req.body;
 
-  // Formatear el nombre de la empresa para crear el nombre de usuario
-  const nombreFormateado = empresa.toLowerCase().replace(/\s+/g, '');
+  const nombreFormateado = formatearNombreEmpresa(empresa.nombre);
+
   const nombreUsuario = `admin@${nombreFormateado}`;
 
-  // Verificar si el usuario ya existe por correo electrónico
   const existeUsuario = await Usuarios.findOne({ where: { email } });
 
   if (existeUsuario) {
@@ -64,7 +67,6 @@ const registrar_usuario = async (req, res) => {
     });
   }
 
-  // Verificar si la empresa ya existe por nombre
   const existeEmpresa = await Empresas.findOne({ where: { nombre: empresa } });
 
   if (existeEmpresa) {
@@ -79,21 +81,24 @@ const registrar_usuario = async (req, res) => {
     });
   }
 
-  // Si la empresa no existe, crearla
   let nuevaEmpresa = await Empresas.create({ nombre: empresa });
 
-  // Crear el usuario asociado a la empresa
   const usuario = await Usuarios.create({
     nombre,
     nombreFormateadoEmpresa: nombreFormateado,
     email,
     nombreUsuario,
     password, 
-    token: '123', // Arreglar esto
+    token: generarId(),
     empresaId: nuevaEmpresa.id, 
   });
 
-  // Renderizar la página de mensaje de confirmación
+  emailRegistro({
+    nombre: usuario.nombre,
+    email: usuario.email,
+    token: usuario.token
+})
+
   res.render('autenticacion/mensaje', {
     pagina: 'Creación exitosa',
     mensaje: 'Hemos enviado un email de confirmación, por favor revisa tu bandeja de entrada',
@@ -101,7 +106,7 @@ const registrar_usuario = async (req, res) => {
 };
 
 const iniciar_sesion = async (req, res) => {
-  // Validaciones
+
   await check('nombreUsuario').notEmpty().withMessage('Ingrese un usuario').run(req);
   await check('password').notEmpty().withMessage('Ingrese una contraseña').run(req);
 
@@ -117,10 +122,9 @@ const iniciar_sesion = async (req, res) => {
 
   const { nombreUsuario, password } = req.body;
 
-  // Buscar el usuario y su empresa asociada
   const usuario = await Usuarios.findOne({
     where: { nombreUsuario },
-    include: [{ model: Empresas, as: 'empresa' }] // Incluir la relación con la empresa
+    include: [{ model: Empresas, as: 'empresa_usuarios' }]
   });
 
   if (!usuario) {
@@ -131,7 +135,14 @@ const iniciar_sesion = async (req, res) => {
     });
   }
 
-  // Verificar contraseña
+  if (!usuario.confirmado) {
+    return res.render('autenticacion/login', {
+        pagina: 'Iniciar Sesión',
+        csrfToken: req.csrfToken(),
+        errores: [{msg: 'Confirma tu cuenta antes de iniciar sesión'}]
+    })
+}
+
   if (!await usuario.verificarPassword(password)) {
     return res.render('autenticacion/login', {
       pagina: 'Iniciar Sesión',
@@ -140,30 +151,57 @@ const iniciar_sesion = async (req, res) => {
     });
   }
 
-  // Generar el JWT token
   const token = jwt.sign({
     id: usuario.id,
     nombre: usuario.nombre,
-    empresa: usuario.empresa.nombre, // Incluir la empresa en el token si es necesario
-    rol: 'Administrador',
+    empresa: usuario.empresa_usuarios.nombre,
+    permisos: usuario.permisos,
     empresaId: usuario.empresaId,
   }, 'secreto_seguro', { expiresIn: '1d' });
 
-  // Guardar el token como cookie
-  return res.cookie('_token', token, {
-    httpOnly: true,  // Asegura que la cookie no pueda ser accedida por JavaScript en el cliente
-    maxAge: 60 * 60 * 24 * 1000  // 1 día de duración
-  }).redirect('/dashboard');
+  if (usuario.permisos === 'colaborador') {
+    return res.cookie('_token', token, {
+        httpOnly: true,  
+        maxAge: 60 * 60 * 24 * 1000 
+      }).redirect(`/recursos_humanos/perfil_colaborador/${usuario.id}`);
+  } else {
+    return res.cookie('_token', token, {
+      httpOnly: true, 
+      maxAge: 60 * 60 * 24 * 1000
+      }).redirect('/dashboard');
+  }
 };
 
+const confirmar_token = async (req, res) => {
+  const usuario = await Usuarios.findOne({where: {token: req.params.token}})
+
+  if (!usuario) {
+      return res.render('autenticacion/confirmar', {
+          pagina: 'Error',
+          mensaje: 'El token no es válido',
+          error: true
+      })
+  }
+
+  usuario.confirmado = true;
+  usuario.token = null;
+  await usuario.save();
+
+  res.render('autenticacion/confirmar', {
+      pagina: 'Cuenta activada',
+      cuenta_activada: true,
+      mensaje: 'Tu cuenta ha sido activada correctamente'
+  })
+}
+
 const recuperar_contrasena = async (req, res) => {
-  // Validaciones
+
   await check('email').isEmail().withMessage('Ingrese un correo válido').run(req);
 
   let resultado = validationResult(req);
 
   if (!resultado.isEmpty()) {
-    return res.render('autenticacion/recuperar', {
+    return res.render('autenticacion/mensaje', {
       pagina: 'Recuperar contraseña',
       errores: resultado.array(),
       csrfToken: req.csrfToken(),
@@ -172,28 +210,27 @@ const recuperar_contrasena = async (req, res) => {
 
   const { email } = req.body;
 
-  // Verificar si el usuario existe
   const usuario = await Usuarios.findOne({ where: { email } });
 
   if (!usuario) {
-    return res.render('autenticacion/recuperar', {
+    return res.render('autenticacion/mensaje', {
       pagina: 'Recuperar contraseña',
       errores: [{ msg: 'El correo no está registrado' }],
       csrfToken: req.csrfToken(),
     });
   }
 
-  // Generar un token aleatorio
   const token = generarId();
 
-  // Guardar el token en la base de datos
   usuario.token = token;
   await usuario.save();
 
-  // Enviar un email con el token
-  // ...
+  emailRecuperar({
+    nombre: usuario.nombre,
+    email: usuario.email,
+    token: usuario.token
+})
 
-  // Redirigir a la página de mensaje
   res.render('autenticacion/mensaje', {
     pagina: 'Recuperar contraseña',
     mensaje: 'Hemos enviado un email con las instrucciones para recuperar tu contraseña',
@@ -205,6 +242,72 @@ const mostrar_recuperar_contrasena = (req, res) => {
     pagina: 'Recuperar contraseña',
     csrfToken: req.csrfToken(),
   });
+}
+
+const verificar_token = async (req, res) => {
+  const { token } = req.params;
+  const usuario = await Usuarios.findOne({where: {token}})
+
+  if (!usuario) {
+      return res.render('autenticacion/mensaje', {
+          pagina: 'Error',
+          mensaje: 'El token no es válido',
+          error: true
+      })
+  }
+
+  res.render('autenticacion/reset', {
+      pagina: 'Nueva contraseña',
+      csrfToken: req.csrfToken(),
+  })
+}
+
+const nueva_contrasena = async (req, res) => {
+
+  await check('password').isLength({min: 6}).withMessage('Mínimo 6 caracteres').run(req);
+
+  let resultado = validationResult(req);
+
+  if(!resultado.isEmpty()) {
+      return res.render('autenticacion/reset', {
+          pagina: 'Nueva contraseña',
+          csrfToken: req.csrfToken(),
+          errores: resultado.array()
+      })
+  }
+
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+
+  const usuario = await Usuarios.findOne({ where: { token } });
+  if (!usuario) {
+    return res.render('autenticacion/mensaje', {
+      pagina: 'Error',
+      mensaje: 'Token inválido o usuario no encontrado',
+      error: true,
+    });
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  usuario.password = await bcrypt.hash(password, salt);
+  usuario.token = null;
+
+  await usuario.save();
+
+  res.render('autenticacion/mensaje', {
+    pagina: 'Contraseña actualizada',
+    mensaje: 'Tu contraseña ha sido actualizada correctamente',
+  });
+} catch (error) {
+  console.error('Error al actualizar la contraseña:', error);
+  res.status(500).render('autenticacion/mensaje', {
+    pagina: 'Error',
+    mensaje: 'Hubo un error al actualizar la contraseña. Intenta de nuevo más tarde.',
+    error: true,
+  });
+}
 }
 
 const mostrar_mensaje = (req, res) => {
@@ -225,7 +328,10 @@ export {
     registrar_usuario,
     iniciar_sesion,
     recuperar_contrasena,
+    confirmar_token,
     mostrar_recuperar_contrasena, 
+    verificar_token,
+    nueva_contrasena,
     mostrar_mensaje,
     salir
 };

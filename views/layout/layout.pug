@@ -18,28 +18,12 @@ head
   link(rel='stylesheet' href='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')
 
 .wrapper
-  // Navbar
   nav.main-header.navbar.navbar-expand.navbar-dark
-    // Left navbar links
     ul.navbar-nav
       li.nav-item
         a.nav-link(data-widget='pushmenu' href='#' role='button')
           i.fas.fa-bars
-      li.nav-item.dropdown
-        a.nav-link(data-toggle='dropdown' href='#')
-          |  Configuración
-        .dropdown-menu.dropdown-menu-lg.dropdown-menu-right
-          a.dropdown-item(href='#')
-            i.fas.fa-user
-            |  Permisos
-          a.dropdown-item(href='#')
-            i.fas.fa-lock
-            |  Impresoras
-          a.dropdown-item(href='#')
-            i.fas.fa-cogs
-            |  Seguridad
 
-    // Right navbar links
     ul.navbar-nav.ml-auto
       li.nav-item.dropdown
         a.nav-link(data-toggle='dropdown' href='#')
@@ -67,15 +51,9 @@ head
 
     .sidebar
       .user-panel.mt-2.pb-2.mb-3.d-flex
-        //.image
-        //  img.img-circle.elevation-2(src='dist/img/user2-160x160.jpg' alt='User Image')
       div.text-center
-        //p.text-white.text-center.font-d #{req.session.usuarioNombre}  
-        //- p.text-white.text-center(style="font-size: 0.7em") #{req.session.empresaNombre}
-        p.text-white.text-center.font-d= locals.usuario + " - " +empresa
-        //p.text-white.text-center.font-d #{usuario}
-        //p.text-white.text-center(style="font-size: 0.7em") #{empresa}
-        //a.d-block(href='#') Usuario - Ti
+        p.text-white.text-center.font-d= locals.usuario + " - " +locals.empresa
+        p.text-white.text-center.font-d= locals.permisos + ' - solo para test'
       nav.mt-2
         ul.nav.nav-pills.nav-sidebar.flex-column(data-widget='treeview' role='menu' data-accordion='false')
           li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas', 'gastos', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
@@ -85,9 +63,10 @@ head
               | Finanzas
               i.right.fas.fa-angle-left
             ul.nav.nav-treeview
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/banco")
-                  p Bancos
+              if locals.permisos === 'propietario'
+                li.nav-item
+                  a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/banco")
+                    p Bancos
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_emitidas' ? 'active' : '', href="/finanzas/facturas_emitidas")
                   p Facturas Emitidas
@@ -104,7 +83,7 @@ head
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
                   p Proveedores
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['mesas','caja','productos_a_la_venta', 'cliente', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['mesas','caja','productos_a_la_venta', 'cliente'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-cash-register
               p
@@ -196,13 +175,30 @@ head
               i.nav-icon.fas.fa-chart-pie
               p
                 | Proyecciones
-                i.fas   
+                i.fas      
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['usuarios'].includes(pagina_activa) ? 'menu-open' : '')
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-boxes
+              p
+                | Configuraciones
+                i.fas.fa-angle-left.right
+            ul.nav.nav-treeview
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'usuarios' ? 'active' : '', href='/configuraciones/usuarios')
+                  p Usuarios
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'otros' ? 'active' : '', href='#')
+                  p Dashboard
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'otros' ? 'active' : '', href='#')
+                  p Impresoras
+
           li.nav-item.mt-2
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-edit
               p
                 | Notificaciones
-                i.fas   
+                i.fas  
     // sidebar
   block contenido
 // Scripts requeridos

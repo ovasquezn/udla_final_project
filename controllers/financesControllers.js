@@ -1,6 +1,6 @@
 import '../models/relations.js';
 import { Productos } from '../models/Productos.js';
-import { Facturas, Proveedores, DetalleFacturas, FacturasEmitidas} from '../models/relations.js';
+import { Facturas, Proveedores, DetalleFacturas, FacturasEmitidas, Inventarios} from '../models/relations.js';
 
 import { MovimientosBancarios } from '../models/MovimientosBancarios.js';
 import { verificarToken } from '../helpers/protegerRuta.js';
@@ -52,23 +52,38 @@ const mostrar_banco = async (req, res) => {
 const mostrar_facturas_recibidas = async (req, res) => {
   try {
     const empresaId = req.usuario.empresaId;
+
+    // Fetch invoices with related provider and details
     const facturas = await Facturas.findAll({
       where: { empresaId },
-      include: [{ model: Proveedores, as: 'proveedor' }]
+      include: [
+        { model: Proveedores, as: 'proveedor' },
+        {
+          model: DetalleFacturas,
+          as: 'detalle_factura',
+          include: [{ model: Productos, as: 'producto' }]
+        }
+      ]
     });
 
+    const productos = await Productos.findAll({ where: { empresaId } });
     const proveedores = await Proveedores.findAll({ where: { empresaId } });
-    res.render('finanzas/facturas_recibidas', { 
-      facturas, 
-      proveedores, 
+    const inventarios = await Inventarios.findAll({ where: { empresaId } });
+
+    res.render('finanzas/facturas_recibidas', {
+      inventarios,
+      facturas,
+      productos,
+      proveedores,
       pagina: 'Facturas Recibidas',
       pagina_activa: 'facturas_recibidas',
-      csrfToken: req.csrfToken() });
+      csrfToken: req.csrfToken()
+    });
   } catch (error) {
     console.error('Error al cargar las facturas:', error);
     res.status(500).send('Error al cargar las facturas');
   }
-  };
+};
 
 const agregar_factura_recibida = async (req, res) => {
   try {
@@ -93,6 +108,77 @@ const agregar_factura_recibida = async (req, res) => {
     res.status(500).send('Error al crear la factura');
   }
   };
+
+const agregar_productos_factura_recibida = async (req, res) => {
+  try {
+    const { facturaId } = req.params;
+    const { producto_id, cantidad } = req.body;
+    const empresaId = req.usuario.empresaId;
+
+    const factura = await Facturas.findOne({ where: { id: facturaId, empresaId } });
+    if (!factura) {
+      return res.status(404).json({ success: false, message: 'Factura no encontrada' });
+    }
+
+    const producto = await Productos.findOne({ where: { id: producto_id, empresaId } });
+    if (!producto) {
+      return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+    }
+
+    const nuevoDetalle = await DetalleFacturas.create({
+      empresaId,
+      factura_id: factura.id, 
+      producto_id: producto.id,  
+      nombre_producto: producto.nombre_producto, 
+      unidad: producto.unidad || 'unidad', 
+      codigo_barra: 'N/A', 
+      precio: 1.0, 
+      cantidad,  
+      descuento: 0,  
+      impuestos: 0,  
+      fecha_creacion: new Date(),  
+      fecha_actualizacion: new Date(),
+    });
+
+    const detalleConProducto = await DetalleFacturas.findOne({
+      where: { id: nuevoDetalle.id },
+      include: [{ model: Productos, as: 'producto' }],
+    });
+
+    res.status(201).json({ success: true, detalle: detalleConProducto });
+    console.log('Producto agregado con éxito');
+    //res.send('Producto agregado con éxito');
+  } catch (error) {
+    console.error('Error al agregar productos a la factura:', error);
+    res.status(500).json({ success: false, message: 'Error al agregar productos a la factura' });
+  }
+}
+const crear_productos_factura_recibida = async (req, res) => { 
+  try {
+    const { codigo_barra, nombre_producto, precio, cantidad, inventario_id } = req.body;
+    const empresaId = req.usuario.empresaId;
+    const proveedor_id = req.body.proveedor_id; 
+
+    const nuevoProducto = await Productos.create({
+      empresaId,
+      codigo_barra,
+      nombre_producto,
+      precio,
+      cantidad,
+      inventario_id,
+      proveedor_id,
+      codigo_interno: codigo_barra, 
+      fecha_creacion: new Date(),
+      fecha_actualizacion: new Date(),
+    });
+
+    res.status(201).json({ success: true, producto: nuevoProducto });
+    
+  } catch (error) {
+    console.error('Error al crear el producto:', error);
+    res.status(500).json({ success: false, message: 'Error al crear el producto' });
+  }
+};
 
 // FACTURAS EMITIDAS
 const mostrar_facturas_emitidas = async (req, res) => {
@@ -138,6 +224,10 @@ const agregar_factura_emitida = async (req, res) => {
     res.status(500).send('Error al crear la factura emitida');
   }
 };
+
+
+
+
 const mostrar_gastos = (req, res) => {
     res.render('finanzas/gastos', {
         pagina: 'Gastos',
@@ -161,15 +251,9 @@ const mostrar_proveedores_test = async (req, res) => {
     }
 };
 
-
-
-
-
-// Proveedores
-
 const mostrar_proveedores = async (req, res) => {
   try {
-    const empresaId = req.usuario.empresaId; // Obtén el ID de la empresa del usuario autenticado
+    const empresaId = req.usuario.empresaId; autenticado
     const proveedores = await Proveedores.findAll({ where: { empresaId } });
     res.render('finanzas/proveedores', { 
       proveedores,
@@ -246,5 +330,7 @@ export {
     eliminar_proveedor,
     mostrar_precios,
     agregar_factura_recibida,
-    agregar_factura_emitida
+    agregar_factura_emitida,
+    agregar_productos_factura_recibida,
+    crear_productos_factura_recibida,
 };

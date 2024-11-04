@@ -32,6 +32,7 @@ Facturas.belongsTo(Proveedores, { foreignKey: 'proveedor_id', as: 'proveedor' })
 // Relación entre DetalleFacturas y Facturas
 Facturas.hasMany(DetalleFacturas, { foreignKey: 'factura_id', as: 'detalle_factura' });
 DetalleFacturas.belongsTo(Facturas, { foreignKey: 'factura_id', as: 'factura' });
+DetalleFacturas.belongsTo(Productos, { foreignKey: 'producto_id', as: 'producto' });
 
 // Relación entre Usuarios y Empresas (Uno a Muchos)
 Empresas.hasMany(Usuarios, { foreignKey: 'empresaId', as: 'usuarios' });

@@ -3,6 +3,7 @@ const dashboard = (req, res) => {
       pagina: 'Dashboard',
       usuario: req.usuario.nombre,
       empresa: req.usuario.empresa,
+      permisos: req.usuario.permisos,
   })
 }
 

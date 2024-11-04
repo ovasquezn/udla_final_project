@@ -1,4 +1,4 @@
-extends ../layout 
+extends ../layout/layout
 
 block contenido
   .content-wrapper
@@ -7,3 +7,277 @@ block contenido
         .row.mb-2
           .col-sm-6
             h1.m-0 Dashboard
+
+    section.content
+      .container-fluid.d-grid.grid-template-rows.gap-4
+        .row
+          
+          .col-lg-3.col-6
+            .small-box.bg-info
+              .inner
+                h3(style="font-size: 1.5rem;") $6,223,234
+                p Montos Disponibles
+              .icon
+                i.fas.fa-dollar-sign
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-warning
+              .inner
+                h3(style="font-size: 1.5rem;") 12
+                p Facturas por vencer en 7 días
+              .icon
+                i.fas.fa-file-invoice
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-danger
+              .inner
+                h3(style="font-size: 1.5rem;") $3,210,452
+                p Vencimientos (a 7 días)
+              .icon
+                i.fas.fa-exclamation-triangle
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-info
+              .inner
+                h3(style="font-size: 1.5rem;") 34
+                p Colaboradores
+              .icon
+                i.fas.fa-users
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-info
+              .inner
+                h3(style="font-size: 1.5rem;") $15,023,234
+                p Sueldos (a 7 días)
+              .icon
+                i.fas.fa-dollar-sign
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-success
+              .inner
+                h3(style="font-size: 1.5rem;") $12,003,452
+                p Montos a ingresar en 7 días
+              .icon
+                i.fas.fa-file-invoice
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-danger
+              .inner
+                h3(style="font-size: 1.5rem;")  1
+                p Facturas vencidas
+              .icon
+                i.fas.fa-exclamation-triangle
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+          .col-lg-3.col-6
+            .small-box.bg-dark
+              .inner
+                h3(style="font-size: 1.5rem;")  2
+                p Licencias médicas activas
+              .icon
+                i.fas.fa-users
+              a.small-box-footer(href="#") Ver detalles <i class="fas fa-arrow-circle-right"></i>
+
+        .row
+          .col-md-6
+            .card
+              .card-header
+                h3.card-title Reservas sin Confirmar (+10)
+              .card-body
+                table.table.table-bordered
+                  thead
+                    tr
+                      th Cliente
+                      th Fecha
+                      th Inv.
+                      th.d-none.d-lg-table-cell Tipo de Evento
+                      th Estado
+                      
+                  tbody
+                    tr
+                      td Juan Pérez
+                      td 2024-10-15
+                      td 3
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente (+1día)
+                    tr
+                      td María García
+                      td 2024-10-16
+                      td 4
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Carlos López
+                      td 2024-10-17
+                      td 3
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Ana Martínez
+                      td 2024-10-18
+                      td 2
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Luis Fernández
+                      td 2024-10-19
+                      td 6
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Elena Gómez
+                      td 2024-10-20
+                      td 35
+                      td.d-none.d-lg-table-cell Evento Corporativo
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Pedro Sánchez
+                      td 2024-10-21
+                      td 12
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Laura Torres
+                      td 2024-10-22
+                      td 110
+                      td.d-none.d-lg-table-cell Evento Corporativo
+                      td.bg-warning.text-bold Pendiente
+                    tr
+                      td Andrés Ruiz
+                      td 2024-10-23
+                      td 3
+                      td.d-none.d-lg-table-cell Normal
+                      td.bg-warning.text-bold Pendiente
+          .col-md-6
+            .card
+              .card-header
+                h3.card-title Productos con Bajo Stock
+              .card-body
+                table.table.table-bordered
+                  thead
+                    tr
+                      th Producto
+                      th.d-none.d-xl-table-cell Proveedor
+                      th Stock
+                      th.d-none.d-lg-table-cell Stock Mínimo
+                      th 
+                  tbody
+                    tr.bg-danger
+                      td Leche
+                      td.d-none.d-lg-table-cell 3 
+                      td 0 litros 
+                      td.d-none.d-lg-table-cell 20 litros
+                      td.text-center
+                        button.btn.btn-primary(type="button") Solicitar
+                        
+                    tr.bg-warning
+                      td Harina
+                      td.d-none.d-lg-table-cell 2 
+                      td 70 kg 
+                      td.d-none.d-lg-table-cell 100 kg
+                      td.text-center
+                        button.btn.btn-primary(type="button") Solicitar
+                    tr.bg-warning
+                      td Margarina
+                      td.d-none.d-xl-table-cell 1 
+                      td 5 kg
+                      td.d-none.d-xl-table-cell 10 kg
+                      td.text-center
+                        button.btn.btn-primary(type="button") Solicitar
+                    tr.bg-warning
+                      td Coca Cola
+                      td.d-none.d-xl-table-cell 1
+                      td 26 unidades
+                      td.d-none.d-xl-table-cell 30 unid.
+                      td.text-center
+                        button.btn.btn-primary(type="button") Solicitar
+                    tr.bg-warning
+                      td Camarones
+                      td.d-none.d-xl-table-cell 2
+                      td 14 kg
+                      td.d-none.d-xl-table-cell 20 kg
+                      td.text-center
+                        button.btn.btn-primary(type="button") Solicitar
+        .row
+          .col-md-6
+            .card
+              .card-header
+                h3.card-title Variación de Precios - Lomo Liso +23%
+              .card-body
+                canvas#priceVariationChart1
+          .col-md-6
+            .card
+              .card-header
+                h3.card-title Variación de Precios - Harian +18%
+              .card-body
+                canvas#priceVariationChart2 
+          .col-md-6
+            .card
+              .card-header
+                h3.card-title Productos sin Salidas - +15 días
+              .card-body
+                table.table.table-striped
+                  thead
+                    tr
+                      th Producto
+                      th Fecha Última Salida
+                      th Días
+                      th Inventario 
+                  tbody
+                    tr
+                      td Coctel de Frutas
+                      td 2024-09-15
+                      td 15
+                      td 9 kg
+                    tr
+                      td Johnnie Walker Green Label
+                      td 2024-09-10
+                      td 20
+                      td 5 botellas 1 litro
+                    tr
+                      td Camarón Calibre 100/200
+                      td 2024-09-10
+                      td 20
+                      td 10 kg
+
+                    tr
+                      td Atun Porcionado
+                      td 2024-09-10
+                      td 20
+                      td 10 kg
+
+      script(src="https://cdn.jsdelivr.net/npm/chart.js")
+
+      script.
+        const priceVariationChart1 = new Chart(document.getElementById('priceVariationChart1'), {
+          type: 'line',
+          data: {
+            labels: ["01-10", "05-10", "10-10", "15-10", "20-10", "25-10", "30-10"],
+            datasets: [{
+              label: "Precio",
+              data: [100, 98, 97, 99, 101, 100, 102],
+                data: [7820, 8100, 8050, 8300, 8500, 8400, 9300],
+              borderColor: "rgba(75, 192, 192, 1)",
+              fill: false
+            }]
+          }
+        });
+
+        const priceVariationChart2 = new Chart(document.getElementById('priceVariationChart2'), {
+          type: 'line',
+          data: {
+            labels: ["01-10", "05-10", "10-10", "15-10", "20-10", "25-10", "30-10"],
+            datasets: [{
+              label: "Precio",
+              data: [930, 915, 940, 1050, 990, 985, 1097],
+              borderColor: "rgba(75, 192, 192, 1)",
+              fill: false
+            }]
+          }
+        });

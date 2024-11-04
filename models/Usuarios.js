@@ -1,9 +1,35 @@
 import { DataTypes } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import db from '../config/db.js';
 import { Empresas } from './Empresas.js'; // Importar el modelo de empresas
+import { Colaboradores } from './Colaboradores.js'; // Importar el modelo de colaboradores
 
 const Usuarios = db.define('usuarios', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    set() {
+      return uuidv4() + '-' + this.empresaId;
+    },
+    primaryKey: true,
+  },
+  empresaId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: Empresas,
+      key: 'id',
+    },
+  },
+  colaboradorId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: Colaboradores,
+      key: 'id',
+    },
+  },
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -25,30 +51,17 @@ const Usuarios = db.define('usuarios', {
     type: DataTypes.BOOLEAN,
     defaultValue: true, // El usuario está activo por defecto
   },
-  licencia: {
-    type: DataTypes.ENUM('gratis','basica','estandar', 'premium', 'test'),
-    defaultValue: 'gratis',
-    allowNull: true,
+  confirmado: DataTypes.BOOLEAN,
+  permisos: {
+    type: DataTypes.ENUM('propietario', 'admin', 'colaborador'),
+    defaultValue: 'propietario',
+    allowNull: false,
   },
   token: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  empresaId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'empresas',
-      key: 'id',
-    },
-  },
-  colaboradorId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,  // Esta clave es opcional
-    references: {
-      model: 'colaboradores',
-      key: 'id',
-    }
-  },
+
 }, {
   hooks: {
       beforeCreate: async function(usuario) {
@@ -57,9 +70,6 @@ const Usuarios = db.define('usuarios', {
       }
   }
 });
-
-// Relacionar usuarios con empresas
-Usuarios.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa' });
 
 Usuarios.prototype.verificarPassword = async function(password) {
   const isMatch = await bcrypt.compareSync(password, this.password);

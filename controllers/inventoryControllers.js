@@ -20,13 +20,10 @@ const mostrar_inventario_test = async (req, res) => {
     }
 };
 
-// Controlador para mostrar los datos
-const mostrar_inventario = async (req, res) => {
+//Eliminar
+const mostrar_inventario_test_2 = async (req, res) => {
   try {
-    //const empresaId = req.user.empresaId;  // Asegúrate de que el middleware coloca empresaId en req.user
-    const empresaId = 1;  // Elimina esta línea si el middleware ya coloca empresaId en req.user
-
-    // Obtener datos de productos, inventario y movimientos filtrados por empresaId
+    const empresaId = req.user.empresaId;
     const productos = await Productos.findAll({ where: { empresaId } });
     const inventario = await Inventarios.findAll({ where: { empresaId } });
     const movimientos = await Movimientos.findAll({ where: { empresaId } });
@@ -37,6 +34,7 @@ const mostrar_inventario = async (req, res) => {
     res.status(500).send("Error al cargar los datos.");
   }
 }
+//Eliminar
 const mostrar_detalle = async (req, res) => {
     try {
         const id = req.params.id;
@@ -54,6 +52,47 @@ const mostrar_detalle = async (req, res) => {
         res.status(500).send("Error interno del servidor");
     }
 };
+
+const mostrar_inventario = async (req, res) => {
+    const empresaId = req.usuario.empresaId;
+    try {
+      const inventario = await Inventarios.findAll({ where: { empresaId } }); // Obtenemos todos los productos en inventario
+      res.render('inventarios/inventario', {
+        inventario,
+        csrfToken: req.csrfToken(),
+      });
+    } catch (error) {
+      console.error('Error al cargar el inventario:', error);
+      res.status(500).send('Error al cargar el inventario');
+    }
+  };
+  
+
+const agregar_producto_inventario = async (req, res) => {
+    const empresaId = req.usuario.empresaId;
+    const { nombre, unidad, descripcion, bodega, encargado } = req.body;
+  
+    // Validaciones simples
+    if (!nombre || !unidad) {
+      return res.status(400).send('Nombre y unidad son campos obligatorios');
+    }
+  
+    try {
+      await Inventarios.create({
+        nombre,
+        unidad,
+        descripcion,
+        bodega,
+        encargado,
+        empresaId: empresaId,
+      });
+  
+      res.redirect('/inventario/lista_inventario');
+    } catch (error) {
+      console.error('Error al agregar el producto al inventario:', error);
+      res.status(500).send('Error al agregar el producto al inventario');
+    }
+  };
 
 const mostrar_productos = async (req, res) => {
     res.render('inventarios/productos', { pagina: 'Productos', pagina_activa: 'productos' });
@@ -76,5 +115,6 @@ export {
     mostrar_ingresos,
     mostrar_salidas,
     mostrar_pedidos,
-    mostrar_productos
+    mostrar_productos,
+    agregar_producto_inventario
 }

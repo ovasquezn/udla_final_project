@@ -3,6 +3,7 @@ import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import financesRoutes from './routes/financesRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 import hrRoutes from './routes/hrRoutes.js';
 import dashboard from './routes/dashboardRoutes.js';
 import index from './routes/indexRoutes.js';
@@ -31,6 +32,9 @@ app.use(express.json());
 app.use( cookieParser() );
 app.use( csrf({ cookie: true }) );
 
+
+//app.use(csrf({ ignoreMethods: ['POST'] }));
+
 app.use((req, res, next) => {
     if (req.usuario) {
       res.locals.usuario = req.usuario.nombre;
@@ -53,6 +57,8 @@ app.use('/', index);
 app.use('/recursos_humanos', hrRoutes);
 app.use('/inventario', inventoryRoutes); 
 app.use('/finanzas', financesRoutes);
+
+app.use('/configuraciones', configRoutes)
 
 const port = 3000;
 app.listen(port, () => {

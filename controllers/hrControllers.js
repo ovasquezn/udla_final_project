@@ -24,7 +24,7 @@ const mostrar_colaboradores = async (req, res) => {
 };
   
 
-const agregarTrabajador = async (req, res) => {
+const agregar_trabajador = async (req, res) => {
   try {
     const {
       nombre,
@@ -42,12 +42,11 @@ const agregarTrabajador = async (req, res) => {
     } = req.body;
 
     const empresaId = req.usuario.empresaId;
-    // Validaciones básicas (puedes agregar más según tus necesidades)
+
     if (!nombre || !apellido || !cargo || !estado) {
       return res.status(400).send('Los campos nombre, apellido, cargo y estado son obligatorios.');
     }
 
-    // Crear el trabajador en la base de datos
     await Colaboradores.create({
       nombre,
       apellido,
@@ -64,8 +63,7 @@ const agregarTrabajador = async (req, res) => {
       empresaId: empresaId,
     });
 
-    // Redirigir a la página de trabajadores
-    res.redirect('/recursosHumanos');
+    res.redirect('/recursos_humanos/colaboradores');
   } catch (error) {
     console.error('Error al agregar el trabajador:', error);
     res.status(500).send('Error al agregar el trabajador.');
@@ -73,21 +71,61 @@ const agregarTrabajador = async (req, res) => {
 };
 
 const mostrar_liquidaciones = async (req, res) => {
-  // const empresaId = req.usuario.empresaId;
+  try {
+    const empresaId = req.usuario.empresaId;
+    const colaboradores = await Colaboradores.findAll({ where: { empresaId } });
 
-  // const liquidaciones = await Liquidaciones.findAll({
-  //   where: { empresaId: empresaId },
-  //   include: [
-  //     { model: Colaboradores, as: 'colaborador' },
-  //   ],
-  // });
+  
+    const fechaActual = new Date();
+    const meses = Array.from({ length: 24 }, (_, i) => {
+      const fecha = new Date(fechaActual.getFullYear(), fechaActual.getMonth() - i, 1);
+      return {
+        nombre: fecha.toLocaleString('es-ES', { month: 'long' }),
+        mes: fecha.getMonth() + 1,
+        anio: fecha.getFullYear(),
+      };
+    });
 
-  res.render('recursos_humanos/liquidaciones', {
-    csrfToken: req.csrfToken(),
-    pagina: 'liquidaciones',
-    pagina_activa: 'liquidaciones'    
-  });
-}
+    const liquidaciones = await Liquidaciones.findAll({
+      where: { empresaId },
+      include: [{ model: Colaboradores, as: 'colaboradore' }],
+    });
+
+    res.render('recursos_humanos/liquidaciones', {
+      pagina: 'Liquidaciones de Sueldo',
+      csrfToken: req.csrfToken(),
+      meses,
+      colaboradores,
+      liquidaciones,
+    });
+  } catch (error) {
+    console.error('Error al mostrar las liquidaciones:', error);
+    res.status(500).send('Error al mostrar las liquidaciones');
+  }
+};
+
+const crear_liquidaciones = async (req, res) => {
+  try {
+    const { mes, anio, detalle } = req.body;
+    const empresaId = req.usuario.empresaId;
+
+    const colaboradores = await Colaboradores.findAll({ where: { empresaId } });
+
+    const liquidaciones = colaboradores.map(colaborador => ({
+      empresaId,
+      trabajador_id: colaborador.id,
+      fecha: new Date(anio, mes - 1, 1),
+      detalle,
+    }));
+
+    await Liquidaciones.bulkCreate(liquidaciones);
+
+    res.redirect('/recursosHumanos/liquidaciones');
+  } catch (error) {
+    console.error('Error al generar liquidaciones mensuales:', error);
+    res.status(500).send('Error al generar liquidaciones');
+  }
+};
 
 const mostrar_comite_paritario = async (req, res) => {
 
@@ -116,14 +154,23 @@ const mostrar_control_asisitencia = async (req, res) => {
       });
     } 
 
+const mostrar_perfil_colaborador = async (req, res) => {
+  res.render('recursos_humanos/perfil_colaborador', {
+    csrfToken: req.csrfToken(),
+    pagina: 'perfil_colaborador',
+    pagina_activa: 'perfil_colaborador',
+    usuario: req.usuario.nombre,
+    empresa: req.usuario.empresa,
+  });
+}
 export { 
       mostrar_colaboradores,
-      agregarTrabajador,
+      agregar_trabajador,
       mostrar_liquidaciones,
       mostrar_comite_paritario,
       mostrar_personal_antiguo,
-      mostrar_control_asisitencia
+      mostrar_control_asisitencia,
+      mostrar_perfil_colaborador,
+      crear_liquidaciones
 };
-  
-  
   
