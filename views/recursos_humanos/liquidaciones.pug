@@ -1,4 +1,4 @@
-extends ../layout 
+extends ../layout/layout
 
 block contenido
   .content-wrapper
@@ -6,4 +6,138 @@ block contenido
       .container-fluid
         .row.mb-2
           .col-sm-6
-            h1.m-0 Liquidaciones
+            h1.m-0 Liquidaciones de Sueldo
+          .col-sm-6.text-right
+            // Botón para agregar nueva liquidación para todos los colaboradores
+            button.btn.btn-success(data-toggle="modal" data-target="#addLiquidacionMesModal") 
+              i.fas.fa-plus
+              |  Generar Liquidaciones Mensuales
+
+    // Sección de meses y liquidaciones
+    section.content
+      .container-fluid
+        each mes, index in meses
+          .card.mb-3
+            .card-header
+              h5.mb-0
+                a.collapsed(data-toggle="collapse" href=`#mes${index}` role="button" aria-expanded="false" aria-controls=`mes${index}`)
+                  | #{mes.nombre.charAt(0).toUpperCase() + mes.nombre.slice(1)} #{mes.anio}
+
+            .collapse(id=`mes${index}`)
+              .card-body
+                each colaborador in colaboradores
+                  .row.mb-3
+                    .col-md-4
+                      h6= colaborador.nombre + ' ' + colaborador.apellido
+
+                    .col-md-2
+                      //h6 Estado: #{colaborador.liquidacion?.estado || 'Sin liquidación'}
+                      h6 Estado: 
+                        span.badge.badge-warning.ml-1 Pendiente
+                    .col-md-2
+                      //h6 Monto: #{colaborador.liquidacion?.monto ? `$${colaborador.liquidacion.monto}` : 'No disponible'}
+                      h6 Monto:
+                        span.badge.badge-danger.ml-1 No disponible
+                        
+                    .col-md-4.text-right
+                      // Botón para abrir el modal
+                      button.btn.btn-primary.btn-sm.mr-2(data-toggle="modal" data-target=`#viewLiquidacionModal-${colaborador.id}`)
+                        i.fas.fa-eye
+
+                      // Modal de Detalles de Liquidación
+                      .modal.fade(id=`viewLiquidacionModal-${colaborador.id}` tabindex="-1" role="dialog")
+                        .modal-dialog.modal-lg(role="document")
+                          .modal-content
+                            .modal-header
+                              h5.modal-title Detalles de Liquidación
+                              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") &times;
+                            .modal-body.text-left
+                              // Detalles de la liquidación
+                              p Nombre: #{colaborador.nombre} #{colaborador.apellido}
+                              p Estado: Aceptada
+                              p Monto: $1.000.000
+                            .modal-footer
+                              //if colaborador.liquidacion?.estado === 'pendiente'
+                              a.btn.btn-success.btn-sm(href=`/descargar/liquidacion/${colaborador.id}` target="_blank")
+                                i.fas.fa-download.mr-1
+                                | Descargar Liquidación
+                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+                      //- Botón para Cargar Liquidación
+                      a.btn.btn-secondary.btn-sm.mr-2(href=`/recursosHumanos/liquidacion/${mes.anio}-${mes.mes}/${colaborador.id}/cargar`).fas.fa-upload
+
+                      //- Botón para Firma Digital
+                      a.btn.btn-warning.btn-sm.mr-2(href=`/recursosHumanos/liquidacion/${mes.anio}-${mes.mes}/${colaborador.id}/firmar`).fas.fa-signature
+
+                      //- Botón para Eliminar Liquidación
+                      button.btn.btn-primary.btn-sm(type="button" onclick=`eliminarLiquidacion(${colaborador.id}, '${mes.anio}-${mes.mes}')`) 
+                        i.fas.fa-trash
+
+
+
+    // Modal para generar liquidaciones mensuales
+    .modal.fade#addLiquidacionMesModal(tabindex="-1" role="dialog")
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Generar Liquidaciones
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form(action="/recursosHumanos/liquidaciones/generar_mes" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              .form-row
+                .col-md-6
+                  .form-group
+                    label(for="mes") Mes
+                    select#mes.form-control(name="mes" required)
+                      option(value="1") Enero
+                      option(value="2") Febrero
+                      option(value="3") Marzo
+                      option(value="4") Abril
+                      option(value="5") Mayo
+                      option(value="6") Junio
+                      option(value="7") Julio
+                      option(value="8") Agosto
+                      option(value="9") Septiembre
+                      option(value="10") Octubre
+                      option(value="11") Noviembre
+                      option(value="12") Diciembre
+                .col-md-6
+                  .form-group
+                    label(for="anio") Año
+                    input#anio.form-control(type="number" name="anio" placeholder="Ingrese año" value=2024 required)
+
+              .form-group
+                label(for="detalle") Comentarios Generales
+                textarea#detalle.form-control(name="detalle" rows="3")
+
+              button.btn.btn-primary(type="submit") Generar Liquidaciones
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+      //- // Scripts para DataTables y Bootstrap
+      //- script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+      //- script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+      //- script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+      //- script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+      script.
+        function eliminarLiquidacion(colaboradorId, fecha) {
+          if (confirm('¿Estás seguro de que deseas eliminar esta liquidación?')) {
+            fetch(`/recursosHumanos/liquidacion/${fecha}/${colaboradorId}/eliminar`, {
+              method: 'DELETE',
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert('Liquidación eliminada correctamente');
+                location.reload();
+              } else {
+                alert('Error al eliminar la liquidación');
+              }
+            })
+            .catch(error => console.error('Error:', error));
+          }
+        }

@@ -1,4 +1,4 @@
-extends ../layout 
+extends ../layout/layout 
 
 block contenido
   .content-wrapper
@@ -121,7 +121,7 @@ block contenido
               button.close(type="button" data-dismiss="modal" aria-label="Close")
                 span(aria-hidden="true") &times;
             .modal-body
-              form(action="/recursosHumanos/agregar" method="POST")
+              form(action="/recursos_humanos/agregar" method="POST")
                 input(type="hidden" name="_csrf" value=csrfToken) 
                 .form-group
                   label(for="nombre") Nombre

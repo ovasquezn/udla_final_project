@@ -1,0 +1,147 @@
+extends ../layout/layout_profile
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1 #{usuario}
+          .col-sm-6.text-right
+
+    section.content
+        .container-fluid
+            .card.card-primary
+                .card-header
+                    h3.card-title Detalles del Colaborador
+                .card-body
+                    dl
+                        dt Nombre
+                        dd Nombre Apellido
+                        dt Cargo
+                        dd Cargo en la empresa
+                        dt Departamento
+                        dd Atencion al 
+                        dt Correo Electrónico
+                        dd colaborador@#correo.com
+                        dt Teléfono
+                        dd +56 9 1234 5678
+                        dt Dirección
+                        dd Calle 123, Comuna, Ciudad
+                .card.card-primary
+                    .card-header
+                        h3.card-title Documentos de Liquidaciones
+                    .card-body
+                        table.table.table-striped
+                            thead
+                                tr
+                                    th Liquidación
+                                    th Fecha emisión
+                                    th Estado
+                                    th Documento
+                            tbody
+                                tr
+                                    td Marzo 2024
+                                    td 03/03/2024
+                                    td Aceptada
+                                    td
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Abril 2024
+                                    td 03/04/2024
+                                    td Aceptada
+                                    td
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Mayo 2024
+                                    td 03/05/2024
+                                    td Aceptada
+                                    td
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Junio 2024
+                                    td 03/06/2024
+                                    td Aceptada
+                                    td
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Julio 2024
+                                    td 03/07/2024
+                                    td Firma Pendiente
+                                    td
+                                        a(href='#' download) Descargar
+
+                .card.card-primary
+                    .card-header
+                        h3.card-title Pagos
+                    .card-body
+                        table.table.table-striped
+                            thead
+                                tr
+                                    th Fecha de Pago
+                                    th Monto
+                                    th Método de Pago
+                                    th Estado
+                            tbody
+                                tr
+                                    td 01/01/2024
+                                    td $1000
+                                    td Transferencia Bancaria
+                                    td Completado
+                                tr
+                                    td 01/02/2024
+                                    td $1000
+                                    td Transferencia Bancaria
+                                    td Completado
+                                tr
+                                    td 01/03/2024
+                                    td $1000
+                                    td Transferencia Bancaria
+                                    td Completado
+                                tr
+                                    td 01/04/2024
+                                    td $1000
+                                    td Transferencia Bancaria
+                                    td Completado
+                                tr
+                                    td 01/05/2024
+                                    td $1000
+                                    td Transferencia Bancaria
+                                    td Completado
+
+                .card.card-primary
+                    .card-header
+                        h3.card-title Pagos
+                    .card-body
+                        table.table.table-striped
+                            thead 
+                                tr 
+                                    th Documento 
+                                    th Fecha de Emisión
+                                    th Estado
+                                    th Descargar
+                            tbody 
+                                tr 
+                                    td Contrato de Trabajo
+                                    td 01/01/2024
+                                    td Aceptado
+                                    td 
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Anexo 1
+                                    td 01/01/2024
+                                    td Aceptado
+                                    td 
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Anexo 2
+                                    td 01/01/2024
+                                    td Aceptado
+                                    td 
+                                        a(href='#' download) Descargar
+                                tr
+                                    td Carta Empleador
+                                    td 01/01/2024
+                                    td Pendiente
+                                    td 
+                                        a(href='#' download) Descargar
