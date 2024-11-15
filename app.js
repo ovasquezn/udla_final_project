@@ -10,7 +10,7 @@ import index from './routes/indexRoutes.js';
 import db from './db.js';
 import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
-import {PORT} from './config.js';
+//import {PORT} from './config.js';
 
 const app = express();
 
@@ -42,6 +42,8 @@ app.use('/finanzas', financesRoutes);
 
 app.use('/configuraciones', configRoutes)
 
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT,"0.0.0.0", () => {
     console.log(`Server on port ${PORT}`);
 }  );
