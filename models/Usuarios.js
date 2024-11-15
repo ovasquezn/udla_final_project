@@ -49,7 +49,7 @@ const Usuarios = db.define('usuarios', {
   },
   estadoActivo: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true, // El usuario está activo por defecto
+    defaultValue: true,
   },
   confirmado: DataTypes.BOOLEAN,
   permisos: {

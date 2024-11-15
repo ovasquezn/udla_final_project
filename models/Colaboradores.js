@@ -56,6 +56,10 @@ const Colaboradores = db.define('colaboradores', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  fecha_fin_contrato: {
+    type: DataTypes.DATE,
+    allowNull: true, 
+  },
   tipo_contrato: {
     type: DataTypes.STRING,
   },

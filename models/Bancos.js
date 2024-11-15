@@ -1,8 +1,9 @@
+// models/Bancos.js
+
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
-import { Empresas } from './Empresas.js';
 
-const MovimientosBancarios = db.define('movimientos_bancarios', {
+const Bancos = db.define('bancos', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -11,31 +12,28 @@ const MovimientosBancarios = db.define('movimientos_bancarios', {
   empresaId: {
     type: DataTypes.UUID,
     allowNull: false,
-    references: {
-      model: Empresas,
-      key: 'id',
-    },
   },
-  banco_id: {
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
-  fecha: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-  detalle: {
+  nombre_banco: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  monto: {
-    type: DataTypes.DECIMAL(10, 2),
+  numero_cuenta: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  tipo: {
-    type: DataTypes.ENUM('gasto', 'abono'),
+  tipo_cuenta: {
+    type: DataTypes.ENUM('corriente', 'ahorro', 'cheques', 'otros'),
     allowNull: false,
+  },
+  saldo: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    defaultValue: 0.00,
+  },
+  moneda: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'USD',
   },
   fecha_creacion: {
     type: DataTypes.DATE,
@@ -51,4 +49,4 @@ const MovimientosBancarios = db.define('movimientos_bancarios', {
   updatedAt: 'fecha_actualizacion',
 });
 
-export { MovimientosBancarios };
+export { Bancos };

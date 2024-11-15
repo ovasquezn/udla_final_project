@@ -12,6 +12,8 @@ import { Movimientos } from './Movimientos.js';
 import { MovimientosBancarios } from './MovimientosBancarios.js';
 import { Productos } from './Productos.js';
 import { FacturasEmitidas } from './FacturasEmitidas.js';
+import { Bancos } from './Bancos.js';
+import { Clientes } from './Clientes.js';
 
 // Relación Colaboradores - Pagos (uno a muchos)
 Colaboradores.hasMany(PagosColaboradores, { foreignKey: 'trabajador_id', as: 'pagos_colaboradores' });
@@ -32,7 +34,10 @@ Facturas.belongsTo(Proveedores, { foreignKey: 'proveedor_id', as: 'proveedor' })
 // Relación entre DetalleFacturas y Facturas
 Facturas.hasMany(DetalleFacturas, { foreignKey: 'factura_id', as: 'detalle_factura' });
 DetalleFacturas.belongsTo(Facturas, { foreignKey: 'factura_id', as: 'factura' });
+
 DetalleFacturas.belongsTo(Productos, { foreignKey: 'producto_id', as: 'producto' });
+Productos.hasMany(DetalleFacturas, { foreignKey: 'producto_id', as: 'detalleFacturas' });
+//DetalleFactura.belongsTo(Productos, { foreignKey: 'producto_id', as: 'producto' });
 
 // Relación entre Usuarios y Empresas (Uno a Muchos)
 Empresas.hasMany(Usuarios, { foreignKey: 'empresaId', as: 'usuarios' });
@@ -55,4 +60,24 @@ Productos.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_productos'
 Proveedores.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_proveedores' });
 FacturasEmitidas.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_facturas_emitidas' });
 
-export { Facturas, Proveedores, DetalleFacturas, Colaboradores, PagosColaboradores, Liquidaciones, Documentos, Usuarios, Empresas, Inventarios, Movimientos, MovimientosBancarios, Productos, FacturasEmitidas};
+Productos.belongsTo(Inventarios, { foreignKey: 'inventario_id', as: 'inventario' });
+Inventarios.hasMany(Productos, { foreignKey: 'inventario_id', as: 'productos' });
+
+Productos.hasMany(Movimientos, { foreignKey: 'producto_id', as: 'movimientos' });
+Movimientos.belongsTo(Productos, { foreignKey: 'producto_id', as: 'producto_movimiento' });
+
+// Relación entre Liquidaciones y Meses
+//Liquidaciones.belongsTo(Meses, { foreignKey: 'mesId', as: 'mes' });
+//Meses.hasMany(Liquidaciones, { foreignKey: 'mesId', as: 'liquidaciones' });
+
+Bancos.hasMany(MovimientosBancarios, { foreignKey: 'banco_id', as: 'movimientos_bancarios' });
+MovimientosBancarios.belongsTo(Bancos, { foreignKey: 'banco_id', as: 'banco' });
+Empresas.hasMany(Bancos, { foreignKey: 'empresaId', as: 'bancos' });
+
+Clientes.hasMany(FacturasEmitidas, { foreignKey: 'clienteId', as: 'facturas_emitidas' });
+FacturasEmitidas.belongsTo(Clientes, { foreignKey: 'clienteId', as: 'cliente_info' });
+
+Clientes.belongsTo(Empresas, { foreignKey: 'empresaId', as: 'empresa_clientes' });
+
+
+export { Bancos, Facturas, Clientes, Proveedores, DetalleFacturas, Colaboradores, PagosColaboradores, Liquidaciones, Documentos, Usuarios, Empresas, Inventarios, Movimientos, MovimientosBancarios, Productos, FacturasEmitidas};

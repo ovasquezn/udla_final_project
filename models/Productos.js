@@ -26,14 +26,14 @@ const Productos = db.define('productos', {
       key: 'id',
     },
   },
-  proveedor_id: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: Proveedores,
-      key: 'id',
-    },
-  },
+  // proveedor_id: {
+  //   type: DataTypes.UUID,
+  //   allowNull: false,
+  //   references: {
+  //     model: Proveedores,
+  //     key: 'id',
+  //   },
+  // },
   nombre_producto: {
     type: DataTypes.STRING,
     allowNull: false,
