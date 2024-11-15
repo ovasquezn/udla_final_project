@@ -1,9 +1,137 @@
 extends ../layout/layout
 
 block contenido
-    .content-wrapper
-        .content-header
-            .container-fluid
-                .row.mb-2
-                    .col-sm-6
-                        h1.m-0 Ingresos
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1 Ingresos de Productos
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addIngresoModal")
+              i.fas.fa-plus
+              |  Registrar Ingreso
+
+    section.content
+      .container-fluid
+        // Table to display Ingresos
+        table#ingresosTable.table.table-striped.table-bordered
+          thead
+            tr
+              th Producto
+              th Cantidad
+              th Fecha
+              th Tipo Movimiento
+          tbody
+            each ingreso in ingresos
+              tr
+                td= ingreso.producto ? ingreso.producto.nombre_producto : 'Producto desconocido'
+                td= ingreso.cantidad
+                td= new Date(ingreso.fecha).toLocaleDateString('es-ES')
+                td= ingreso.tipo_movimiento === 'entrada' ? 'Ingreso' : 'Salida'
+
+    // Modal for registering a new Ingreso
+    .modal.fade#addIngresoModal(tabindex="-1" role="dialog")
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Registrar Ingreso de Productos
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form#formRegistrarIngreso(action="/ingresos/registrar" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              
+              // Search product by barcode or name
+              .form-group
+                label(for="codigo_barra") Escanear Código de Barra
+                input#codigo_barra.form-control(type="text" name="codigo_barra" placeholder="Ingrese código de barra y presione Enter")
+              
+              .form-group
+                label(for="nombre_producto") Buscar Producto por Nombre
+                input#nombre_producto.form-control(type="text" name="nombre_producto" placeholder="Ingrese nombre del producto")
+
+              // List of products found
+              ul#productosEncontrados.list-group.mt-2
+                // JS will populate this dynamically
+              
+              // Table to select quantities
+              table.table.table-sm.table-bordered.mt-2
+                thead
+                  tr
+                    th Producto
+                    th Unidad
+                    th Cantidad
+                tbody#productosSeleccionados
+
+              // Submit button
+              button.btn.btn-primary(type="button" onclick="confirmarIngreso()") Confirmar Ingreso
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+  // Scripts for handling barcode scanning and product search
+  script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+  script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $('#ingresosTable').DataTable({
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+        }
+      });
+
+      $('#codigo_barra').on('keypress', function(e) {
+        if (e.which === 13) {
+          e.preventDefault();
+          buscarProductoPorCodigo($('#codigo_barra').val());
+        }
+      });
+
+      // Function to search for products by code
+      function buscarProductoPorCodigo(codigo) {
+        $.ajax({
+          url: `/productos/buscar?codigo_barra=${codigo}`,
+          method: 'GET',
+          success: function(data) {
+            agregarProductoALista(data.producto);
+          },
+          error: function() {
+            alert('Producto no encontrado');
+          }
+        });
+      }
+
+      // Function to add product to selection table
+      function agregarProductoALista(producto) {
+        const row = `
+          <tr>
+            <td>${producto.nombre_producto}</td>
+            <td>Unidad</td>
+            <td><input type="number" name="productos[${producto.id}][cantidad]" class="form-control" value="1" min="1"></td>
+          </tr>`;
+        $('#productosSeleccionados').append(row);
+      }
+
+      // Confirm Ingreso function
+      function confirmarIngreso() {
+        const productos = [];
+        $('#productosSeleccionados tr').each(function() {
+          const productoId = $(this).find('input').attr('name').match(/\[(.*?)\]/)[1];
+          const cantidad = $(this).find('input').val();
+          productos.push({ producto_id: productoId, cantidad });
+        });
+
+        $.ajax({
+          url: '/ingresos/registrar',
+          method: 'POST',
+          data: { productos: productos },
+          success: function() {
+            alert('Ingreso registrado exitosamente');
+            location.reload();
+          },
+          error: function() {
+            alert('Error al registrar ingreso');
+          }
+        });
+      }
+    });

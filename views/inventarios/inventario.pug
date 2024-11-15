@@ -4,117 +4,149 @@ block contenido
   .content-wrapper
     .content-header
       .container-fluid
-        .row
+        .row.mb-2
           .col-sm-6
-            h1.m-0 Inventario de Productos
+            h1 Inventario
           .col-sm-6.text-right
             button.btn.btn-success(data-toggle="modal" data-target="#addInventarioModal") 
               i.fas.fa-plus
-              |  Nuevo Producto
-    // Main content
+              |  Agregar Producto al Inventario
+
     section.content
       .container-fluid
+        // Tabla principal de inventario
         table#inventarioTable.table.table-striped
           thead
             tr
               th Nombre
-              th.d-none.d-mm-table-cell= Unidad
-              th.d-none.d-mm-table-cell= Bodega
-              th.d-none.d-sm-table-cell= Encargado
-              th Cantidad
-              th Estado
-              th 
+              th Cantidad Total
+              th Estado de Stock
+              th Bodega
+              th Encargado
+              th Unidad
+              th Detalles
           tbody
             each item, index in inventario
               tr
                 td= item.nombre
-                td.d-none.d-mm-table-cell= item.unidad
-                td.d-none.d-mm-table-cell= item.bodega
-                td.d-none.d-sm-table-cell= item.encargado
-                th= "Normal"
-                th= 0
+                td= item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) || '0'
                 td
-                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleInventarioModal${index}`) 
+                  if item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) > 50
+                    span.badge.badge-success Stock Alto
+                  else if item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) > 10
+                    span.badge.badge-warning Stock Medio
+                  else
+                    span.badge.badge-danger Stock Bajo
+                td= item.bodega || 'No especificado'
+                td= item.encargado || 'Sin asignar'
+                td= item.unidad || 'N/A'
+                td.text-center
+                  button.btn.btn-info.btn-sm(data-toggle="modal" data-target=`#detalleProductoModal-${index}`)
                     i.fas.fa-eye
+                    |  Ver Detalle
 
-                  // Modal de Detalles del Producto en Inventario
-                  .modal.fade(id=`detalleInventarioModal${index}` tabindex="-1" role="dialog")
-                    .modal-dialog.modal-lg(role="document")
-                      .modal-content
-                        .modal-header
-                          h5.modal-title Detalles del Producto - #{item.nombre}
-                          button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                        .modal-body
-                          p Nombre: #{item.nombre}
-                          p Unidad: #{item.unidad}
-                          p Descripción: #{item.descripcion || 'Sin descripción'}
-                          p Bodega: #{item.bodega || 'No especificada'}
-                          p Encargado: #{item.encargado || 'No asignado'}
-                        .modal-footer
-                          form(action=`/inventario/eliminar/${item.id}` method="POST" style="display:inline;")
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            button.btn.btn-danger(type="submit") 
-                              i.fas.fa-trash
-                              |  Eliminar
-                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
-    // Modal para Crear Nuevo Producto en Inventario
-    .modal.fade#addInventarioModal(tabindex="-1" role="dialog")
-      .modal-dialog.modal-lg(role="document")
-        .modal-content
-          .modal-header
-            h5.modal-title Nuevo Producto
-            button.close(type="button" data-dismiss="modal" aria-label="Close")
-              span(aria-hidden="true") &times;
-          .modal-body
-            form(action="/inventario/agregar_producto_inventario" method="POST")
-              input(type="hidden" name="_csrf" value=csrfToken) 
-              
-              // Nombre del Producto
-              .form-group
-                label(for="nombre") Nombre
-                input#nombre.form-control(type="text" name="nombre" required)
+        // Modal para agregar producto al inventario
+        .modal.fade#addInventarioModal(tabindex="-1" role="dialog")
+          .modal-dialog.modal-lg(role="document")
+            .modal-content
+              .modal-header
+                h5.modal-title Agregar Producto al Inventario
+                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                  span(aria-hidden="true") &times;
+              .modal-body
+                form(action="/inventario/lista_inventario/agregar_producto_inventario" method="POST")
+                  input(type="hidden" name="_csrf" value=csrfToken)
+                  .form-group
+                    label(for="nombre") Nombre del Producto
+                    input#nombre.form-control(type="text" name="nombre" required)
+                  .form-group
+                    label(for="unidad") Unidad
+                    input#unidad.form-control(type="text" name="unidad" required)
+                  .form-group
+                    label(for="descripcion") Descripción
+                    textarea#descripcion.form-control(name="descripcion")
+                  .form-group
+                    label(for="bodega") Bodega
+                    input#bodega.form-control(type="text" name="bodega")
+                  .form-group
+                    label(for="encargado") Encargado
+                    input#encargado.form-control(type="text" name="encargado")
+                  button.btn.btn-primary(type="submit") Guardar
+              .modal-footer
+                button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
-              // Unidad de Medida
-              .form-group
-                label(for="unidad") Unidad de Medida
-                input#unidad.form-control(type="text" name="unidad" required)
+        // Modales de Detalle de Productos (ubicados fuera de la tabla)
+        each item, index in inventario
+          .modal.fade(id=`detalleProductoModal-${index}` tabindex="-1" role="dialog")
+            .modal-dialog.modal-lg(role="document")
+              .modal-content
+                .modal-header
+                  h5.modal-title Detalles del Producto - #{item.nombre}
+                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                .modal-body
+                  h6 Productos Relacionados
+                  table.table.table-sm.table-bordered
+                    thead
+                      tr
+                        th Producto
+                        th Precio
+                        th Código Interno
+                        th Código de Barra
+                        th Cantidad en Factura
+                    tbody
+                      // Accedemos a item.productos en lugar de inventario para cada modal
+                      each producto in item.productos
+                        tr
+                          td= producto.nombre_producto
+                          td= producto.precio
+                          td= producto.codigo_interno || 'N/A'
+                          td= producto.codigo_barra || 'N/A'
+                          td= producto.cantidadTotal || '0'
 
-              // Descripción
-              .form-group
-                label(for="descripcion") Descripción
-                textarea#descripcion.form-control(name="descripcion")
+                  hr
 
-              // Bodega
-              .form-group
-                label(for="bodega") Bodega
-                input#bodega.form-control(type="text" name="bodega")
+                  h6 Salidas de Producto
+                  table.table.table-sm.table-bordered.mt-2
+                    thead
+                      tr
+                        th Fecha de Salida
+                        th Cantidad
+                        th Motivo
+                        th Responsable
+                    // Datos de ejemplo
+                    tbody 
+                      tr
+                        td 2024-11-15
+                        td 20
+                        td Venta directa
+                        td Juan Pérez
+                      tr
+                        td 2024-11-16
+                        td 15
+                        td Uso en restaurante
+                        td María López
+                      tr
+                        td 2024-11-17
+                        td 10
+                        td Transferencia a otra bodega
+                        td Carlos Gómez
 
-              // Encargado
-              .form-group
-                label(for="encargado") Encargado
-                input#encargado.form-control(type="text" name="encargado")
+                .modal-footer
+                  button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
-              button.btn.btn-primary(type="submit") Guardar
-          .modal-footer
-            button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
-
-          // Scripts para DataTables y Bootstrap
-          script(src="https://code.jquery.com/jquery-3.3.1.min.js")
-          script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
-          script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
-          script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
-          script.
-            new DataTable('#inventarioTable', {
-              "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
-              },
-              "order": [[ 0, "asc" ]],
-              "columnDefs": [
-                { "orderable": false, "targets": 6 }
-              ],
-              "lengthMenu": [50,100],
-              "pagingType": "full_numbers",
-              "pageLength": 50
-            })
+  script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+  script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+  script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js")
+  script.
+    $(document).ready(function() {
+      $('#inventarioTable').DataTable({
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+        },
+        ordering: true,
+      });
+    });

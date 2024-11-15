@@ -6,4 +6,82 @@ block contenido
       .container-fluid
         .row.mb-2
           .col-sm-6
-            h1.m-0 Productos
+            h1 Productos
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addProductoModal")
+              i.fas.fa-plus
+              |  Crear Nuevo Producto
+
+    section.content
+      .container-fluid
+        // Tabla de productos
+        table#productosTable.table.table-striped
+          thead
+            tr
+              th Código de Barra
+              th Codigo Interno
+              th Nombre
+              th Inventario Asociado
+              th Unidad 
+              th Formato 
+              th Acciones
+          tbody
+            each producto in productos
+              tr
+                td= producto.codigo_barra
+                td= producto.codigo_interno
+                td= producto.nombre_producto
+                td= producto.inventario ? producto.inventario.nombre : 'No especificado'
+                td Unidad
+                td Formato
+                td
+                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
+                    i.fas.fa-eye
+
+        // Modal para agregar un nuevo producto
+        .modal.fade#addProductoModal(tabindex="-1" role="dialog")
+          .modal-dialog.modal-lg(role="document")
+            .modal-content
+              .modal-header
+                h5.modal-title Crear Nuevo Producto
+                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                  span(aria-hidden="true") &times;
+              .modal-body
+                form(action="/productos/crear" method="POST")
+                  input(type="hidden" name="_csrf" value=csrfToken)
+                  
+                  // Código de Barra
+                  .form-group 
+                    label(for="codigo") Código de Barra
+                    input#codigo_de_barra.form-control(type="text" name="codigo_barra" placeholder="Ingrese código de barra" required)
+                    
+                  // Nombre del Producto
+                  .form-group
+                    label(for="nombre_producto") Nombre del Producto
+                    input#nombre_producto.form-control(type="text" name="nombre_producto" placeholder="Ingrese nombre del producto" required)
+
+                  // Inventario Asociado
+                  .form-group
+                    label(for="inventario_id") Inventario
+                    select#inventario.form-control(name="inventario_id" required)
+                      each inventario in inventarios
+                        option(value=inventario.id)= inventario.nombre
+
+                  // Botón para Crear Producto
+                  button.btn.btn-primary(type="submit") Crear Producto
+              .modal-footer
+                button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+  script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+  script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+  script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+  script.
+    $(document).ready(function() {
+      $('#productosTable').DataTable({
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+        },
+        ordering: true,
+      });
+    });
