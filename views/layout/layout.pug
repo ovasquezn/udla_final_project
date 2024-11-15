@@ -4,18 +4,31 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1')
   meta(name="csrf-token" content=csrfToken)
   title Grimu
+
   // Google Font: Source Sans Pro
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback')
   // Font Awesome Icons
-  link(rel='stylesheet' href='/plugins/fontawesome-free/css/all.min.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css')
   // overlayScrollbars
-  link(rel='stylesheet' href='/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css')
   // AdminLTE Theme style
-  link(rel='stylesheet' href='/dist/css/adminlte.min.css')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/admin-lte@3.1.0/dist/css/adminlte.min.css')
   // DataTables Styles (integración con AdminLTE)
-  link(rel='stylesheet' href='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')
-  link(rel='stylesheet' href='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')
-  link(rel='stylesheet' href='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')
+  link(rel='stylesheet' href='https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css')
+  link(rel='stylesheet' href='https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap4.min.css')
+  link(rel='stylesheet' href='https://cdn.datatables.net/buttons/1.6.5/css/buttons.bootstrap4.min.css')
+
+
+  //- // Font Awesome Icons
+  //- link(rel='stylesheet' href='/plugins/fontawesome-free/css/all.min.css')
+  //- // overlayScrollbars
+  //- link(rel='stylesheet' href='/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')
+  //- // AdminLTE Theme style
+  //- link(rel='stylesheet' href='/dist/css/adminlte.min.css')
+  //- // DataTables Styles (integración con AdminLTE)
+  //- link(rel='stylesheet' href='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')
+  //- link(rel='stylesheet' href='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')
+  //- link(rel='stylesheet' href='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')
 
 .wrapper
   nav.main-header.navbar.navbar-expand.navbar-dark
@@ -206,17 +219,32 @@ head
                 i.fas  
     // sidebar
   block contenido
+//- // Scripts requeridos
+//- // jQuery
+//- script(src='/plugins/jquery/jquery.min.js')
+//- // Bootstrap
+//- script(src='/plugins/bootstrap/js/bootstrap.bundle.min.js')
+//- // overlayScrollbars
+//- script(src='/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')
+//- // DataTables Scripts
+//- script(src='/plugins/datatables/jquery.dataTables.min.js')
+//- script(src='/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')
+//- script(src='/plugins/datatables-responsive/js/dataTables.responsive.min.js')
+//- script(src='/plugins/datatables-buttons/js/dataTables.buttons.min.js')
+//- // AdminLTE App
+//- script(src='/dist/js/adminlte.js')
+
 // Scripts requeridos
 // jQuery
-script(src='/plugins/jquery/jquery.min.js')
+script(src='https://code.jquery.com/jquery-3.6.0.min.js')
 // Bootstrap
-script(src='/plugins/bootstrap/js/bootstrap.bundle.min.js')
+script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js')
 // overlayScrollbars
-script(src='/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js')
 // DataTables Scripts
-script(src='/plugins/datatables/jquery.dataTables.min.js')
-script(src='/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')
-script(src='/plugins/datatables-responsive/js/dataTables.responsive.min.js')
-script(src='/plugins/datatables-buttons/js/dataTables.buttons.min.js')
+script(src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+script(src='https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js')
+script(src='https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js')
+script(src='https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js')
 // AdminLTE App
-script(src='/dist/js/adminlte.js')
+script(src='https://cdn.jsdelivr.net/npm/admin-lte@3.1.0/dist/js/adminlte.min.js')
