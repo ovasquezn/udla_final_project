@@ -2,6 +2,7 @@ import { Usuarios } from '../models/Usuarios.js';
 import { Empresas } from '../models/Empresas.js'; 
 import { Colaboradores } from '../models/Colaboradores.js';
 import { validationResult } from 'express-validator';
+import { Bancos } from '../models/Bancos.js';
 
 const formatearNombreEmpresa = (nombreEmpresa) => {
     return nombreEmpresa.toLowerCase().replace(/\s+/g, '');
@@ -89,7 +90,124 @@ try {
     }
 };
 
+//NO HA SIDO PROBADA
+const editar_usuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, nombreUsuario, email, password, permisos } = req.body;
+    
+        const usuario = await Usuarios.findOne({ where: { id } });
+        if (!usuario) {
+        return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+    
+        usuario.nombre = nombre;
+        usuario.nombreUsuario = nombreUsuario;
+        usuario.email = email;
+        usuario.password = password;
+        usuario.permisos = permisos;
+    
+        await usuario.save();
+    
+        res.status(200).json({ success: true, usuario });
+    } catch (error) {
+        console.error('Error al editar el usuario:', error);
+        res.status(500).json({ success: false, message: 'Error al editar el usuario' });
+    }
+}
+
+const mostrar_bancos = async (req, res) => {
+    try {
+        const empresaId = req.usuario.empresaId;
+        const bancos = await Bancos.findAll({ where: { empresaId } });
+
+        res.render('configuraciones/bancos', {
+        pagina: 'Bancos',
+        bancos,
+        csrfToken: req.csrfToken(),
+        });
+    } catch (error) {
+        console.error('Error al mostrar los bancos:', error);
+        res.status(500).json({ success: false, message: 'Error al mostrar los bancos' });
+    }
+};
+
+const agregar_banco = async (req, res) => {
+    try {
+        const { nombre_banco, numero_cuenta, tipo_cuenta, saldo, moneda } = req.body;
+        const empresaId = req.usuario.empresaId;
+
+        const nuevoBanco = await Bancos.create({
+        empresaId,
+        nombre_banco,
+        numero_cuenta,
+        tipo_cuenta,
+        saldo,
+        moneda,
+        fecha_creacion: new Date(),
+        fecha_actualizacion: new Date(),
+        });
+
+        res.redirect('/configuraciones/bancos');
+        //res.status(201).json({ success: true, banco: nuevoBanco });
+    } catch (error) {
+        console.error('Error al agregar el banco:', error);
+        res.status(500).json({ success: false, message: 'Error al agregar el banco' });
+    }
+};
+
+//NO HA SIDO PROBADA
+const editar_banco = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre_banco, numero_cuenta, tipo_cuenta, saldo, moneda } = req.body;
+    
+        const banco = await Bancos.findOne({ where: { id } });
+        if (!banco) {
+        return res.status(404).json({ success: false, message: 'Banco no encontrado' });
+        }
+    
+        banco.nombre_banco = nombre_banco;
+        banco.numero_cuenta = numero_cuenta;
+        banco.tipo_cuenta = tipo_cuenta;
+        banco.saldo = saldo;
+        banco.moneda = moneda;
+        banco.fecha_actualizacion = new Date();
+    
+        await banco.save();
+    
+        res.status(200).json({ success: true, banco });
+    } catch (error) {
+        console.error('Error al editar el banco:', error);
+        res.status(500).json({ success: false, message: 'Error al editar el banco' });
+    }
+    };
+
+//NO HA SIDO PROBADA
+const eliminar_banco = async (req, res) => {
+    try {
+        const { id } = req.params;
+    
+        const banco = await Bancos.findOne({ where: { id } });
+        if (!banco) {
+        return res.status(404).json({ success: false, message: 'Banco no encontrado' });
+        }
+    
+        await banco.destroy();
+    
+        res.status(200).json({ success: true, message: 'Banco eliminado' });
+    } catch (error) {
+        console.error('Error al eliminar el banco:', error);
+        res.status(500).json({ success: false, message: 'Error al eliminar el banco' });
+    }
+    }
+
 export {
     mostrar_usuarios,
-    crear_usuario
+    crear_usuario,
+    editar_usuario,
+    mostrar_bancos,
+    agregar_banco,
+    editar_banco,
+    eliminar_banco
 }

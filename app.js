@@ -10,7 +10,7 @@ import index from './routes/indexRoutes.js';
 import db from './config/db.js';
 import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
-
+import {PORT} from './config.js';
 
 const app = express();
 
@@ -32,24 +32,6 @@ app.use(express.json());
 app.use( cookieParser() );
 app.use( csrf({ cookie: true }) );
 
-
-//app.use(csrf({ ignoreMethods: ['POST'] }));
-
-app.use((req, res, next) => {
-    if (req.usuario) {
-      res.locals.usuario = req.usuario.nombre;
-      res.locals.empresa = req.usuario.empresa;
-      res.locals.rol = req.usuario.rol;
-      res.locals.empresaId = req.usuario.empresaId;
-    } else {
-      res.locals.usuario = null;
-      res.locals.empresa = null;
-      res.locals.rol = null;
-      res.locals.empresaId = null;
-    }
-    next();
-  });
-
 app.use('/autenticacion', authRoutes);
 app.use('/dashboard', dashboard);
 app.use('/', index);
@@ -60,7 +42,6 @@ app.use('/finanzas', financesRoutes);
 
 app.use('/configuraciones', configRoutes)
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`El servidor esta funcionando en el puerto ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server on port ${PORT}`);
 }  );

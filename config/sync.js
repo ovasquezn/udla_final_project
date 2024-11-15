@@ -18,6 +18,8 @@ import { FacturasEmitidas } from '../models/FacturasEmitidas.js';
 
 import { PagosColaboradores } from '../models/PagosColaboradores.js';
 
+import { Bancos } from '../models/Bancos.js';
+import { Clientes} from '../models/Clientes.js';
 
 const syncDatabase = async () => {
   try {

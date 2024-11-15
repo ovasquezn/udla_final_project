@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const verificarToken = (req, res, next) => {
+const verificar_jwt_token = (req, res, next) => {
   const token = req.cookies._token; 
 
   if (!token) {
@@ -14,6 +14,11 @@ const verificarToken = (req, res, next) => {
 
     req.usuario = decoded; 
     console.log(req.usuario);
+
+    res.locals.nombre = req.usuario.nombre;
+    res.locals.empresa = req.usuario.empresa;
+    res.locals.permisos = req.usuario.permisos;
+
     next();
   });
 };
@@ -34,7 +39,7 @@ const permiso_colaborador = (req, res, next) => {
 };
 
 export { 
-  verificarToken,
+  verificar_jwt_token,
   permiso_nivel_1,
   permiso_colaborador
 };

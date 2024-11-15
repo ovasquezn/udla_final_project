@@ -155,3 +155,5 @@ public/pages
 public/plugins
 public/.DS_Store
 data_generator/__pycache__/
+data_generator/.DS_Store
+stress-test/

@@ -1,0 +1,71 @@
+extends ../layout/layout
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        if mensaje
+          .alert.alert-warning
+            | #{mensaje}
+        .row.mb-2
+          .col-sm-6
+            h1 Bancos
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addBankModal") 
+              i.fas.fa-plus
+              |  Agregar Banco
+
+    section.content
+      .container-fluid
+        if bancos && bancos.length > 0
+          table#banksTable.table.table-striped
+            thead
+              tr
+                th Nombre del Banco
+                th Número de Cuenta
+                th Tipo de Cuenta
+                th Saldo
+                th Moneda
+            tbody
+              each banco in bancos
+                tr
+                  td= banco.nombre_banco
+                  td= banco.numero_cuenta
+                  td= banco.tipo_cuenta
+                  td= `$${banco.saldo}`
+                  td= banco.moneda
+        else
+          p.text-center No hay bancos registrados.
+
+    .modal.fade#addBankModal(tabindex="-1" role="dialog")
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Agregar Banco
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form(action="/configuraciones/bancos/agregar_banco" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              .form-group
+                label(for="nombre_banco") Nombre del Banco
+                input#nombre_banco.form-control(type="text" name="nombre_banco" required)
+              .form-group
+                label(for="numero_cuenta") Número de Cuenta
+                input#numero_cuenta.form-control(type="text" name="numero_cuenta" required)
+              .form-group
+                label(for="tipo_cuenta") Tipo de Cuenta
+                select#tipo_cuenta.form-control(name="tipo_cuenta" required)
+                  option(value="corriente") Corriente
+                  option(value="ahorro") Ahorro
+                  option(value="cheques") Cheques
+                  option(value="otros") Otros
+              .form-group
+                label(for="saldo") Saldo Inicial
+                input#saldo.form-control(type="number" step="0.01" name="saldo" required)
+              .form-group
+                label(for="moneda") Moneda
+                input#moneda.form-control(type="text" name="moneda" value="CLP" required)
+              button.btn.btn-primary(type="submit") Guardar
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar

@@ -9,8 +9,8 @@ import { dashboard } from '../controllers/dashboardControllers.js';
 //module.exports = router;
 ;
 
-import { verificarToken } from '../helpers/protegerRuta.js';
+import { verificar_jwt_token } from '../helpers/functions.js';
 
-router.get('/', verificarToken, dashboard);
+router.get('/', verificar_jwt_token, dashboard);
 
 export default router

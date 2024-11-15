@@ -1,16 +1,21 @@
 import express from 'express';
-import { mostrar_inventario, mostrar_ingresos, mostrar_salidas, mostrar_pedidos, mostrar_productos, agregar_producto_inventario} from '../controllers/inventoryControllers.js'
-import { verificarToken } from '../helpers/protegerRuta.js';
+import { mostrar_inventario_con_cantidad, mostrar_ingresos, mostrar_salidas, mostrar_pedidos, mostrar_productos, agregar_producto_inventario, buscar_productos, registrar_salida} from '../controllers/inventoryControllers.js'
+import { verificar_jwt_token } from '../helpers/functions.js';
 
 const router = express.Router();
 
-// Pendientes: agregar el middleware verificarToken
+// Pendientes: agregar el middleware verificar_jwt_token
 
-router.get('/lista_inventario', verificarToken, mostrar_inventario);
-router.post('/agregar_producto_inventario', verificarToken, agregar_producto_inventario);
+router.get('/lista_inventario', verificar_jwt_token, mostrar_inventario_con_cantidad);
+//router.post('/agregar_producto_inventario', verificar_jwt_token, agregar_producto_inventario);
+router.post('/lista_inventario/agregar_producto_inventario', verificar_jwt_token, agregar_producto_inventario);
 
-router.get('/productos', verificarToken, mostrar_productos);
-router.get('/ingresos', verificarToken,mostrar_ingresos);
-router.get('/salidas', verificarToken,mostrar_salidas);
-router.get('/pedidos', verificarToken,mostrar_pedidos);
+
+router.get('/productos/buscar', verificar_jwt_token, buscar_productos);
+router.post('/salidas/registrar_salida',verificar_jwt_token, registrar_salida);
+
+router.get('/productos', verificar_jwt_token, mostrar_productos);
+router.get('/ingresos', verificar_jwt_token,mostrar_ingresos);
+router.get('/salidas', verificar_jwt_token,mostrar_salidas);
+router.get('/pedidos', verificar_jwt_token,mostrar_pedidos);
 export default router;

@@ -21,7 +21,7 @@ const mostrar_login = (req, res) => {
   })
 }
 
-export const formatearNombreEmpresa = (nombreEmpresa) => {
+const formatearNombreEmpresa = (nombreEmpresa) => {
   return nombreEmpresa.toLowerCase().replace(/\s+/g, '');
 };
 
@@ -49,7 +49,7 @@ const registrar_usuario = async (req, res) => {
 
   const { nombre, empresa, email, password } = req.body;
 
-  const nombreFormateado = formatearNombreEmpresa(empresa.nombre);
+  const nombreFormateado = formatearNombreEmpresa(empresa);
 
   const nombreUsuario = `admin@${nombreFormateado}`;
 
@@ -86,6 +86,7 @@ const registrar_usuario = async (req, res) => {
   const usuario = await Usuarios.create({
     nombre,
     nombreFormateadoEmpresa: nombreFormateado,
+    confirmado: true,
     email,
     nombreUsuario,
     password, 

@@ -52,42 +52,16 @@ head
     .sidebar
       .user-panel.mt-2.pb-2.mb-3.d-flex
       div.text-center
-        p.text-white.text-center.font-d= locals.usuario + " - " +locals.empresa
-        p.text-white.text-center.font-d= locals.permisos + ' - solo para test'
+        p.text-white.text-center.font-d= locals.nombre
+        //p.text-white.text-center.font-d= locals.empresa
+
       nav.mt-2
         ul.nav.nav-pills.nav-sidebar.flex-column(data-widget='treeview' role='menu' data-accordion='false')
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas', 'gastos', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
-            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
-              i.nav-icon.fas.fa-dollar-sign
-              p
-              | Finanzas
-              i.right.fas.fa-angle-left
-            ul.nav.nav-treeview
-              if locals.permisos === 'propietario'
-                li.nav-item
-                  a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/banco")
-                    p Bancos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_emitidas' ? 'active' : '', href="/finanzas/facturas_emitidas")
-                  p Facturas Emitidas
-
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_recibidas' ? 'active' : '', href="/finanzas/facturas_recibidas")
-                  p Facturas Recibidas
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'gastos' ? 'active' : '', href="/finanzas/gastos")
-                  p Gastos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'precios' ? 'active' : '', href="/finanzas/precios")
-                  p Precios
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
-                  p Proveedores
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['mesas','caja','productos_a_la_venta', 'cliente'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2.disabled(class= typeof pagina_activa !== 'undefined' && ['mesas','caja','productos_a_la_venta', 'cliente'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-cash-register
               p
-                | Punto de Venta
+                | Mi Negocio
                 i.fas.fa-angle-left.right
             ul.nav.nav-treeview
               li.nav-item
@@ -102,7 +76,59 @@ head
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'clientes' ? 'active' : '', href="#")
                   p Clientes
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['colaboradores', 'liquidaciones','comite_paritario','personal_antiguo', 'control_asistencia'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas','ingresos', 'gastos', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-dollar-sign
+              p
+              | Finanzas
+              i.right.fas.fa-angle-left
+            ul.nav.nav-treeview
+              if locals.permisos === 'propietario'
+                li.nav-item
+                  a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'banco' ? 'active' : '', href="/finanzas/movimientos_bancarios")
+                    p Bancos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_emitidas' ? 'active' : '', href="/finanzas/facturas_emitidas")
+                  p Facturas Emitidas
+
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_recibidas' ? 'active' : '', href="/finanzas/facturas_recibidas")
+                  p Facturas Recibidas
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'ingresos' ? 'active' : '', href="/finanzas/ingresos")
+                  p Ingresos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'gastos' ? 'active' : '', href="/finanzas/gastos")
+                  p Gastos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'precios' ? 'active' : '', href="/finanzas/precios")
+                  p Precios
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
+                  p Proveedores
+          li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['lista_inventario', 'productos','ingresos_inventario','salidas_inventario', 'pedidos'].includes(pagina_activa) ? 'menu-open' : '')
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+              i.nav-icon.fas.fa-boxes
+              p
+                | Inventarios
+                i.fas.fa-angle-left.right
+            ul.nav.nav-treeview
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'lista_inventario' ? 'active' : '', href='/inventario/lista_inventario')
+                  p Lista de Inventario
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'productos' ? 'active' : '', href='/inventario/productos')
+                  p Productos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'ingresos_inventario' ? 'active' : '', href='/inventario/ingresos')
+                  p Ingresos
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'salidas_inventario' ? 'active' : '', href='/inventario/salidas')
+                  p Salidas
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'pedidos' ? 'active' : '', href='/inventario/pedidos')
+                  p Consejos IA
+          li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['colaboradores', 'liquidaciones','comite_paritario','personal_antiguo', 'control_asistencia'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-users-cog
               p
@@ -124,30 +150,9 @@ head
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'control_asistencia' ? 'active' : '', href="/recursos_humanos/control_asistencia")
                   p Control Asistencia
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['lista_inventario', 'productos','ingresos','salidas', 'pedidos'].includes(pagina_activa) ? 'menu-open' : '')
-            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
-              i.nav-icon.fas.fa-boxes
-              p
-                | Inventarios
-                i.fas.fa-angle-left.right
-            ul.nav.nav-treeview
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'lista_inventario' ? 'active' : '', href='/inventario/lista_inventario')
-                  p Inventario
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'productos' ? 'active' : '', href='/inventario/productos')
-                  p Productos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'ingresos' ? 'active' : '', href='/inventario/ingresos')
-                  p Ingresos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'salidas' ? 'active' : '', href='/inventario/salidas')
-                  p Salidas
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'pedidos' ? 'active' : '', href='/inventario/pedidos')
-                  p Pedidos
+
           li.nav-item.mt-2
-            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
+            a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px; disabled")
               i.nav-icon.fas.fa-bookmark
               p
                 | Reservas
@@ -176,7 +181,7 @@ head
               p
                 | Proyecciones
                 i.fas      
-          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['usuarios'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2(class= typeof pagina_activa !== 'undefined' && ['configuracion_usuarios', 'configuracion_bancos', 'configuracion_dashboard'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-boxes
               p
@@ -184,14 +189,14 @@ head
                 i.fas.fa-angle-left.right
             ul.nav.nav-treeview
               li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'usuarios' ? 'active' : '', href='/configuraciones/usuarios')
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'configuracion_usuarios' ? 'active' : '', href='/configuraciones/usuarios')
                   p Usuarios
               li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'otros' ? 'active' : '', href='#')
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'configuracion_dashboard' ? 'active' : '', href='#')
                   p Dashboard
               li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'otros' ? 'active' : '', href='#')
-                  p Impresoras
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'configuracion_bancos' ? 'active' : '', href='/configuraciones/bancos')
+                  p Bancos
 
           li.nav-item.mt-2
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
