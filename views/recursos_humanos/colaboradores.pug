@@ -41,27 +41,80 @@ block contenido
                     .modal-dialog.modal-xl(role="document")
                       .modal-content
                         .modal-header
-                          h5.modal-title Detalles de Trabajador - #{trabajador.nombre} #{trabajador.apellido}
+                          h5.modal-title Detalles de Trabajador
+                          button.btn.btn-outline-secondary.btn-sm.ml-3(type="button" onclick=`descargarPDF('${trabajador.nombre}-${trabajador.apellido}')`)
+                            i.fas.fa-download
+                            |  Descargar Ficha
                           button.close(type="button" data-dismiss="modal" aria-label="Close")
                             span(aria-hidden="true") &times;
+
                         .modal-body
                           // Información Personal
-                          h5 Información Personal
-                          p Dirección: #{trabajador.direccion}
-                          p RUT: #{trabajador.rut}
-                          p Estado Civil: #{trabajador.estado_civil}
-                          p Cuenta Bancaria: #{trabajador.cuenta_bancaria}
-                          p Contacto de Emergencia: #{trabajador.contacto_emergencia}
+                          h5.text-info.mt-2 Información Personal
+                          .row 
+                            .col-md-6
+                              .form-group
+                                label.text-muted Nombre:
+                                p.form-control-plaintext.border-bottom #{trabajador.nombre || 'No disponible'}
+                            .col-md-6
+                              .form-group
+                                label.text-muted Apellido:
+                                p.form-control-plaintext.border-bottom #{trabajador.apellido || 'No disponible'}
+                          .row
+                            .col-md-6
+                              .form-group
+                                label.text-muted Domicilio:
+                                p.form-control-plaintext.border-bottom #{trabajador.direccion || 'No disponible'}
+                            .col-md-6
+                              .form-group
+                                label.text-muted RUT:
+                                p.form-control-plaintext.border-bottom #{trabajador.rut || 'No disponible'}
+                          .row
+                            .col-md-6
+                              .form-group
+                                label.text-muted Estado Civil:
+                                p.form-control-plaintext.border-bottom #{trabajador.estado_civil || 'No disponible'}
+                            .col-md-6
+                              .form-group
+                                label.text-muted Cuenta Bancaria:
+                                p.form-control-plaintext.border-bottom #{trabajador.cuenta_bancaria || 'No disponible'}
+                          .row
+                            .col-md-6
+                              .form-group
+                                label.text-muted Contacto de Emergencia:
+                                p.form-control-plaintext.border-bottom #{trabajador.contacto_emergencia || 'No disponible'}
 
                           hr
 
                           // Datos Laborales
-                          h5 Datos Laborales
-                          p Sueldo: $#{trabajador.sueldo}
-                          p Fecha de Ingreso: #{trabajador.fecha_ingreso ? trabajador.fecha_ingreso.toLocaleDateString('es-ES') : 'Fecha no disponible'}
-                          p Tipo de Contrato: #{trabajador.tipo_contrato}
+                          h5.text-info.mt-2 Datos Laborales
+                          .row 
+                            .col-md-6
+                              .form-group
+                                label.text-muted Cargo:
+                                p.form-control-plaintext.border-bottom #{trabajador.cargo || 'No disponible'}
+                          .row
+                            .col-md-6
+                              .form-group
+                                label.text-muted Sueldo:
+                                p.form-control-plaintext.border-bottom $#{trabajador.sueldo || 'No disponible'}
+                            .col-md-6
+                              .form-group
+                                label.text-muted Estado:
+                                p.form-control-plaintext.border-bottom #{trabajador.estado || 'No disponible'}
+                          .row
+                            .col-md-6
+                              .form-group
+                                label.text-muted Fecha de Ingreso:
+                                p.form-control-plaintext.border-bottom #{trabajador.fecha_ingreso ? trabajador.fecha_ingreso.toLocaleDateString('es-ES') : 'Fecha no disponible'}
+                            .col-md-6
+                              .form-group
+                                label.text-muted Tipo de Contrato:
+                                p.form-control-plaintext.border-bottom #{trabajador.tipo_contrato || 'No disponible'}
 
-                          hr
+
+
+
 
                           // Lista de Pagos
                           h5 Lista de Pagos
@@ -83,33 +136,175 @@ block contenido
                           table.table.table-bordered.mt-2
                             thead
                               tr
-                                th Fecha
+                                th Año
+                                th Mes
+                                th Estado
+                                th Monto
                                 th Detalle
+                                th 
                             tbody
                               each liquidacion in trabajador.liquidaciones
                                 tr
-                                  td= liquidacion.fecha.toLocaleDateString('es-ES')
-                                  td= liquidacion.detalle
-
+                                  td= liquidacion.anio
+                                  td= liquidacion.mes ? new Date(liquidacion.mes).toLocaleDateString('es-ES', { month: 'long' }) : 'Fecha no disponible'  
+                                  td= liquidacion.estado || 'Estado no disponible'
+                                  td= liquidacion.sueldo ? `$${liquidacion.sueldo}` : 'No disponible'
+                                  td= liquidacion.detalle || 'Sin detalle'
+                                  td.text-center
+                                    a.btn.btn-info.btn-sm(href=`#` target="_blank")
+                                      .fas.fa-download
                           hr
 
-                          // Documentos
+                          // Documentos del Trabajador
                           h5 Documentos
+
+                          // Contrato
+                          h6 Contrato
                           table.table.table-bordered.mt-2
                             thead
                               tr
-                                th Tipo
-                                th Descripción
-                                th Archivo
+                                th(style="width: 20%") Tipo
+                                th(style="width: 10%") Fecha emisión
+                                th(style="width: 60%") Descripción
+                                th(style="width: 5%") Archivo
+                                th(style="width: 5%") Acciones
                             tbody
                               each documento in trabajador.documentos
+                                if documento.tipo === 'Contrato'
+                                  tr
+                                    td= documento.tipo
+                                    td XX XX XXXX
+                                    td= documento.descripcion || 'Sin descripción'
+                                    td
+                                      if documento.archivo
+                                        a(href=`${documento.archivo}` target="_blank") Descargar
+                                      else
+                                        | No disponible
+                                    td.text-center
+                                      button.btn.btn-primary.btn-sm(data-toggle="modal" data-target=`#editarDocumentoModal-${documento.id}`)
+                                        i.fas.fa-edit
+
+                          // Anexos
+                          h6 Anexos
+                          table.table.table-bordered.mt-2
+                            thead
+                              tr
+                                th(style="width: 20%") Tipo
+                                th(style="width: 10%") Fecha emisión
+                                th(style="width: 60%") Descripción
+                                th(style="width: 5%") Archivo
+                                th(style="width: 5%") Acciones
+                            tbody
+                              each documento in trabajador.documentos
+                                if documento.tipo === 'Anexo'
+                                  tr
+                                    td= documento.tipo
+                                    td XX XX XXXX
+                                    td= documento.descripcion || 'Sin descripción'
+                                    td
+                                      if documento.archivo
+                                        a(href=`/descargar/${documento.archivo}` target="_blank") Descargar
+                                      else
+                                        | No disponible
+                                    td.text-center
+                                      button.btn.btn-primary.btn-sm(data-toggle="modal" data-target=`#editarDocumentoModal-${documento.id}`)
+                                        i.fas.fa-edit
+
+                          // Otros Documentos
+                          h6 Otros Documentos
+                          table.table.table-bordered.mt-2
+                            thead
                                 tr
-                                  td= documento.tipo
-                                  td= documento.descripcion
-                                  td
-                                    a(href=`/descargar/${documento.archivo}`) Descargar
+                                th(style="width: 20%") Tipo
+                                th(style="width: 10%") Fecha emisión
+                                th(style="width: 60%") Descripción
+                                th(style="width: 5%") Archivo
+                                th(style="width: 5%") Acciones
+                            tbody
+                              each documento in trabajador.documentos
+                                if documento.tipo !== 'Contrato' && documento.tipo !== 'Anexo'
+                                  tr
+                                    td= documento.tipo
+                                    td XX XX XXXX
+                                    td= documento.descripcion || 'Sin descripción'
+                                    td
+                                      if documento.archivo
+                                        a(href=`/descargar/${documento.archivo}` target="_blank") Descargar
+                                      else
+                                        | No disponible
+                                    td.text-center
+                                      button.btn.btn-primary.btn-sm(data-toggle="modal" data-target=`#editarDocumentoModal-${documento.id}`)
+                                        i.fas.fa-edit
+
+                          // Botones para agregar documentos en cada categoría
+                          div.text-right
+                            button.btn.btn-success.btn-sm(data-toggle="modal" data-target=`#agregarDocumentoModal`) 
+                              i.fas.fa-plus
+                              |  Agregar Documento
+
+                          // Modal para agregar un nuevo documento
+                          .modal.fade#agregarDocumentoModal(tabindex="-1" role="dialog")
+                            .modal-dialog.modal-lg(role="document")
+                              .modal-content
+                                .modal-header
+                                  h5.modal-title Agregar Documento
+                                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                    span(aria-hidden="true") &times;
+                                .modal-body
+                                  form(action="/recursos_humanos/colaboradores/documentos/agregar" method="POST")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    input(type="hidden" name="trabajadorId" value=trabajador.id)
+                                    .form-group
+                                      label(for="tipo") Tipo de Documento
+                                      select#tipo.form-control(name="tipo" required)
+                                        option(value="Contrato") Contrato
+                                        option(value="Anexo") Anexo
+                                        option(value="Otro") Otro
+                                    .form-group
+                                      label(for="descripcion") Descripción
+                                      input#descripcion.form-control(type="text" name="descripcion" placeholder="Descripción del documento")
+                                    .form-group
+                                      label(for="documento_url") Enlace del Documento
+                                      input#documento_url.form-control(type="url" name="documento_url" placeholder="https://ejemplo.com/documento" required)
+                                    button.btn.btn-primary(type="submit") Guardar
+                                .modal-footer
+                                  button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+                          // Modal para editar un documento existente
+                          each documento in trabajador.documentos
+                            .modal.fade(id=`editarDocumentoModal-${documento.id}` tabindex="-1" role="dialog")
+                              .modal-dialog.modal-lg(role="document")
+                                .modal-content
+                                  .modal-header
+                                    h5.modal-title Editar Documento - #{documento.tipo}
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                      span(aria-hidden="true") &times;
+                                  .modal-body
+                                    form(action=`/recursos_humanos/colaboradores/documentos/editar/${documento.id}` method="POST")
+                                      input(type="hidden" name="_csrf" value=csrfToken)
+                                      .form-group
+                                        label(for="tipo") Tipo de Documento
+                                        select#tipo.form-control(name="tipo" required)
+                                          option(value="Contrato" selected=documento.tipo === 'Contrato') Contrato
+                                          option(value="Anexo" selected=documento.tipo === 'Anexo') Anexo
+                                          option(value="Otro" selected=documento.tipo === 'Otro') Otro
+                                      .form-group
+                                        label(for="descripcion") Descripción
+                                        input#descripcion.form-control(type="text" name="descripcion" value=documento.descripcion)
+                                      .form-group
+                                        label(for="documento_url") Nuevo Enlace
+                                        input#documento_url.form-control(type="url" name="documento_url" placeholder="https://ejemplo.com/documento" required)
+                                      button.btn.btn-primary(type="submit") Guardar Cambios
+                                  .modal-footer
+                                    button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
 
                         .modal-footer
+                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+                        .modal-footer
+                          button.btn.btn-primary(type="button" onclick="descargarPDF(this)")
+                            i.fas.fa-download
+                            | Descargar PDF
                           button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
       // Modal para Agregar Nuevo Trabajador
@@ -172,9 +367,23 @@ block contenido
       script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
       script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
       script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js")
       script.
         new DataTable('#trabajadoresTable',{
           "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
           }
         })
+        function descargarPDF(button) {
+          // Encuentra el contenedor del modal (sube dos niveles desde el botón)
+          const modalContent = button.closest('.modal-content').querySelector('.modal-body');
+          
+          // Usa html2pdf para generar y descargar el PDF
+          html2pdf().from(modalContent).set({
+            margin: 0.5,
+            filename: 'Detalles_Trabajador.pdf',
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+          }).save();
+        }
+
