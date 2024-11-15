@@ -6,4 +6,127 @@ block contenido
       .container-fluid
         .row.mb-2
           .col-sm-6
-            h1.m-0 Salidas
+            h1 Salidas de Productos
+          .col-sm-6.text-right
+            button.btn.btn-primary(data-toggle="modal" data-target="#registrarSalidaModal")
+              i.fas.fa-plus
+              |  Registrar Nueva Salida
+
+    section.content
+      .container-fluid
+        table#salidasTable.table.table-striped
+          thead
+            tr
+              th Producto
+              th Cantidad
+              th Unidad
+              th Encargado
+              th Fecha
+              th Comentarios
+          tbody
+            each salida in salidas
+              tr
+                td= salida.producto_movimiento ? salida.producto_movimiento.nombre_producto : 'Producto desconocido'
+                td= salida.cantidad
+                td= salida.producto ? salida.producto.unidad : '?'
+                td= salida.encargado || 'Sin asignar'
+                td= salida.fecha.toLocaleDateString('es-ES')
+                td= salida.comentarios || 'Sin comentarios'
+
+  .modal.fade#registrarSalidaModal(tabindex="-1" role="dialog")
+    .modal-dialog.modal-lg(role="document")
+      .modal-content
+        .modal-header
+          h5.modal-title Registrar Nueva Salida
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .modal-body
+          form#formSalidas(action="/inventario/salidas/registrar_salida" method="POST" onsubmit="return false;")
+            input(type="hidden" name="_csrf" value=csrfToken)
+
+            // Código de Barra
+            .form-group 
+              label(for="codigo_barra") Código de Barra
+              input#codigo_barra.form-control(type="text" placeholder="Escanee o ingrese el código de barra")
+
+            // Table for selected products
+            h6 Productos Seleccionados
+            table.table.table-bordered.mt-3
+              thead
+                tr
+                  th Producto
+                  th Unidad
+                  th(width="15%") Cantidad
+              tbody#productosSeleccionados
+                tr.text-muted
+                  td(colspan="3") No hay productos seleccionados.
+
+            // Botón para confirmar salida
+            button.btn.btn-primary.mt-3(type="button" onclick="confirmarSalidas()") Confirmar Salidas
+
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+  script.
+    const productos = !{JSON.stringify(productos)};
+
+    document.getElementById('codigo_barra').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const codigoBarra = event.target.value.trim();
+
+        const producto = productos.find(p => p.codigo_barra === codigoBarra);
+
+        if (producto) {
+          agregarProductoSeleccionado(producto.id, producto.nombre_producto, producto.unidad || 'unidad');
+        } else {
+          alert("Producto no encontrado");
+        }
+        event.target.value = '';
+      }
+    });
+
+    function agregarProductoSeleccionado(productoId, nombreProducto, unidad) {
+      const productosSeleccionados = document.getElementById('productosSeleccionados');
+      const existingRow = productosSeleccionados.querySelector(`[data-producto-id="${productoId}"]`);
+      
+      if (existingRow) {
+        alert('Este producto ya está en la lista.');
+        return;
+      }
+
+      productosSeleccionados.querySelector('.text-muted')?.remove();
+
+      const row = document.createElement('tr');
+      row.setAttribute('data-producto-id', productoId);
+
+      const nameCell = document.createElement('td');
+      nameCell.textContent = nombreProducto;
+      row.appendChild(nameCell);
+
+      const unidadCell = document.createElement('td');
+      unidadCell.textContent = unidad || 'unidad';
+      row.appendChild(unidadCell);
+
+      const cantidadCell = document.createElement('td');
+      const cantidadInput = document.createElement('input');
+      cantidadInput.type = 'number';
+      cantidadInput.name = 'productos[][cantidad]';
+      cantidadInput.className = 'form-control form-control-sm';
+      cantidadInput.value = 1;
+      cantidadInput.required = true;
+      cantidadCell.appendChild(cantidadInput);
+      row.appendChild(cantidadCell);
+
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'productos[][producto_id]';
+      hiddenInput.value = productoId;
+      row.appendChild(hiddenInput);
+
+      productosSeleccionados.appendChild(row);
+    }
+
+    function confirmarSalidas() {
+      document.getElementById('formSalidas').submit();
+    }

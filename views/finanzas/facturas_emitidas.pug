@@ -64,12 +64,57 @@ block contenido
                     td= factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
                     td= factura.estado_pago ? 'Pagado' : 'Pendiente'
                     td
-                      button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
+                      button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#verModal${index}`) 
                         i.fas.fa-eye
-                        |  Detalles
+                        |  Ver
+                      button.btn.btn-warning.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
+                        i.fas.fa-edit
 
                       // Modal de Detalles de Factura Emitida
                       .modal.fade(id=`detalleModal${index}` tabindex="-1" role="dialog")
+                        .modal-dialog.modal-lg(role="document")
+                          .modal-content
+                            .modal-header
+                              h5.modal-title Detalles de Factura - #{factura.numero_factura}
+                              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") &times;
+                            .modal-body
+                              form(action=`/finanzas/facturas_emitidas/editar/${factura.id}` method="POST")
+                                p Número de Factura: 
+                                input.form-control(type="text" name="numero_factura" value=factura.numero_factura required)
+                                
+                                p Fecha de Emisión: 
+                                input.form-control(type="date" name="fecha_emision" value=factura.fecha_emision.toISOString().slice(0, 10) required)
+
+                                p Fecha de Vencimiento: 
+                                input.form-control(type="date" name="fecha_vencimiento" value=factura.fecha_vencimiento.toISOString().slice(0, 10) required)
+
+                                p Cliente: 
+                                input.form-control(type="text" name="clienteId" value=factura.clienteId required)
+
+                                p Monto: 
+                                input.form-control(type="number" name="monto" step="0.01" value=factura.monto required)
+
+                                p Forma de Pago: 
+                                select.form-control(name="forma_pago" required)
+                                  option(value="efectivo" selected=factura.forma_pago === 'efectivo') Efectivo
+                                  option(value="transferencia" selected=factura.forma_pago === 'transferencia') Transferencia
+                                  option(value="tarjeta" selected=factura.forma_pago === 'tarjeta') Tarjeta
+                                  option(value="cheque" selected=factura.forma_pago === 'cheque') Cheque
+
+                                p Estado de Pago: 
+                                select.form-control(name="estado_pago" required)
+                                  option(value="1" selected=factura.estado_pago) Pagado
+                                  option(value="0" selected=!factura.estado_pago) Pendiente
+
+                            .modal-footer
+                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+                              button.btn.btn-primary(type="submit") Guardar Cambios
+                              form(action=`/finanzas/facturas_emitidas/eliminar/${factura.id}` method="POST" style="display:inline;")
+                                button.btn.btn-danger(type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar esta factura?')") Eliminar
+
+                      // Modal de Detalles de Factura Emitida
+                      .modal.fade(id=`verModal${index}` tabindex="-1" role="dialog")
                         .modal-dialog.modal-lg(role="document")
                           .modal-content
                             .modal-header
@@ -83,6 +128,7 @@ block contenido
                               p Cliente: Nombre cliente
                               p Monto: #{factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
                               p Estado de Pago: #{factura.estado_pago ? 'Pagado' : 'Pendiente'}
+                              p Comentarios: #{factura.comentarios}
                             .modal-footer
                               button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
@@ -142,6 +188,10 @@ block contenido
                     select#estado_pago.form-control(name="estado_pago" required)
                       option(value="1") Pagado
                       option(value="0") Pendiente
+                  
+                  .form-group 
+                    label(for="comentarios") Comentarios
+                    textarea#comentarios.form-control(name="comentarios" rows="3")
 
                   button.btn.btn-primary(type="submit") Guardar
               .modal-footer

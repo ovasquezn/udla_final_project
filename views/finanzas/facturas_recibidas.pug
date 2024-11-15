@@ -44,10 +44,8 @@ block contenido
               i.fas.fa-plus
               |  Nueva Factura
 
-    // Main content
     section.content
       .container-fluid
-        // Table displaying invoices
         table#facturasTable.table.table-striped
           thead
             tr
@@ -63,7 +61,7 @@ block contenido
                 td= factura.fecha_emision.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 td= factura.numero_factura
                 td= factura.proveedor.nombre_proveedor
-                td= factura.monto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+                td= '$' + Math.floor(factura.monto).toLocaleString('es-ES')
                 td= factura.estado_pago ? 'Pagado' : 'Pendiente'
                 td
                   button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
@@ -103,8 +101,8 @@ block contenido
                                 each inventario in inventarios
                                   option(value=inventario.id)= inventario.nombre
 
-                            // Proveedor (Valor por defecto de la factura actual)
-                            input(type="hidden" name="proveedor_id" value=`${factura.proveedor_id}`)
+                            //- // Proveedor (Valor por defecto de la factura actual)
+                            //- input(type="hidden" name="proveedor_id" value=`${factura.proveedor_id}`)
 
                             // Botón para Crear Producto
                             button.btn.btn-primary(type="button" onclick="crearProducto()") Crear Producto
@@ -182,6 +180,33 @@ block contenido
                           
                           // Section to Add Products to the Invoice
 
+                          // Lista de productos añadidos a la factura
+                          h5.mt-4 Productos en la Factura
+                          table.table.table-bordered
+                            thead
+                              tr
+                                th Producto
+                                th Cantidad
+                                th Precio Unitario
+                                th Subtotal
+                            tbody#productosTabla
+                              each detalle in factura.detalle_factura
+                                tr
+                                  td= detalle.producto.nombre_producto
+                                  td= detalle.cantidad
+                                  td= detalle.precio.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+                                  td= (detalle.cantidad * detalle.precio).toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+                          
+                          //- Resumen de la factura
+                          .mt-4.text-right
+                            - var subtotal = factura.detalle_factura.reduce((acc, detalle) => acc + (detalle.cantidad * detalle.precio), 0);
+                            - var impuesto = subtotal * 0.19;
+                            - var total = subtotal + impuesto;
+                            h5 Subtotal: #{subtotal.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
+                            h5 Impuesto (19%): #{impuesto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
+                            h5 Total a Pagar: #{total.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}
+
+
                           h5.mt-4 Agregar Productos a la Factura
 
                           // Formulario para agregar productos existentes a la factura
@@ -210,22 +235,7 @@ block contenido
                             // Botón para agregar producto a la factura
                             button.btn.btn-primary.mt-2(type="button" onclick="agregarProductoAFactura(event)") Agregar Producto
 
-                          // Lista de productos añadidos a la factura
-                          h5.mt-4 Productos en la Factura
-                          table.table.table-bordered
-                            thead
-                              tr
-                                th Producto
-                                th Cantidad
-                                th Precio Unitario
-                                th Subtotal
-                            tbody#productosTabla
-                              each detalle in factura.detalle_factura
-                                tr
-                                  td= detalle.producto.nombre_producto
-                                  td= detalle.cantidad
-                                  td= detalle.precio.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
-                                  td= (detalle.cantidad * detalle.precio).toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })
+
 
                         .modal-footer
                           button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
@@ -315,7 +325,6 @@ block contenido
         const codigoBarra = document.querySelector('#codigo_de_barra').value;
         const nombreProducto = document.querySelector('#producto_nombre').value;
         const inventarioId = document.querySelector('#inventario').value;
-        const proveedorId = document.querySelector('input[name="proveedor_id"]').value;
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
         fetch('/finanzas/facturas_recibidas/crear_producto', {
@@ -328,7 +337,6 @@ block contenido
             codigo_barra: codigoBarra,
             nombre_producto: nombreProducto,
             inventario_id: inventarioId,
-            proveedor_id: proveedorId
           })
         })
         .then(response => response.json())

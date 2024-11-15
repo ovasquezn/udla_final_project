@@ -11,9 +11,7 @@ block contenido
             button.btn.btn-success(data-toggle="modal" data-target="#addProveedorModal")
               i.fas.fa-plus
               |  Nuevo Proveedor
-        // /.row
 
-    // Main content
     section.content
       .container-fluid
         .section-notification
@@ -21,16 +19,14 @@ block contenido
         table#proveedoresTable.table.table-striped
           thead
             tr
-              th ID
               th Nombre del Proveedor
               th Contacto
               th Dirección
               th Teléfono
-              th Acciones
+              th 
           tbody
             each proveedor, index in proveedores
               tr
-                td= proveedor.id
                 td= proveedor.nombre_proveedor
                 td= proveedor.contacto
                 td= proveedor.direccion
@@ -38,26 +34,137 @@ block contenido
                 td
                   button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleProveedorModal${index}`)
                     i.fas.fa-eye
-                    |  Detalles
+                  button.btn.btn-warning.btn-sm.mx-2(data-toggle="modal" data-target=`#editarProveedorModal${index}`)
+                    i.fas.fa-edit
 
                   // Modal de Detalles del Proveedor
                   .modal.fade(id=`detalleProveedorModal${index}` tabindex="-1" role="dialog")
                     .modal-dialog.modal-lg(role="document")
                       .modal-content
-                        .modal-header
+                        .modal-header.bg-primary.text-white
                           h5.modal-title Detalles del Proveedor - #{proveedor.nombre_proveedor}
                           button.close(type="button" data-dismiss="modal" aria-label="Close")
                             span(aria-hidden="true") &times;
                         .modal-body
-                          p Nombre: #{proveedor.nombre_proveedor}
-                          p Contacto: #{proveedor.contacto}
-                          p Dirección: #{proveedor.direccion}
-                          p Teléfono: #{proveedor.telefono}
-                          p Fecha de Creación: #{proveedor.fecha_creacion.toLocaleDateString('es-ES')}
-                          p Última Actualización: #{proveedor.fecha_actualizacion.toLocaleDateString('es-ES')}
+                          .container
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Nombre: 
+                                  span.badge.badge-info.ml-2(style="font-size: 1.2em; padding: 8px 12px;") #{proveedor.nombre_proveedor}
+                              .col-md-6
+                                p.mb-2
+                                  strong RUT:
+                                  span.badge.badge-secondary.ml-2(style="font-size: 1.2em; padding: 8px 12px;") #{proveedor.rut}
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Razón Social:
+                                  span.text-muted.ml-2 #{proveedor.razon_social}
+                              .col-md-6
+                                p.mb-2
+                                  strong Giro:
+                                  span.text-muted.ml-2 #{proveedor.giro}
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Contacto:
+                                  span.text-muted.ml-2 #{proveedor.contacto}
+                              .col-md-6
+                                p.mb-2
+                                  strong Dirección:
+                                  span.text-muted #{proveedor.direccion}
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Teléfono:
+                                  span.text-muted #{proveedor.telefono}
+                              .col-md-6
+                                p.mb-2
+                                  strong Email:
+                                  a(href=`mailto:${proveedor.email}`) #{proveedor.email}
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Web:
+                                  a(href=`${proveedor.web}` target="_blank") #{proveedor.web}
+                            .row.mb-3
+                              .col-md-6
+                                p.mb-2
+                                  strong Forma de Pago:
+                                  span.badge.badge-primary.ml-2 #{proveedor.forma_pago}
+                              .col-md-6
+                                p.mb-2
+                                  strong Plazo de Pago:
+                                  span.badge.badge-warning.ml-2 #{proveedor.plazo_pago} días
+                            .row.mb-6 
+                              .col-md-12
+                                p.mb-2
+                                  strong Detalles:
+                                  span.text-muted.ml-2 #{proveedor.detalles}
+
                         .modal-footer
-                          button.btn.btn-danger(type="button" onclick=`eliminarProveedor(${proveedor.id})`) Elimin
+                          button.btn.btn-danger(type="button" onclick=`eliminarProveedor(${proveedor.id})`)
+                            i.fas.fa-trash-alt.mr-1
+                            | Eliminar
                           button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
+
+                  .modal.fade(id=`editarProveedorModal${index}` tabindex="-1" role="dialog")
+                    .modal-dialog.modal-lg(role="document")
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Editar Proveedor - #{proveedor.nombre_proveedor}
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        .modal-body
+                          form#editarProveedorForm(action=`/finanzas/proveedores/editar/${proveedor.id}` method="POST" onsubmit="editarProveedor(event, '#editarProveedorModal')")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            
+                            .form-group
+                              label(for="nombre_proveedor") Nombre del Proveedor
+                              input#nombre_proveedor.form-control(type="text" name="nombre_proveedor" required value=proveedor.nombre_proveedor)
+                            .form-group
+                              label(for="rut") RUT
+                              input#rut.form-control(type="text" name="rut" value=proveedor.rut)
+                            .form-group
+                              label(for="razon_social") Razón Social
+                              input#razon_social.form-control(type="text" name="razon_social" value=proveedor.razon_social)
+                            .form-group
+                              label(for="giro") Giro
+                              input#giro.form-control(type="text" name="giro" value=proveedor.giro)
+                            .form-group
+                              label(for="web") Página Web
+                              input#web.form-control(type="text" name="web" value=proveedor.web)
+                            .form-group
+                              label(for="email") Email
+                              input#email.form-control(type="email" name="email" value=proveedor.email)
+                            .form-group
+                              label(for="contacto") Contacto
+                              input#contacto.form-control(type="text" name="contacto" value=proveedor.contacto)
+                            .form-group
+                              label(for="direccion") Dirección
+                              input#direccion.form-control(type="text" name="direccion" value=proveedor.direccion)
+                            .form-group
+                              label(for="telefono") Teléfono
+                              input#telefono.form-control(type="text" name="telefono" value=proveedor.telefono)
+                            .form-group
+                              label(for="detalles") Detalles
+                              textarea#detalles.form-control(name="detalles" value=proveedor.detalles)
+                            .form-group 
+                              label(for="forma_pago") Forma de Pago
+                              select#forma_pago.form-control(name="forma_pago" required)
+                                option(value="credito" selected=proveedor.forma_pago === 'credito') Crédito
+                                option(value="contado" selected=proveedor.forma_pago === 'contado') Contado
+                                option(value="cheque" selected=proveedor.forma_pago === 'cheque') Cheque
+                                option(value="transferencia" selected=proveedor.forma_pago === 'transferencia') Transferencia
+                            .form-group
+                              label(for="plazo_pago") Plazo de Pago (días)
+                              input#plazo_pago.form-control(type="number" name="plazo_pago" min="0" max="30" required value=proveedor.plazo_pago)
+                            
+                            .modal-footer
+                              button.btn.btn-primary(type="submit") Guardar Cambios
+                              button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
       // Modal para Agregar Nuevo Proveedor
       .modal.fade#addProveedorModal(tabindex="-1" role="dialog")
@@ -74,6 +181,15 @@ block contenido
                   label(for="nombre_proveedor") Nombre del Proveedor
                   input#nombre_proveedor.form-control(type="text" name="nombre_proveedor" required)
                 .form-group
+                  label(for="rut") RUT
+                  input#rut.form-control(type="text" name="rut")
+                .form-group
+                  label(for="razon_social") Razón Social
+                  input#razon_social.form-control(type="text" name="razon_social")
+                .form-group
+                  label(for="giro") Giro
+                  input#giro.form-control(type="text" name="giro")
+                .form-group
                   label(for="contacto") Contacto
                   input#contacto.form-control(type="text" name="contacto")
                 .form-group
@@ -82,6 +198,25 @@ block contenido
                 .form-group
                   label(for="telefono") Teléfono
                   input#telefono.form-control(type="text" name="telefono")
+                .form-group
+                  label(for="email") Email
+                  input#email.form-control(type="email" name="email")
+                .form-group
+                  label(for="web") Página Web
+                  input#web.form-control(type="text" name="web")
+                .form-group
+                  label(for="detalles") Detalles
+                  textarea#detalles.form-control(name="detalles")
+                .form-group
+                  label(for="forma_pago") Forma de Pago
+                  select#forma_pago.form-control(name="forma_pago" required)
+                    option(value="credito") Crédito
+                    option(value="contado") Contado
+                    option(value="cheque") Cheque
+                    option(value="transferencia") Transferencia
+                .form-group
+                  label(for="plazo_pago") Plazo de Pago (días)
+                  input#plazo_pago.form-control(type="number" name="plazo_pago" min="0" max="30" required)
                 button.btn.btn-primary(type="submit") Guardar
             .modal-footer
               button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
@@ -97,7 +232,7 @@ block contenido
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
-              'CSRF-Token': csrfToken // Incluir el token CSRF en el encabezado
+              'CSRF-Token': csrfToken 
             }
           })
           .then(response => {
@@ -105,9 +240,10 @@ block contenido
               alert("Proveedor eliminado con éxito");
               location.reload(); // Recargar la página para actualizar la lista de proveedores
             } else {
+              console.error("Error en la respuesta:", response.statusText);
               alert("Error al eliminar el proveedor");
             }
           })
-          .catch(error => console.error("Error:", error));
+          .catch(error => console.error("Error en la solicitud de eliminación:", error));
         }
       }
