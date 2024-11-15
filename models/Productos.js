@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import db from '../config/db.js';
+import db from '../db.js';
 import { Empresas } from './Empresas.js';
 import { Proveedores } from './Proveedores.js';
 import { Inventarios } from './Inventarios.js';

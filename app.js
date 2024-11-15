@@ -7,7 +7,7 @@ import configRoutes from './routes/configRoutes.js';
 import hrRoutes from './routes/hrRoutes.js';
 import dashboard from './routes/dashboardRoutes.js';
 import index from './routes/indexRoutes.js';
-import db from './config/db.js';
+import db from './db.js';
 import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
 import {PORT} from './config.js';

@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import db from '../config/db.js';
+import db from '../db.js';
 
 // pendiente de implementar, ademas tener cuidado con los duplicados
 function generarIdEmpresa() {

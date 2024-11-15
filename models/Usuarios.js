@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-import db from '../config/db.js';
+import db from '../db.js';
 import { Empresas } from './Empresas.js'; // Importar el modelo de empresas
 import { Colaboradores } from './Colaboradores.js'; // Importar el modelo de colaboradores
 

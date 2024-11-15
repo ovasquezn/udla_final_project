@@ -1,7 +1,7 @@
 // models/Bancos.js
 
 import { DataTypes } from 'sequelize';
-import db from '../config/db.js';
+import db from '../db.js';
 
 const Bancos = db.define('bancos', {
   id: {
