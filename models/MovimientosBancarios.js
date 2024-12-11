@@ -25,17 +25,26 @@ const MovimientosBancarios = db.define('movimientos_bancarios', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
-  detalle: {
+  categoria: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  detalle: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   monto: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   tipo: {
     type: DataTypes.ENUM('gasto', 'abono'),
     allowNull: false,
+  },
+  estado: {
+    type: DataTypes.ENUM('pendiente', 'aprobado', 'rechazado'),
+    allowNull: false,
+    defaultValue: 'aprobado',
   },
   fecha_creacion: {
     type: DataTypes.DATE,

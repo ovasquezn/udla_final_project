@@ -1,0 +1,101 @@
+extends ../layout/layout
+
+block contenido
+  .content-wrapper
+    .content-header
+      .container-fluid
+        .row.mb-2
+          .col-sm-6
+            h1.m-0 Clientes
+          .col-sm-6.text-right
+            button.btn.btn-success(data-toggle="modal" data-target="#addClienteModal") 
+              i.fas.fa-plus
+              |  Nuevo Cliente
+
+    .content
+      .container-fluid
+        // Tabla para listar clientes
+        table#clientesTable.table.table-striped
+          thead
+            tr
+              th Nombre
+              th RUT
+              th Email
+              th Teléfono
+              th Dirección
+              th 
+          tbody
+            each cliente, index in clientes
+              tr
+                td= cliente.nombre
+                td= cliente.rut || 'N/A'
+                td= cliente.email || 'N/A'
+                td= cliente.telefono || 'N/A'
+                td= cliente.direccion || 'N/A'
+                td
+                  // Botón para editar cliente
+                  button.btn.btn-warning.btn-sm.mr-2(data-toggle="modal" data-target=`#editClienteModal-${index}`)
+                    i.fas.fa-edit
+                    |  Editar
+                  // Botón para eliminar cliente
+                  form(action=`/clientes/eliminar/${cliente.id}` method="POST" style="display:inline;")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    button.btn.btn-danger.btn-sm(type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')") 
+                      i.fas.fa-trash-alt
+
+    // Modal para agregar cliente
+    .modal.fade#addClienteModal(tabindex="-1" role="dialog")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Nuevo Cliente
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form(action="/finanzas/clientes/agregar" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              .form-group
+                label(for="nombre") Nombre del Cliente
+                input#nombre.form-control(type="text" name="nombre" placeholder="Ingrese el nombre del cliente" required)
+              .form-group
+                label(for="rut") RUT del Cliente
+                input#rut.form-control(type="text" name="rut" placeholder="Ingrese el RUT (opcional)")
+              .form-group
+                label(for="email") Correo Electrónico
+                input#email.form-control(type="email" name="email" placeholder="Ingrese el correo electrónico (opcional)")
+              .form-group
+                label(for="telefono") Teléfono
+                input#telefono.form-control(type="text" name="telefono" placeholder="Ingrese el número de teléfono (opcional)")
+              .form-group
+                label(for="direccion") Dirección
+                input#direccion.form-control(type="text" name="direccion" placeholder="Ingrese la dirección (opcional)")
+              button.btn.btn-primary(type="submit") Guardar
+
+    // Modales para editar clientes
+    each cliente, index in clientes
+      .modal.fade(id=`editClienteModal-${index}` tabindex="-1" role="dialog")
+        .modal-dialog(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Editar Cliente
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") &times;
+            .modal-body
+              form(action=`/clientes/editar/${cliente.id}` method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                .form-group
+                  label(for="nombre") Nombre del Cliente
+                  input#nombre.form-control(type="text" name="nombre" value=cliente.nombre required)
+                .form-group
+                  label(for="rut") RUT del Cliente
+                  input#rut.form-control(type="text" name="rut" value=cliente.rut)
+                .form-group
+                  label(for="email") Correo Electrónico
+                  input#email.form-control(type="email" name="email" value=cliente.email)
+                .form-group
+                  label(for="telefono") Teléfono
+                  input#telefono.form-control(type="text" name="telefono" value=cliente.telefono)
+                .form-group
+                  label(for="direccion") Dirección
+                  input#direccion.form-control(type="text" name="direccion" value=cliente.direccion)
+                button.btn.btn-primary(type="submit") Guardar Cambios

@@ -70,15 +70,39 @@ const mostrar_movimientos_bancarios = async (req, res) => {
       }
     }
 
+    // const movimientos = await MovimientosBancarios.findAll({
+    //   where: { empresaId, banco_id: bancoId },
+    //   order: [['fecha', 'DESC']],
+    // });
     const movimientos = await MovimientosBancarios.findAll({
-      where: { empresaId, banco_id: bancoId },
+      where: { estado: 'aprobado', banco_id: bancoId },
       order: [['fecha', 'DESC']],
     });
+    
+    const movimientosPendientes = await MovimientosBancarios.findAll({
+      where: { estado: 'pendiente', banco_id: bancoId },
+      order: [['fecha', 'DESC']],
+    });
+    
 
     const saldoInicial = bancoSeleccionado.saldo;
     const abonos = movimientos.filter(mov => mov.tipo === 'abono');
     const gastos = movimientos.filter(mov => mov.tipo === 'gasto');
     const saldoActual = calcularSaldoActual(saldoInicial, abonos, gastos);
+
+    // const saldoProyectado = (parseFloat(saldoActual) + parseFloat(movimientosPendientes.reduce((sum, mov) => sum + parseFloat(mov.monto), 0))).toFixed(2);
+
+    const abonosPendientes = movimientosPendientes
+    .filter(mov => mov.tipo === 'abono')
+    .reduce((sum, mov) => sum + parseFloat(mov.monto), 0)
+    .toFixed(2);
+
+    const gastosPendientes = movimientosPendientes
+    .filter(mov => mov.tipo === 'gasto')
+    .reduce((sum, mov) => sum + parseFloat(mov.monto), 0)
+    .toFixed(2);
+
+    const saldoProyectado = (parseFloat(saldoActual) + parseFloat(abonosPendientes) - parseFloat(gastosPendientes)).toFixed(2);
 
     res.render('finanzas/banco', {
       id: bancoId,
@@ -87,9 +111,13 @@ const mostrar_movimientos_bancarios = async (req, res) => {
       bancoSeleccionado,
       bancoSeleccionadoNombre: bancoSeleccionado.nombre_banco,
       movimientos,
+      movimientosPendientes,
       pagina: 'Banco',
       pagina_activa: 'banco',
       saldoActual,
+      saldoProyectado,
+      abonosPendientes,
+      gastosPendientes,
     });
   } catch (error) {
     console.error('Error al mostrar los movimientos bancarios:', error);
@@ -97,9 +125,20 @@ const mostrar_movimientos_bancarios = async (req, res) => {
   }
 };
 
+const aprobar_movimiento = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await MovimientosBancarios.update({ estado: 'aprobado' }, { where: { id } });
+    res.redirect('/finanzas/movimientos_bancarios');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al aprobar el movimiento');
+  }
+};
+
 const agregar_movimiento_bancario = async (req, res) => {
   try {
-    const { bancoId, fecha, detalle, monto, tipo } = req.body;
+    const { bancoId, fecha, categoria, detalle, monto, tipo, estado } = req.body;
     const empresaId = req.usuario.empresaId;
 
     if (!bancoId) {
@@ -110,7 +149,9 @@ const agregar_movimiento_bancario = async (req, res) => {
       empresaId,
       banco_id: bancoId,
       fecha,
+      categoria,
       detalle,
+      estado,
       monto,
       tipo,
       fecha_creacion: new Date(),
@@ -128,12 +169,13 @@ const agregar_movimiento_bancario = async (req, res) => {
 const editar_movimiento_bancario = async (req, res) => {
   try {
     const { id } = req.params;
-    const { detalle, monto, tipo } = req.body;
+    const { categoria ,detalle, monto, tipo } = req.body;
 
     const movimiento = await MovimientosBancarios.findByPk(id);
     if (!movimiento) {
       return res.status(404).json({ success: false, message: 'Movimiento no encontrado' });
     }
+    movimiento.categoria = categoria;
     movimiento.detalle = detalle;
     movimiento.monto = monto;
     movimiento.tipo = tipo;
@@ -313,9 +355,11 @@ const mostrar_facturas_emitidas = async (req, res) => {
       include: [{ model: Clientes, as: 'cliente_info' }]
     });
 
+    const clientes = await Clientes.findAll({ where: { empresaId } });
     //const clientes = await Clientes.findAll({ where: { empresaId } });
     res.render('finanzas/facturas_emitidas', { 
       facturasEmitidas, 
+      clientes,
       pagina: 'Facturas Emitidas',
       pagina_activa: 'facturas_emitidas',
       csrfToken: req.csrfToken() });
@@ -333,7 +377,7 @@ const agregar_factura_emitida = async (req, res) => {
 
     await FacturasEmitidas.create({
       empresaId,
-      numero_factura: numero_factura || '12345',
+      numero_factura: numero_factura,
       fecha_emision: fecha_emision || new Date(),
       fecha_vencimiento: fecha_vencimiento || new Date(new Date().setDate(new Date().getDate() + 30)),
       clienteId: clienteId || 1,
@@ -351,27 +395,86 @@ const agregar_factura_emitida = async (req, res) => {
 };
 // #endregion Facturas Emitidas
 
-//=========GASTOS================
-// Funciones de gastos
-// #region Gastos
-const mostrar_gastos = (req, res) => {
-    res.render('finanzas/gastos', {
-        pagina: 'Gastos',
-        pagina_activa: 'gastos',
-        usuario: req.usuario.nombre,
-        empresa: req.usuario.empresa,
-        permisos: req.usuario.permisos
-    })
-}
-// #endregion Gastos
+//=========CLIENTES================
+// Funciones de clientes
+// #region Clientes
+const mostrar_clientes = async (req, res) => {
 
+  try {
+    const empresaId = req.usuario.empresaId;
 
-const mostrar_ingresos = async (req, res) => {
-  res.render('finanzas/ingresos', {
-      pagina: 'Ingresos',
-      pagina_activa: 'ingresos',
+    // Obtener clientes de la empresa
+    const clientes = await Clientes.findAll({
+      where: { empresaId },
+      order: [['nombre', 'ASC']],
+    });
+
+    res.render('finanzas/clientes', {
+      clientes,
+      pagina: 'Clientes',
+      pagina_activa: 'clientes',
+      csrfToken: req.csrfToken(),
   })
+  } catch (error) {
+    console.error('Error al listar los clientes:', error);
+    res.status(500).send('Error al listar los clientes.');
+  }
 }
+
+const agregar_cliente = async (req, res) => {
+  try {
+    const empresaId = req.usuario.empresaId;
+    //const { empresaId } = req.usuario;
+    const { nombre, rut, email, telefono, direccion } = req.body;
+
+    await Clientes.create({
+      empresaId,
+      nombre,
+      rut: rut || null,
+      email: email || null,
+      telefono: telefono || null,
+      direccion: direccion || null,
+    });
+
+    res.redirect('/finanzas/clientes');
+  } catch (error) {
+    console.error('Error al agregar cliente:', error);
+    res.status(500).send('Error al agregar cliente.');
+  }
+};
+
+
+
+const editar_cliente = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, rut, email, telefono, direccion } = req.body;
+
+    await Clientes.update(
+      { nombre, rut, email, telefono, direccion },
+      { where: { id } }
+    );
+
+    res.redirect('/finanzas/clientes');
+  } catch (error) {
+    console.error('Error al editar cliente:', error);
+    res.status(500).send('Error al editar cliente.');
+  }
+};
+
+const eliminar_cliente = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Clientes.destroy({ where: { id } });
+
+    res.redirect('/finanzas/clientes');
+  } catch (error) {
+    console.error('Error al eliminar cliente:', error);
+    res.status(500).send('Error al eliminar cliente.');
+  }
+};
+// #endregion Clientes
 
 //=========PROVEEDORES================
 // Funciones de proveedores
@@ -537,13 +640,16 @@ const mostrar_precios = async (req, res) => {
 // #region Exportar funciones
 export { 
     mostrar_movimientos_bancarios,
+    aprobar_movimiento,
     agregar_movimiento_bancario,
     editar_movimiento_bancario,
     eliminar_movimiento_bancario,
     mostrar_facturas_recibidas,
     mostrar_facturas_emitidas,
-    mostrar_gastos,
-    mostrar_ingresos,
+    mostrar_clientes,
+    agregar_cliente,
+    editar_cliente,
+    eliminar_cliente,
     mostrar_proveedores,
     agregar_proveedor,
     eliminar_proveedor,
@@ -555,3 +661,44 @@ export {
     crear_productos_factura_recibida,
 };
 // #endregion
+
+
+
+
+
+
+
+// 18.
+// Metogologia Aplicada:
+
+// Compaaracion agiles y tradicionales
+// Eleccion de metodologia agil: SCRUM
+// cARACTERISITICAS
+// Software: Jira
+// Srpints, epicas, tareas, distribuidas entre ambos
+
+// 20.
+// Reuerimientos funcionales
+// requerimineto no funcionales
+// No funcionalesDe seguridad
+// De mantencion
+
+// 21.
+// Diagrama de casos de uso / general y por actor
+
+// 22. Diagrama de componentes/ Arquitectura?
+
+// 23. Modelo entiidad relacion
+
+// 24. Imagenes del prototipo
+
+// 25. Diseño de las pruebas, listado de algunas y estructyra de ficha
+
+// 26. Conclusiones y recomendaciones
+
+//   * 1 conslusion para cada objetivo
+//   * recomendaciones
+//   * 
+// 27. Referencias
+
+// Proptotipo

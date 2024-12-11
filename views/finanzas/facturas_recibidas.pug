@@ -43,6 +43,9 @@ block contenido
             button.btn.btn-success(data-toggle="modal" data-target="#addFacturaModal") 
               i.fas.fa-plus
               |  Nueva Factura
+            button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#crearModal`) 
+              i.fas.fa-plus
+              |  Crear Producto
 
     section.content
       .container-fluid
@@ -66,14 +69,11 @@ block contenido
                 td
                   button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#detalleModal${index}`) 
                     i.fas.fa-eye
-                  button.btn.btn-primary.btn-sm.mx-2(data-toggle="modal" data-target=`#crearModal${index}`) 
-                    i.fas.
-                    | Crear
                   button.btn.btn-danger.btn-sm.mx-2(data-toggle="modal" data-target=`#crearModal${index}`) 
                     i.fas.
                     | Eliminar
 
-                  .modal.fade(id=`crearModal${index}` tabindex="-1" role="dialog")
+                  .modal.fade(id=`crearModal` tabindex="-1" role="dialog")
                     .modal-dialog.modal-lg(role="document")
                       .modal-content
                         .modal-header
@@ -311,7 +311,6 @@ block contenido
         }
       })
 
-      // Show new product fields if 'Crear Nuevo Producto' is selected
       $('#producto').on('change', function() {
         if (this.value === 'nuevo') {
           $('.new-product-fields').show();
@@ -342,12 +341,10 @@ block contenido
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            // Limpiar el formulario
             document.querySelector('#codigo_de_barra').value = '';
             document.querySelector('#producto_nombre').value = '';
             document.querySelector('#inventario').value = '';
 
-            // Actualizar la lista de productos en el modal
             agregarProductoATabla(data.producto);
           } else {
             alert('Error al crear el producto');
@@ -356,19 +353,15 @@ block contenido
         .catch(error => console.error('Error al crear el producto:', error));
       }
 
-          // Función para agregar un producto a la tabla de productos en el modal
       function agregarProductoATabla(producto) {
-        // Selecciona el cuerpo de la tabla de productos
         const tablaProductos = document.querySelector('#tablaProductos tbody');
 
-        // Crear una nueva fila con los datos del producto
         const nuevaFila = document.createElement('tr');
         nuevaFila.innerHTML = `
           <td>${producto.codigo_barra}</td>
           <td>${producto.nombre_producto}</td>
         `;
 
-        // Añadir la nueva fila a la tabla
         tablaProductos.appendChild(nuevaFila);
       }
 
@@ -397,7 +390,6 @@ block contenido
         return;
         }
 
-        // Construir un objeto de datos para enviar al controlador
         const data = {
         producto_id: productoId,
         cantidad,
@@ -417,8 +409,7 @@ block contenido
         .then(response => response.json())
         .then(data => {
         if (data.success) {
-            actualizarTablaProductos(data.detalle); // Actualizar la tabla sin recargar
-            //$('#addProductModal').modal('hide');    // Cerrar el modal
+            actualizarTablaProductos(data.detalle);
         } else {
             alert(data.message || 'Error al agregar producto');
         }
@@ -426,8 +417,6 @@ block contenido
         .catch(error => console.error('Error al agregar producto:', error));
       }
 
-
-      // Función para actualizar la tabla de productos en la factura
       function actualizarTablaProductos(detalle) {
         console.log(detalle);
         const tablaProductos = document.getElementById('productosTabla');

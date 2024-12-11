@@ -26,9 +26,9 @@ const Bancos = db.define('bancos', {
     allowNull: false,
   },
   saldo: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 0.00,
+    defaultValue: 0,
   },
   moneda: {
     type: DataTypes.STRING,

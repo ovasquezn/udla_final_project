@@ -89,7 +89,7 @@ head
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'clientes' ? 'active' : '', href="#")
                   p Clientes
-          li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas','ingresos', 'gastos', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
+          li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['banco', 'facturas_emitidas','facturas_recibidas','clientes', 'precios','proveedores'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-dollar-sign
               p
@@ -108,17 +108,14 @@ head
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'facturas_recibidas' ? 'active' : '', href="/finanzas/facturas_recibidas")
                   p Facturas Recibidas
               li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'ingresos' ? 'active' : '', href="/finanzas/ingresos")
-                  p Ingresos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'gastos' ? 'active' : '', href="/finanzas/gastos")
-                  p Gastos
-              li.nav-item
-                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'precios' ? 'active' : '', href="/finanzas/precios")
-                  p Precios
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'clientes' ? 'active' : '', href="/finanzas/clientes")
+                  p Clientes
               li.nav-item
                 a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'proveedores' ? 'active' : '', href="/finanzas/proveedores")
                   p Proveedores
+              li.nav-item
+                a.nav-link(class= typeof pagina_activa !== 'undefined' && pagina_activa === 'precios' ? 'active' : '', href="/finanzas/precios")
+                  p Precios
           li.nav-item.mt-2.menu-open(class= typeof pagina_activa !== 'undefined' && ['lista_inventario', 'productos','ingresos_inventario','salidas_inventario', 'pedidos'].includes(pagina_activa) ? 'menu-open' : '')
             a.nav-link(href='#', style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;")
               i.nav-icon.fas.fa-boxes

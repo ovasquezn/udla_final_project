@@ -33,45 +33,149 @@ block contenido
             .small-box.bg-info
               .inner
                 h3.valor-clp= saldoActual
+                
                 p Saldo Disponible
               .icon
                 i.fas.fa-dollar-sign
           .col-lg-3.col-6
             .small-box.bg-success
               .inner
-                h3.valor-clp= saldoActual
-                p Saldo Proyectado a 7 Días
+                h3.valor-clp= saldoProyectado
+                p Saldo Proyectado
               .icon
                 i.fas.fa-calendar-alt
           .col-lg-3.col-6
             .small-box.bg-warning
               .inner
-                h3.valor-clp= saldoActual
+                h3.valor-clp= abonosPendientes
                 p Abonos Pendientes
               .icon
                 i.fas.fa-plus
           .col-lg-3.col-6
             .small-box.bg-danger
               .inner
-                h3.valor-clp= saldoActual
+                h3.valor-clp= gastosPendientes
                 p Gastos Pendientes
               .icon
                 i.fas.fa-minus
+      .container-fluid
+        h3 Movimientos Pendientes
+        if movimientosPendientes.length > 0
+          table#movimientosPendientesTable.table.table-striped
+            thead
+              tr
+                th Fecha
+                th Detalle
+                th Tipo
+                th Monto
+                th
+            tbody
+              each movimiento in movimientosPendientes
+                tr
+                  td= new Date(movimiento.fecha).toLocaleDateString('es-ES')
+                  td= movimiento.categoria
+                  td
+                    if movimiento.tipo === 'abono'
+                      span.badge.badge-success Abono
+                    else if movimiento.tipo === 'gasto'
+                      span.badge.badge-danger Gasto
+                  td.valor-clp= movimiento.monto
+                  td.text-center 
+                    button.btn.btn-warning.btn-sm(data-toggle="modal" data-target=`#editarMovimientoModal-${movimiento.id}`)
+                      i.fas.fa-edit
+                    button.btn.btn-warning.btn-sm.ml-2(data-toggle="modal" data-target=`#aprobarMovimientoModal-${movimiento.id}`)
+                      i.fas.fa-check
+                    button.btn.btn-danger.btn-sm.ml-2(data-toggle="modal" data-target=`#eliminarMovimientoModal-${movimiento.id}`)
+                      i.fas.fa-trash-alt
+        else
+          p.text-center   No hay movimientos pendientes
+        each movimiento in movimientosPendientes
+          .modal.fade(id=`aprobarMovimientoModal-${movimiento.id}` tabindex="-1" role="dialog")
+            .modal-dialog(role="document")
+              .modal-content
+                .modal-header
+                  h5.modal-title Confirmar Aprobación
+                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                .modal-body
+                  p ¿Estás seguro de que deseas aprobar este movimiento bancario?
+                  p
+                    strong Detalle:
+                    |  #{movimiento.detalle}
+                  p
+                    strong Monto:
+                    |  $#{parseFloat(movimiento.monto).toLocaleString('es-CL')}
+                .modal-footer
+                  form(action=`/finanzas/movimientos_bancarios/aprobar/${movimiento.id}` method="POST")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    button.btn.btn-primary(type="submit") Aprobar
+                  button.btn.btn-secondary(type="button" data-dismiss="modal") Cancelar
+
+        each movimiento in movimientosPendientes
+          .modal.fade(id=`eliminarMovimientoModal-${movimiento.id}` tabindex="-1" role="dialog")
+            .modal-dialog(role="document")
+              .modal-content
+                .modal-header
+                  h5.modal-title Confirmar Eliminación
+                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                .modal-body
+                  p ¿Estás seguro de que deseas eliminar este movimiento bancario?
+                  p
+                    strong Detalle:
+                    |  #{movimiento.detalle}
+                  p
+                    strong Monto:
+                    |  $#{parseFloat(movimiento.monto).toLocaleString('es-CL')}
+                .modal-footer
+                  form(action=`/finanzas/movimientos_bancarios/eliminar/${movimiento.id}` method="POST")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    button.btn.btn-danger(type="submit") Confirmar Eliminación
+                  button.btn.btn-secondary(type="button" data-dismiss="modal") Cancelar
+
+        each movimiento in movimientosPendientes
+          .modal.fade(id=`editarMovimientoModal-${movimiento.id}` tabindex="-1" role="dialog")
+            .modal-dialog(role="document")
+              .modal-content
+                .modal-header
+                  h5.modal-title Editar Movimiento
+                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                .modal-body
+                  form(action=`/finanzas/movimientos_bancarios/editar/${movimiento.id}` method="POST")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    .form-group 
+                      label(for="categoria") Categoria
+                      input#categoria.form-control(type="text" name="categoria" value=movimiento.categoria required)
+                    .form-group
+                      label(for="detalle") Detalle
+                      input#detalle.form-control(type="text" name="detalle" value=movimiento.detalle required)
+                    .form-group
+                      label(for="monto") Monto
+                      input#detalle.form-control(type="number" name="monto" value=movimiento.monto required oninput="this.value = Math.floor(this.value)")
+                    .form-group
+                      label(for="tipo") Tipo
+                      select#tipo.form-control(name="tipo" required)
+                        option(value="abono" selected=movimiento.tipo === 'abono') Abono
+                        option(value="gasto" selected=movimiento.tipo === 'gasto') Gasto
+                    button.btn.btn-primary(type="submit") Guardar Cambios
+                .modal-footer
+                  button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
 
       .container-fluid
-        .row.mt-3
-          .col-md-4
-            .form-group
-              label(for="customSearch") Buscar por Detalle
-              input#customSearch.form-control(type="text" placeholder="Ingrese detalle del movimiento")
-          .col-md-4
-            .form-group
-              label(for="fechaInicio") Fecha de Inicio
-              input#fechaInicio.form-control(type="date")
-          .col-md-4
-            .form-group
-              label(for="fechaFin") Fecha de Fin
-              input#fechaFin.form-control(type="date")
+        //- .row.mt-3
+        //-   .col-md-4
+        //-     .form-group
+        //-       label(for="customSearch") Buscar por Detalle
+        //-       input#customSearch.form-control(type="text" placeholder="Ingrese detalle del movimiento")
+        //-   .col-md-4
+        //-     .form-group
+        //-       label(for="fechaInicio") Fecha de Inicio
+        //-       input#fechaInicio.form-control(type="date")
+        //-   .col-md-4
+        //-     .form-group
+        //-       label(for="fechaFin") Fecha de Fin
+        //-       input#fechaFin.form-control(type="date")
           // Tabla de Movimientos Bancarios
     section.content
       .container-fluid
@@ -87,7 +191,7 @@ block contenido
               each movimiento in movimientos
                 tr
                   td= new Date(movimiento.fecha).toLocaleDateString('es-ES')
-                  td= movimiento.detalle
+                  td= movimiento.categoria
                   td
                     if movimiento.tipo === 'abono'
                       span.badge.badge-success Abono
@@ -123,6 +227,9 @@ block contenido
                 label(for="fecha") Fecha
                 input#fecha.form-control(type="date" name="fecha" required)
               .form-group
+                label(for="categoria") Categoria
+                input#categoria.form-control(type="text" name="categoria" required)
+              .form-group
                 label(for="detalle") Detalle
                 input#detalle.form-control(type="text" name="detalle" required)
               .form-group
@@ -130,6 +237,11 @@ block contenido
                 select#tipo.form-control(name="tipo" required)
                   option(value="abono") Abono
                   option(value="gasto") Gasto
+              .form-group
+                label(for="estado") Estado
+                select#estado.form-control(name="estado" required)
+                  option(value="aprobado") Aprobado
+                  option(value="pendiente") Pendiente
               .form-group
                 label(for="monto") Monto
                 input#monto.form-control(type="number" step="0.01" name="monto" required)
@@ -148,6 +260,9 @@ block contenido
             .modal-body
               form(action=`/finanzas/movimientos_bancarios/editar/${movimiento.id}` method="POST")
                 input(type="hidden" name="_csrf" value=csrfToken)
+                .form-group 
+                  label(for="categoria") Categoria
+                  input#categoria.form-control(type="text" name="categoria" value=movimiento.categoria required)
                 .form-group
                   label(for="detalle") Detalle
                   input#detalle.form-control(type="text" name="detalle" value=movimiento.detalle required)
@@ -211,6 +326,27 @@ block contenido
         ordering: true,
       });
 
+    $(document).ready(function() {
+      const table = $('#movimientosPendientesTable').DataTable({
+        // Configuración de lenguaje
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+        },
+        // Ordenar por la columna de fecha (suponiendo que es la segunda columna)
+        order: [[0, 'desc']], // Índice de columna basado en tu tabla; ajusta según corresponda
+
+        // Desactivar ordenamiento en columnas específicas
+        columnDefs: [
+          { orderable: false, targets: [2, 3, 4] } // Índices de las columnas sin ordenación
+        ],
+
+        pageLength: 50, // Número de registros por página
+        
+        searching: true,
+        // Desactivar la ordenación general de DataTables para mostrar el orden por defecto
+        ordering: true,
+      });
+
       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         const minDate = $('#fechaInicio').val();
         const maxDate = $('#fechaFin').val();
@@ -242,15 +378,32 @@ block contenido
       const url = select.options[select.selectedIndex].value;
       window.location.href = url;
     }
+    // Formatear los valores de CLP
     const elementosCLP = document.querySelectorAll('.valor-clp');
-
-    // Aplica el formato a cada elemento
     elementosCLP.forEach(elemento => {
-      const valor = parseFloat(elemento.textContent);  // Asegúrate de que es un número
+      const valor = parseFloat(elemento.textContent.replace(/[^0-9.-]+/g, ''));
       elemento.textContent = new Intl.NumberFormat('es-CL', {
         style: 'currency',
         currency: 'CLP',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
       }).format(valor);
+    });
+    function formatearCLP(elemento) {
+      const valor = parseFloat(elemento.value || elemento.textContent.replace(/[^0-9.-]+/g, ''));
+      if (!isNaN(valor)) {
+        const formateado = new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(valor);
+
+        if (elemento.tagName === 'INPUT') {
+          elemento.value = formateado; // Para inputs
+        } else {
+          elemento.textContent = formateado; // Para texto
+        }
+      }
+    }
     });

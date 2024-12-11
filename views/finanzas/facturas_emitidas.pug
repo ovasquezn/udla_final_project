@@ -162,11 +162,8 @@ block contenido
                   .form-group
                     label(for="cliente") Cliente
                     select#cliente.form-control(name="forma_pago" required)
-                      option(value="cliente1") Cliente 2
-                      option(value="cliente2") Cliente 1
-                    //select#cliente.form-control(name="clienteId" required)
-                    //  each cliente in clientes
-                    //    option(value=cliente.id)= cliente.nombre_cliente
+                      each cliente in clientes
+                        option(value=cliente.id)= cliente.nombre
 
                   // Monto
                   .form-group
@@ -192,6 +189,8 @@ block contenido
                   .form-group 
                     label(for="comentarios") Comentarios
                     textarea#comentarios.form-control(name="comentarios" rows="3")
+                
+  
 
                   button.btn.btn-primary(type="submit") Guardar
               .modal-footer
