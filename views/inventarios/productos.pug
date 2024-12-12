@@ -47,7 +47,7 @@ block contenido
                 button.close(type="button" data-dismiss="modal" aria-label="Close")
                   span(aria-hidden="true") &times;
               .modal-body
-                form(action="/productos/crear" method="POST")
+                form(action="/inventario/productos/crear_producto" method="POST" novalidate)
                   input(type="hidden" name="_csrf" value=csrfToken)
                   
                   // Código de Barra

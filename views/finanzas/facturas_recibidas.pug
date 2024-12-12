@@ -372,50 +372,102 @@ block contenido
         $('#editarProductoModal').modal('show');
       }
 
-      function cerrarModal(modalId) {
-        $(`#${modalId}`).modal('hide');
-      }
+      //- function cerrarModal(modalId) {
+      //-   $(`#${modalId}`).modal('hide');
+      //- }
+
+      //- function agregarProductoAFactura(event) {
+      //-   event.preventDefault();
+        
+      //-   const facturaId = document.getElementById('facturaId').value; 
+      //-   const productoId = document.getElementById('producto').value;
+      //-   const cantidad = document.getElementById('cantidad').value;
+      //-   const precio = document.getElementById('precio').value;
+      //-   const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+      //-   if (!productoId || !cantidad) {
+      //-   alert('Por favor, selecciona un producto y una cantidad.');
+      //-   return;
+      //-   }
+
+      //-   const data = {
+      //-   producto_id: productoId,
+      //-   cantidad,
+      //-   precio,
+      //-   _csrf: csrfToken
+      //-   };
+
+      //-   fetch(`/finanzas/facturas_recibidas/${facturaId}/agregar_producto`, {
+      //-   method: 'POST',
+      //-   headers: {
+      //-       'Content-Type': 'application/json',
+      //-       'CSRF-Token': csrfToken,
+      //-       'X-Requested-With': 'XMLHttpRequest'
+      //-   },
+      //-   body: JSON.stringify(data)
+      //-   })
+      //-   .then(response => response.json())
+      //-   .then(data => {
+      //-   if (data.success) {
+      //-       actualizarTablaProductos(data.detalle);
+      //-   } else {
+      //-       alert(data.message || 'Error al agregar producto');
+      //-   }
+      //-   })
+      //-   .catch(error => console.error('Error al agregar producto:', error));
+      //- }
 
       function agregarProductoAFactura(event) {
         event.preventDefault();
-        
-        const facturaId = document.getElementById('facturaId').value; 
+
+        const facturaId = document.getElementById('facturaId').value;
         const productoId = document.getElementById('producto').value;
         const cantidad = document.getElementById('cantidad').value;
         const precio = document.getElementById('precio').value;
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-        if (!productoId || !cantidad) {
-        alert('Por favor, selecciona un producto y una cantidad.');
-        return;
+        if (!productoId || !cantidad || !precio) {
+          alert('Por favor, selecciona un producto, cantidad y precio.');
+          return;
         }
 
         const data = {
-        producto_id: productoId,
-        cantidad,
-        precio,
-        _csrf: csrfToken
+          producto_id: productoId,
+          cantidad: parseFloat(cantidad),
+          precio: parseFloat(precio),
+          _csrf: csrfToken
         };
 
         fetch(`/finanzas/facturas_recibidas/${facturaId}/agregar_producto`, {
-        method: 'POST',
-        headers: {
+          method: 'POST',
+          headers: {
             'Content-Type': 'application/json',
             'CSRF-Token': csrfToken,
             'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(data)
+          },
+          body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-            actualizarTablaProductos(data.detalle);
-        } else {
-            alert(data.message || 'Error al agregar producto');
-        }
-        })
-        .catch(error => console.error('Error al agregar producto:', error));
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              actualizarTablaProductos(data.detalle);
+              actualizarResumenFactura(data.nuevoResumen); // Actualiza el resumen con los nuevos valores
+            } else {
+              alert(data.message || 'Error al agregar producto');
+            }
+          })
+          .catch(error => console.error('Error al agregar producto:', error));
       }
+
+      function actualizarResumenFactura(nuevoResumen) {
+        const { subtotal, impuesto, total } = nuevoResumen;
+
+        // Actualizar los elementos del resumen
+        document.querySelector('.text-right h5:nth-child(1)').textContent = `Subtotal: ${subtotal.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+        document.querySelector('.text-right h5:nth-child(2)').textContent = `Impuesto (19%): ${impuesto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+        document.querySelector('.text-right h5:nth-child(3)').textContent = `Total a Pagar: ${total.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+      }
+
 
       function actualizarTablaProductos(detalle) {
         console.log(detalle);

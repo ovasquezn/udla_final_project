@@ -271,50 +271,69 @@ const agregar_factura_recibida = async (req, res) => {
   }
   };
 
-const agregar_productos_factura_recibida = async (req, res) => {
-  try {
-    const { facturaId } = req.params;
-    const { producto_id, cantidad, precio } = req.body;
-    const empresaId = req.usuario.empresaId;
-
-    const factura = await Facturas.findOne({ where: { id: facturaId, empresaId } });
-    if (!factura) {
-      return res.status(404).json({ success: false, message: 'Factura no encontrada' });
+  const agregar_productos_factura_recibida = async (req, res) => {
+    try {
+      const { facturaId } = req.params;
+      const { producto_id, cantidad, precio } = req.body;
+      const empresaId = req.usuario.empresaId;
+  
+      // Verificar si la factura existe
+      const factura = await Facturas.findOne({ where: { id: facturaId, empresaId } });
+      if (!factura) {
+        return res.status(404).json({ success: false, message: 'Factura no encontrada' });
+      }
+  
+      // Verificar si el producto existe
+      const producto = await Productos.findOne({ where: { id: producto_id, empresaId } });
+      if (!producto) {
+        return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+      }
+  
+      // Crear un nuevo detalle de factura
+      const nuevoDetalle = await DetalleFacturas.create({
+        empresaId,
+        factura_id: factura.id,
+        producto_id: producto.id,
+        nombre_producto: producto.nombre_producto,
+        unidad: producto.unidad || 'unidad',
+        codigo_barra: 'N/A',
+        precio,
+        cantidad,
+        descuento: 0,
+        impuestos: 0,
+        fecha_creacion: new Date(),
+        fecha_actualizacion: new Date(),
+      });
+  
+      // Incluir el detalle creado con el modelo de productos
+      const detalleConProducto = await DetalleFacturas.findOne({
+        where: { id: nuevoDetalle.id },
+        include: [{ model: Productos, as: 'producto' }],
+      });
+  
+      // Calcular el resumen actualizado de la factura
+      const detallesFactura = await DetalleFacturas.findAll({
+        where: { factura_id: factura.id },
+      });
+  
+      const subtotal = detallesFactura.reduce((acc, detalle) => acc + detalle.cantidad * detalle.precio, 0);
+      const impuesto = subtotal * 0.19; // 19% de impuesto
+      const total = subtotal + impuesto;
+  
+      // Enviar la respuesta con el detalle y el resumen actualizado
+      res.status(201).json({
+        success: true,
+        detalle: detalleConProducto,
+        nuevoResumen: { subtotal, impuesto, total },
+      });
+  
+      console.log('Producto agregado con éxito');
+    } catch (error) {
+      console.error('Error al agregar productos a la factura:', error);
+      res.status(500).json({ success: false, message: 'Error al agregar productos a la factura' });
     }
-
-    const producto = await Productos.findOne({ where: { id: producto_id, empresaId } });
-    if (!producto) {
-      return res.status(404).json({ success: false, message: 'Producto no encontrado' });
-    }
-
-    const nuevoDetalle = await DetalleFacturas.create({
-      empresaId,
-      factura_id: factura.id, 
-      producto_id: producto.id,  
-      nombre_producto: producto.nombre_producto, 
-      unidad: producto.unidad || 'unidad', 
-      codigo_barra: 'N/A', 
-      precio, 
-      cantidad,  
-      descuento: 0,  
-      impuestos: 0,  
-      fecha_creacion: new Date(),  
-      fecha_actualizacion: new Date(),
-    });
-
-    const detalleConProducto = await DetalleFacturas.findOne({
-      where: { id: nuevoDetalle.id },
-      include: [{ model: Productos, as: 'producto' }],
-    });
-
-    res.status(201).json({ success: true, detalle: detalleConProducto });
-    console.log('Producto agregado con éxito');
-    //res.send('Producto agregado con éxito');
-  } catch (error) {
-    console.error('Error al agregar productos a la factura:', error);
-    res.status(500).json({ success: false, message: 'Error al agregar productos a la factura' });
-  }
-}
+  };
+  
 
 const crear_productos_factura_recibida = async (req, res) => { 
   try {

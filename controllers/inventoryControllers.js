@@ -9,7 +9,7 @@ const mostrar_inventario_con_cantidad = async (req, res) => {
 
     const inventarioData = await Inventarios.findAll({
       where: { empresaId },
-      attributes: ['id', 'nombre', 'unidad', 'descripcion', 'bodega', 'encargado']
+      attributes: ['id', 'nombre', 'unidad', 'stock_minimo', 'descripcion', 'bodega', 'encargado']
     });
 
     const inventarioConProductos = await Promise.all(inventarioData.map(async (inventario) => {
@@ -47,7 +47,7 @@ const mostrar_inventario_con_cantidad = async (req, res) => {
 };
 
 const agregar_producto_inventario = async (req, res) => {
-  const { nombre, unidad, descripcion, bodega, encargado } = req.body;
+  const { nombre, unidad, stock_minimo,  descripcion, bodega, encargado } = req.body;
   const empresaId = req.usuario.empresaId;
 
   try {
@@ -55,6 +55,7 @@ const agregar_producto_inventario = async (req, res) => {
       empresaId,
       nombre,
       unidad,
+      stock_minimo,
       descripcion,
       bodega,
       encargado,
@@ -221,9 +222,37 @@ const registrar_salida = async (req, res) => {
   }
 };
 
+const crear_producto = async (req, res) => { 
+  try {
+    const { codigo_barra, nombre_producto, inventario_id } = req.body;
+    const empresaId = req.usuario.empresaId;
+    //const proveedor_id = req.body.proveedor_id; 
+
+    await Productos.create({
+      empresaId,
+      codigo_barra,
+      nombre_producto,
+      inventario_id,
+      //proveedor_id,
+      codigo_interno: codigo_barra, 
+      fecha_creacion: new Date(),
+      fecha_actualizacion: new Date(),
+    });
+
+
+
+    //res.status(201).json({ success: true, producto: nuevoProducto });
+    
+    res.redirect('/inventario/productos');
+  } catch (error) {
+    console.error('Error al crear el producto:', error);
+    res.status(500).json({ success: false, message: 'Error al crear el producto' });
+  }
+};
 
 export {
     mostrar_inventario_con_cantidad,
+    crear_producto,
     agregar_producto_inventario,
     mostrar_ingresos,
     mostrar_salidas,

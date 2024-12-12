@@ -31,6 +31,10 @@ const Inventarios = db.define('inventarios', {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    stock_minimo: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     encargado: {
       type: DataTypes.STRING,
       allowNull: true,

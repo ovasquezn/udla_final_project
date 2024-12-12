@@ -21,6 +21,7 @@ block contenido
               th Nombre
               th Cantidad Total
               th Estado de Stock
+              th Stock Mínimo
               th Bodega
               th Encargado
               th Unidad
@@ -31,19 +32,21 @@ block contenido
                 td= item.nombre
                 td= item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) || '0'
                 td
-                  if item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) > 50
-                    span.badge.badge-success Stock Alto
-                  else if item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0) > 10
-                    span.badge.badge-warning Stock Medio
+                  - const totalStock = item.productos.reduce((acc, prod) => acc + (prod.cantidadTotal || 0), 0);
+                  if totalStock === 0
+                    span.badge.badge-danger Sin Stock
+                  else if totalStock <= (item.stock_minimo || 0)
+                    span.badge.badge-warning Stock Bajo
                   else
-                    span.badge.badge-danger Stock Bajo
+                    span.badge.badge-success Stock Normal
+                td= item.stock_minimo || 'No especificado'
                 td= item.bodega || 'No especificado'
                 td= item.encargado || 'Sin asignar'
                 td= item.unidad || 'N/A'
                 td.text-center
                   button.btn.btn-info.btn-sm(data-toggle="modal" data-target=`#detalleProductoModal-${index}`)
                     i.fas.fa-eye
-                    |  Ver Detalle
+                    |  Ver Detalles
 
 
         // Modal para agregar producto al inventario
@@ -63,6 +66,9 @@ block contenido
                   .form-group
                     label(for="unidad") Unidad
                     input#unidad.form-control(type="text" name="unidad" required)
+                  .form-group
+                    label(for="stock_minimo") Stock Mínimo
+                    input#stock_minimo.form-control(type="number" name="stock_minimo" required)
                   .form-group
                     label(for="descripcion") Descripción
                     textarea#descripcion.form-control(name="descripcion")
