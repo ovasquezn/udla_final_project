@@ -19,8 +19,6 @@ block contenido
             tr
               th Producto
               th Cantidad
-              th Unidad
-              th Encargado
               th Fecha
               th Comentarios
           tbody
@@ -28,8 +26,6 @@ block contenido
               tr
                 td= salida.producto_movimiento ? salida.producto_movimiento.nombre_producto : 'Producto desconocido'
                 td= salida.cantidad
-                td= salida.producto ? salida.producto.unidad : '?'
-                td= salida.encargado || 'Sin asignar'
                 td= salida.fecha.toLocaleDateString('es-ES')
                 td= salida.comentarios || 'Sin comentarios'
 

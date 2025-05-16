@@ -14,7 +14,6 @@ block contenido
 
     section.content
       .container-fluid
-        // Tabla de productos
         table#productosTable.table.table-striped
           thead
             tr
@@ -46,28 +45,26 @@ block contenido
                 h5.modal-title Crear Nuevo Producto
                 button.close(type="button" data-dismiss="modal" aria-label="Close")
                   span(aria-hidden="true") &times;
+              // Contenedor para errores (oculto inicialmente)
+              .alert.alert-danger#addProductoErrors(style="display:none")
               .modal-body
-                form(action="/inventario/productos/crear_producto" method="POST" novalidate)
+                form#addProductoForm(action="/inventario/productos/crear_producto" method="POST" novalidate)
                   input(type="hidden" name="_csrf" value=csrfToken)
                   
-                  // Código de Barra
                   .form-group 
-                    label(for="codigo") Código de Barra
+                    label(for="codigo_de_barra") Código de Barra
                     input#codigo_de_barra.form-control(type="text" name="codigo_barra" placeholder="Ingrese código de barra" required)
                     
-                  // Nombre del Producto
                   .form-group
                     label(for="nombre_producto") Nombre del Producto
                     input#nombre_producto.form-control(type="text" name="nombre_producto" placeholder="Ingrese nombre del producto" required)
 
-                  // Inventario Asociado
                   .form-group
-                    label(for="inventario_id") Inventario
+                    label(for="inventario") Inventario
                     select#inventario.form-control(name="inventario_id" required)
                       each inventario in inventarios
                         option(value=inventario.id)= inventario.nombre
 
-                  // Botón para Crear Producto
                   button.btn.btn-primary(type="submit") Crear Producto
               .modal-footer
                 button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
@@ -76,6 +73,7 @@ block contenido
   script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
   script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+
   script.
     $(document).ready(function() {
       $('#productosTable').DataTable({
@@ -83,5 +81,63 @@ block contenido
           url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
         },
         ordering: true,
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const addProductoForm = document.getElementById('addProductoForm');
+      const addProductoErrors = document.getElementById('addProductoErrors');
+
+      addProductoForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Limpiar errores previos
+        addProductoErrors.style.display = 'none';
+        addProductoErrors.innerHTML = '';
+
+        const formData = new FormData(addProductoForm);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+
+        try {
+          const res = await fetch(addProductoForm.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': data._csrf
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await res.json();
+          if (!result.success) {
+            // Mostrar errores
+            if (result.errors && result.errors.length > 0) {
+              addProductoErrors.style.display = 'block';
+              const ul = document.createElement('ul');
+              result.errors.forEach(err => {
+                const li = document.createElement('li');
+                li.textContent = err.msg;
+                ul.appendChild(li);
+              });
+              addProductoErrors.appendChild(ul);
+            } else if (result.message) {
+              addProductoErrors.style.display = 'block';
+              addProductoErrors.textContent = result.message;
+            }
+          } else {
+            // Éxito: cerrar el modal
+            $('#addProductoModal').modal('hide');
+            // Opcional: recargar la página para ver el producto creado
+            location.reload();
+          }
+
+        } catch (error) {
+          console.error('Error al enviar el formulario:', error);
+          addProductoErrors.style.display = 'block';
+          addProductoErrors.textContent = 'Ocurrió un error al procesar la solicitud.';
+        }
       });
     });

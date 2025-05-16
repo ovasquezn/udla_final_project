@@ -91,56 +91,45 @@ block contenido
                   h5.modal-title Detalles del Producto - #{item.nombre}
                   button.close(type="button" data-dismiss="modal" aria-label="Close")
                     span(aria-hidden="true") &times;
+
                 .modal-body
                   h6 Productos Relacionados
                   table.table.table-sm.table-bordered
                     thead
                       tr
                         th Producto
-                        th Precio
                         th Código Interno
-                        th Código de Barra
-                        th Cantidad en Factura
+                        th Cantidad Total
                     tbody
-                      // Accedemos a item.productos en lugar de inventario para cada modal
                       each producto in item.productos
                         tr
                           td= producto.nombre_producto
-                          td= producto.precio
                           td= producto.codigo_interno || 'N/A'
-                          td= producto.codigo_barra || 'N/A'
                           td= producto.cantidadTotal || '0'
 
                   hr
-
-                  h6 Salidas de Producto
-                  table.table.table-sm.table-bordered.mt-2
-                    thead
-                      tr
-                        th Fecha de Salida
-                        th Cantidad
-                        th Motivo
-                        th Responsable
-                    // Datos de ejemplo
-                    tbody 
-                      tr
-                        td 2024-11-15
-                        td 20
-                        td Venta directa
-                        td Juan Pérez
-                      tr
-                        td 2024-11-16
-                        td 15
-                        td Uso en restaurante
-                        td María López
-                      tr
-                        td 2024-11-17
-                        td 10
-                        td Transferencia a otra bodega
-                        td Carlos Gómez
+                  h3 Salidas Registradas
+                  each producto in item.productos
+                    if producto.salidas.length > 0
+                      h5.mt-3 Salidas de #{producto.nombre_producto}
+                      table.table.table-striped
+                        thead
+                          tr
+                            th Cantidad
+                            th Fecha
+                            th Responsable
+                        tbody
+                          each salida in producto.salidas
+                            tr
+                              td= salida.cantidad
+                              td= new Date(salida.fecha).toLocaleDateString('es-ES')
+                              td= salida.responsable || 'Administración'
+                    else
+                      p.text-muted No hay salidas registradas para #{producto.nombre_producto}
 
                 .modal-footer
                   button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
+
 
   script(src="https://code.jquery.com/jquery-3.3.1.min.js")
   script(src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js")

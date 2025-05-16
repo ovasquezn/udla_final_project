@@ -20,12 +20,13 @@ block contenido
           .row.mb-3
             .col-sm-6
               label(for="bancoSelect") Seleccionar Banco
-              select#bancoSelect.form-control(onchange="cambiarBanco()")
+              select#bancoSelect.form-control
                 each banco in bancos
                   option(
                     value=`/finanzas/movimientos_bancarios?bancoId=${banco.id}`
                     selected=(banco.id === bancoSeleccionado.id)
-                  )= banco.nombre_banco
+                  )= banco.nombre_banco + ' - ' + banco.numero_cuenta + ' - ' + banco.tipo_cuenta
+
       // Widgets de Información del Banco
       .container-fluid
         .row
@@ -177,32 +178,33 @@ block contenido
         //-       label(for="fechaFin") Fecha de Fin
         //-       input#fechaFin.form-control(type="date")
           // Tabla de Movimientos Bancarios
-    section.content
-      .container-fluid
-          table#movimientosTable.table.table-striped
-            thead
-              tr
-                th Fecha
-                th Detalle
-                th Tipo
-                th Monto
-                th
-            tbody
-              each movimiento in movimientos
-                tr
-                  td= new Date(movimiento.fecha).toLocaleDateString('es-ES')
-                  td= movimiento.categoria
-                  td
-                    if movimiento.tipo === 'abono'
-                      span.badge.badge-success Abono
-                    else if movimiento.tipo === 'gasto'
-                      span.badge.badge-danger Gasto
-                    td.valor-clp= movimiento.monto
-                  td.text-center 
-                    button.btn.btn-warning.btn-sm(data-toggle="modal" data-target=`#editarMovimientoModal-${movimiento.id}`)
-                      i.fas.fa-edit
-                    button.btn.btn-danger.btn-sm.ml-2(data-toggle="modal" data-target=`#eliminarMovimientoModal-${movimiento.id}`)
-                      i.fas.fa-trash-alt
+        h3.mt-3 Movimientos Bancarios
+        section.content
+          .container-fluid
+              table#movimientosTable.table.table-striped
+                thead
+                  tr
+                    th Fecha
+                    th Detalle
+                    th Tipo
+                    th Monto
+                    th
+                tbody
+                  each movimiento in movimientos
+                    tr
+                      td= new Date(movimiento.fecha).toLocaleDateString('es-ES')
+                      td= movimiento.detalle
+                      td
+                        if movimiento.tipo === 'abono'
+                          span.badge.badge-success Abono
+                        else if movimiento.tipo === 'gasto'
+                          span.badge.badge-danger Gasto
+                        td.valor-clp= movimiento.monto
+                      td.text-center 
+                        button.btn.btn-warning.btn-sm(data-toggle="modal" data-target=`#editarMovimientoModal-${movimiento.id}`)
+                          i.fas.fa-edit
+                        button.btn.btn-danger.btn-sm.ml-2(data-toggle="modal" data-target=`#eliminarMovimientoModal-${movimiento.id}`)
+                          i.fas.fa-trash-alt
 
 
     // Modal para Agregar Movimiento
@@ -373,11 +375,15 @@ block contenido
 
     });
 
-    function cambiarBanco() {
+    document.addEventListener('DOMContentLoaded', () => {
       const select = document.getElementById('bancoSelect');
-      const url = select.options[select.selectedIndex].value;
-      window.location.href = url;
-    }
+      if (select) {
+        select.addEventListener('change', () => {
+          const url = select.options[select.selectedIndex].value;
+          window.location.href = url;
+        });
+      }
+    });
     // Formatear los valores de CLP
     const elementosCLP = document.querySelectorAll('.valor-clp');
     elementosCLP.forEach(elemento => {

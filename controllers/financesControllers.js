@@ -145,10 +145,13 @@ const agregar_movimiento_bancario = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Banco no especificado.' });
     }
 
+    const fechaAjustada = new Date(fecha);
+    fechaAjustada.setMinutes(fechaAjustada.getMinutes() + fechaAjustada.getTimezoneOffset());
+
     await MovimientosBancarios.create({
       empresaId,
       banco_id: bancoId,
-      fecha,
+      fecha: fechaAjustada,
       categoria,
       detalle,
       estado,

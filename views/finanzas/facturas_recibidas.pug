@@ -73,96 +73,6 @@ block contenido
                     i.fas.
                     | Eliminar
 
-                  .modal.fade(id=`crearModal` tabindex="-1" role="dialog")
-                    .modal-dialog.modal-lg(role="document")
-                      .modal-content
-                        .modal-header
-                          h5.modal-title Crear Producto - Factura #{factura.numero_factura}
-                          button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                        .modal-body
-                          form#formCrearProducto(action=`/facturas/${factura.id}/agregarProducto` method="POST")
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            
-                            // Código de Barra
-                            .form-group 
-                              label(for="codigo") Código de Barra
-                              input#codigo_de_barra.form-control(type="text" name="codigo" placeholder="Ingrese código" required)
-
-                            // Nombre Producto
-                            .form-group
-                              label(for="producto") Nombre Producto
-                              input#producto_nombre.form-control(type="text" name="nombre_producto" placeholder="Ingrese nombre del producto" required)
-
-                            // Inventario (Selector de Producto Agrupado)
-                            .form-group
-                              label(for="inventario") Inventario
-                              select#inventario.form-control(name="inventario_id" required)
-                                each inventario in inventarios
-                                  option(value=inventario.id)= inventario.nombre
-
-                            //- // Proveedor (Valor por defecto de la factura actual)
-                            //- input(type="hidden" name="proveedor_id" value=`${factura.proveedor_id}`)
-
-                            // Botón para Crear Producto
-                            button.btn.btn-primary(type="button" onclick="crearProducto()") Crear Producto
-
-
-                        // Modal Body for Listing and Managing Products
-                        .modal-body
-                          h5.mt-4 Productos del Proveedor
-                          table#tablaProductos.table.table-striped
-                            thead
-                              tr
-                                th Código de Barra
-                                th Producto
-                                th 
-                            tbody
-                              each producto, index in productos
-                                tr
-                                  td= producto.codigo_barra
-                                  td= producto.nombre_producto
-                                  td
-                                    // Button to Edit Product
-                                    button.btn.btn-warning.btn-sm(type="button" onclick=`abrirEditarModal(${producto.id}, '${producto.nombre_producto}', '${producto.codigo_barra}')`)
-                                      i.fas.fa-edit
-                                      |  
-
-                                    // Button to Delete Product
-                                    button.btn.btn-danger.btn-sm(type="button" onclick=`eliminarProducto(${producto.id})`)
-                                      i.fas.fa-trash
-                                      |  
-
-                        .modal-footer
-                          button.btn.btn-secondary(type="button" data-dismiss="modal") Cerrar
-
-                                                // Edit Product Modal
-                        .modal.fade#editarProductoModal(tabindex="-1" role="dialog")
-                          .modal-dialog(role="document")
-                            .modal-content
-                              .modal-header
-                                h5.modal-title Editar Producto
-                                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                  span(aria-hidden="true") &times;
-                              .modal-body
-                                form#formEditarProducto(action="/productos/editar" method="POST")
-                                  input(type="hidden" name="_csrf" value=csrfToken)
-                                  input#editarProductoId(type="hidden" name="productoId")
-                                  
-                                  // Código de Barra
-                                  .form-group
-                                    label(for="editarProductoCodigo") Código de Barra
-                                    input#editarProductoCodigo.form-control(type="text" name="codigo")
-
-                                  // Nombre Producto
-                                  .form-group
-                                    label(for="editarProductoNombre") Nombre Producto
-                                    input#editarProductoNombre.form-control(type="text" name="nombre_producto")
-                                  
-                                  button.btn.btn-primary(type="submit") Guardar Cambios
-                              .modal-footer
-                                button.btn.btn-secondary(type="button" onclick="cerrarModal('editarProductoModal')") Cerrar
-
 
                   .modal.fade(id=`detalleModal${index}` tabindex="-1" role="dialog")
                     .modal-dialog.modal-lg(role="document")
@@ -210,30 +120,39 @@ block contenido
                           h5.mt-4 Agregar Productos a la Factura
 
                           // Formulario para agregar productos existentes a la factura
-                          form#addExistingProductForm(onsubmit="agregarProductoAFactura(event)")
-                            input(type="hidden" name="_csrf" value=csrfToken)
+                          form#addExistingProductForm(onsubmit=`agregarProductoAFactura(event, ${factura.id}, ${index})`)
+                            input(id=id=`token-${index}` type="hidden" name="_csrf" value=csrfToken)
                             input(type="hidden" id="facturaId" value=factura.id)
 
                             // Desplegable de Productos
                             .form-group
                               label(for="producto") Producto
-                              select#producto.form-control(name="producto_id" required)
+                              //select#producto.form-control(name="producto_id" required)
+                              //select#producto-#{index}.form-control(name="producto_id" required)
+                              select.form-control(id=`producto-${index}` name="producto_id" required)
                                 option(value="") Seleccionar Producto
                                 each producto in productos
                                   option(value=producto.id)= producto.nombre_producto
                             // Campo de Precio
                             .form-group
                               label(for="precio") Precio Unitario
-                              input#precio.form-control(type="number" step="0.01" name="precio" placeholder="Ingrese precio" required)
+                              //input#precio.form-control(type="number" step="0.01" name="precio" placeholder="Ingrese precio" required)
+                              //input#precio-#{index}.form-control(type="number" name="precio" required)
+                              input.form-control(id=`precio-${index}` type="number" step="0.01" name="precio" placeholder="Ingrese precio" required)
 
 
                             // Campo de Cantidad
                             .form-group
                               label(for="cantidad") Cantidad
-                              input#cantidad.form-control(type="number" name="cantidad" placeholder="Ingrese cantidad" required)
+                              //input#cantidad.form-control(type="number" name="cantidad" placeholder="Ingrese cantidad" required)
+                              //input#cantidad-#{index}.form-control(type="number" name="cantidad" required)
+                              input.form-control(id=`cantidad-${index}` type="number" name="cantidad" placeholder="Ingrese cantidad" required)
 
                             // Botón para agregar producto a la factura
-                            button.btn.btn-primary.mt-2(type="button" onclick="agregarProductoAFactura(event)") Agregar Producto
+                            button.btn.btn-primary.mt-2(
+                              type="button" 
+                              onclick=`agregarProductoAFactura(event, '${factura.id}', ${index})`
+                            ) Agregar Producto
 
 
 
@@ -320,116 +239,30 @@ block contenido
       })
 
     script.
-      function crearProducto() {
-        const codigoBarra = document.querySelector('#codigo_de_barra').value;
-        const nombreProducto = document.querySelector('#producto_nombre').value;
-        const inventarioId = document.querySelector('#inventario').value;
-        const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-        fetch('/finanzas/facturas_recibidas/crear_producto', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'CSRF-Token': csrfToken,
-          },
-          body: JSON.stringify({
-            codigo_barra: codigoBarra,
-            nombre_producto: nombreProducto,
-            inventario_id: inventarioId,
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            document.querySelector('#codigo_de_barra').value = '';
-            document.querySelector('#producto_nombre').value = '';
-            document.querySelector('#inventario').value = '';
-
-            agregarProductoATabla(data.producto);
-          } else {
-            alert('Error al crear el producto');
-          }
-        })
-        .catch(error => console.error('Error al crear el producto:', error));
-      }
-
-      function agregarProductoATabla(producto) {
-        const tablaProductos = document.querySelector('#tablaProductos tbody');
-
-        const nuevaFila = document.createElement('tr');
-        nuevaFila.innerHTML = `
-          <td>${producto.codigo_barra}</td>
-          <td>${producto.nombre_producto}</td>
-        `;
-
-        tablaProductos.appendChild(nuevaFila);
-      }
-
-      function abrirEditarModal(id, nombre, codigo) {
-        document.querySelector('#editarProductoId').value = id;
-        document.querySelector('#editarProductoNombre').value = nombre;
-        document.querySelector('#editarProductoCodigo').value = codigo;
-        $('#editarProductoModal').modal('show');
-      }
-
-      //- function cerrarModal(modalId) {
-      //-   $(`#${modalId}`).modal('hide');
-      //- }
-
-      //- function agregarProductoAFactura(event) {
-      //-   event.preventDefault();
-        
-      //-   const facturaId = document.getElementById('facturaId').value; 
-      //-   const productoId = document.getElementById('producto').value;
-      //-   const cantidad = document.getElementById('cantidad').value;
-      //-   const precio = document.getElementById('precio').value;
-      //-   const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-      //-   if (!productoId || !cantidad) {
-      //-   alert('Por favor, selecciona un producto y una cantidad.');
-      //-   return;
-      //-   }
-
-      //-   const data = {
-      //-   producto_id: productoId,
-      //-   cantidad,
-      //-   precio,
-      //-   _csrf: csrfToken
-      //-   };
-
-      //-   fetch(`/finanzas/facturas_recibidas/${facturaId}/agregar_producto`, {
-      //-   method: 'POST',
-      //-   headers: {
-      //-       'Content-Type': 'application/json',
-      //-       'CSRF-Token': csrfToken,
-      //-       'X-Requested-With': 'XMLHttpRequest'
-      //-   },
-      //-   body: JSON.stringify(data)
-      //-   })
-      //-   .then(response => response.json())
-      //-   .then(data => {
-      //-   if (data.success) {
-      //-       actualizarTablaProductos(data.detalle);
-      //-   } else {
-      //-       alert(data.message || 'Error al agregar producto');
-      //-   }
-      //-   })
-      //-   .catch(error => console.error('Error al agregar producto:', error));
-      //- }
-
-      function agregarProductoAFactura(event) {
+      function agregarProductoAFactura(event,  facturaId, index) {
         event.preventDefault();
 
-        const facturaId = document.getElementById('facturaId').value;
-        const productoId = document.getElementById('producto').value;
-        const cantidad = document.getElementById('cantidad').value;
-        const precio = document.getElementById('precio').value;
-        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+        const modal = document.querySelector(`#detalleModal${index}`);
+          if (!modal) {
+            console.error(`No se encontró el modal con ID: detalleModal${index}`);
+            return;
+          }
 
-        if (!productoId || !cantidad || !precio) {
-          alert('Por favor, selecciona un producto, cantidad y precio.');
+        // Verificar si el modal existe
+        const productoElement = document.querySelector(`#producto-${index}`);
+        const cantidadElement = document.querySelector(`#cantidad-${index}`);
+        const precioElement = document.querySelector(`#precio-${index}`);
+       const csrfToken = modal.querySelector("input[name='_csrf']")?.value;
+
+        if (!productoElement || !cantidadElement || !precioElement) {
+          console.error(`No se encontró el elemento necesario dentro del modal con ID detalleModal${facturaId}`);
           return;
         }
+
+        const productoId = productoElement.value;
+        const cantidad = parseFloat(cantidadElement.value);
+        const precio = parseFloat(precioElement.value);
+
 
         const data = {
           producto_id: productoId,
@@ -450,8 +283,8 @@ block contenido
           .then(response => response.json())
           .then(data => {
             if (data.success) {
-              actualizarTablaProductos(data.detalle);
-              actualizarResumenFactura(data.nuevoResumen); // Actualiza el resumen con los nuevos valores
+              actualizarTablaProductos(data.detalle, index); // Actualiza la tabla con los nuevos valores
+              actualizarResumenFactura(data.nuevoResumen, index); // Actualiza el resumen con los nuevos valores
             } else {
               alert(data.message || 'Error al agregar producto');
             }
@@ -459,28 +292,34 @@ block contenido
           .catch(error => console.error('Error al agregar producto:', error));
       }
 
-      function actualizarResumenFactura(nuevoResumen) {
-        const { subtotal, impuesto, total } = nuevoResumen;
-
-        // Actualizar los elementos del resumen
-        document.querySelector('.text-right h5:nth-child(1)').textContent = `Subtotal: ${subtotal.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
-        document.querySelector('.text-right h5:nth-child(2)').textContent = `Impuesto (19%): ${impuesto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
-        document.querySelector('.text-right h5:nth-child(3)').textContent = `Total a Pagar: ${total.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
-      }
-
-
-      function actualizarTablaProductos(detalle) {
-        console.log(detalle);
-        const tablaProductos = document.getElementById('productosTabla');
+      function actualizarTablaProductos(detalle, index) {
+        const tablaProductos = document.querySelector(`#detalleModal${index} tbody#productosTabla`);
         
+        if (!tablaProductos) {
+          console.error('No se encontró la tabla de productos.');
+          return;
+        }
+
         const nuevaFila = document.createElement('tr');
         nuevaFila.innerHTML = `
-          <td>${detalle.producto.nombre_producto ? detalle.producto.nombre_producto : 'Producto no disponible'}</td>
+          <td>${detalle.producto.nombre_producto || 'Producto no disponible'}</td>
           <td>${detalle.cantidad}</td>
           <td>${detalle.precio.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}</td>
           <td>${(detalle.cantidad * detalle.precio).toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}</td>
         `;
 
+        // Agregar fila a la tabla del modal específico
         tablaProductos.appendChild(nuevaFila);
       }
 
+      function actualizarResumenFactura(nuevoResumen, index) {
+        const modal = document.querySelector(`#detalleModal${index}`);
+        if (!modal) return;
+
+        modal.querySelector('.text-right h5:nth-child(1)').textContent = 
+          `Subtotal: ${nuevoResumen.subtotal.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+        modal.querySelector('.text-right h5:nth-child(2)').textContent = 
+          `Impuesto (19%): ${nuevoResumen.impuesto.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+        modal.querySelector('.text-right h5:nth-child(3)').textContent = 
+          `Total a Pagar: ${nuevoResumen.total.toLocaleString('es-ES', { style: 'currency', currency: 'CLP' })}`;
+      }
